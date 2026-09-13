@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arav Shah — Software Developer</title>
+<meta name="description" content="Arav Shah — computer engineering student at Purdue. I love to solve problems that make people's lives easier, better, and safer.">
+<meta name="theme-color" content="#658447">
+
+<meta property="og:title" content="Arav Shah — Software Developer">
+<meta property="og:description" content="I love to solve problems that make people's lives easier, better, and safer, no matter how &quot;difficult&quot; that may be.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="assets/hobbit-shire.jpg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23658447'/><circle cx='50' cy='52' r='26' fill='%232f7d4f' stroke='%231b2a12' stroke-width='4'/><circle cx='50' cy='58' r='4' fill='%23e8c34a'/></svg>">
+</head>
+<body>
+
+<!-- parallax ground: two layers that drift slower than the content -->
+<div class="bg-layer bg-tile" aria-hidden="true"></div>
+<div class="bg-layer bg-wash" aria-hidden="true"></div>
+
+<!-- the stone path that runs the length of the page, drawn by script.js -->
+<div class="path-layer" aria-hidden="true"><svg id="stonePath" preserveAspectRatio="none"></svg></div>
+
+<nav class="nav" aria-label="Sections">
+  <a href="#home" class="nav-link is-active">Home</a>
+  <span class="nav-sep" aria-hidden="true">&#10022;</span>
+  <a href="#work" class="nav-link">What I&rsquo;ve Done</a>
+  <span class="nav-sep" aria-hidden="true">&#10022;</span>
+  <a href="#brain" class="nav-link">My Brain</a>
+</nav>
+
+<main>
+
+  <!-- ================= HOME / THE SHIRE ================= -->
+  <section id="home" class="hero">
+    <div class="hero-art" aria-hidden="true"><div class="hero-art-img"></div></div>
+    <div class="hero-fade" aria-hidden="true"></div>
+
+    <div class="hero-inner">
+      <div class="vellum hero-card">
+        <p class="eyebrow">An unexpected portfolio</p>
+        <h1 class="hero-title">Hi, I&rsquo;m Arav Shah</h1>
+        <p class="hero-lede">
+          I love to solve problems that make people&rsquo;s lives easier, better,
+          and safer, no matter how &ldquo;difficult&rdquo; that may be.
+        </p>
+        <div class="rule" aria-hidden="true"><span></span>&#10022;<span></span></div>
+      </div>
+    </div>
+
+    <a href="#work" class="scroll-cue" aria-label="Scroll to What I've Done">
+      <span>the road goes ever on</span>
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+        <path d="M12 4v14M6 13l6 6 6-6" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </section>
+
+  <!-- ================= WHAT I'VE DONE ================= -->
+  <section id="work" class="section">
+    <header class="section-head">
+      <div class="cartouche">
+        <h2>What I&rsquo;ve Done</h2>
+        <p>Roads walked so far &mdash; the work, the teams, the things I built.</p>
+      </div>
+    </header>
+
+    <h3 class="subhead"><span>Experiences</span></h3>
+    <ol class="waypoints">
+      <li class="waypoint side-left">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="HTF">
+              <img src="assets/logos/hack-the-future.png" alt="Hack The Future logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>Hack The Future</h4>
+              <p class="role">President <span class="paren">&middot; formerly Team Lead</span></p>
+              <p class="meta">West Lafayette, IN &middot; Oct. 2025 &ndash; Present</p>
+            </div>
+          </div>
+          <p class="card-body">
+            I lead Purdue&rsquo;s most selective CS organization &mdash; 70+ developers and designers drawn from 750+ applicants, of whom about 10% get in. I&rsquo;ve pushed the club to partner with organizations across America, India, the UK, Ghana, and Botswana, and we ship 10+ projects a year. Day to day that means running sprint planning, sitting in on code review, and making sure every team has what it needs to actually finish what it started.
+          </p>
+          <ul class="tags"><li>Leadership</li><li>Agile</li><li>Mentorship</li><li>Code Review</li></ul>
+        </article>
+      </li>
+      <li class="waypoint side-right">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="RTX">
+              <img src="assets/logos/raytheon.png" alt="Raytheon (RTX) logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>Raytheon <span class="paren">(RTX)</span></h4>
+              <p class="role">Software Engineering Intern</p>
+              <p class="meta">Fullerton, CA &middot; June 2026 &ndash; Aug. 2026</p>
+            </div>
+          </div>
+          <p class="card-body">
+            Built a C/C++ unit-testing suite with GoogleTest that reached roughly 60% coverage of an embedded codebase, then wired those results into the CI/CD pipeline so nightly regression builds ran on their own. Wrote Python and Bash automation on Linux that turned legacy system requirements into repeatable tests, including regression scripts running against tactical and maintenance clone disks in Sentinel software radar kits.
+          </p>
+          <ul class="tags"><li>C/C++</li><li>GoogleTest</li><li>CI/CD</li><li>Python</li><li>Linux</li></ul>
+        </article>
+      </li>
+      <li class="waypoint side-left">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="AAEE">
+              <img src="assets/logos/aaee.png" alt="Aero and Astro Engineering Education logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>Aero &amp; Astro Engineering Education</h4>
+              <p class="role">EPICS Design Lead</p>
+              <p class="meta">West Lafayette, IN &middot; Aug. 2025 &ndash; May 2026</p>
+            </div>
+          </div>
+          <p class="card-body">
+            Led a team of mechanical and aerospace engineers building a simulation of an Autonomous Spaceport Drone Ship landing. Alongside that I spearheaded interactive aerospace education modules for 7th and 8th graders with Purdue Space Day and Imagination Station, managing timelines and the rollout to community partners.
+          </p>
+          <ul class="tags"><li>Simulation</li><li>Team Lead</li><li>Aerospace</li><li>Outreach</li></ul>
+        </article>
+      </li>
+    </ol>
+
+    <h3 class="subhead"><span>Projects</span></h3>
+    <ol class="waypoints">
+      <li class="waypoint side-right">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="HB">
+              <img src="assets/logos/homebeacon.png" alt="HomeBeacon logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>HomeBeacon</h4>
+              <p class="role">Founder &amp; Inventor</p>
+              <p class="meta">2025 &ndash; Present</p>
+            </div>
+          </div>
+          <p class="card-body">
+            A full-stack IoT home-monitoring platform I built end to end: a native Kotlin beacon client, a Flutter app across Android, iOS and Web, and a Python Firebase Cloud Functions backend. A hierarchical Firestore schema (zip &rarr; user &rarr; date &rarr; heartbeats) keeps high-frequency writes fast, and event-driven Cloud Functions check every heartbeat against a configurable health window &mdash; staying quiet while a beacon is healthy, and reaching out the moment it goes silent. Missed pings escalate through tiered yellow/orange/red alerts that name the likely cause: charging disconnect, lost connectivity, GPS or gyroscope drift.
+          </p>
+          <ul class="tags"><li>Kotlin</li><li>Flutter</li><li>Firebase</li><li>Python</li><li>IoT</li></ul>
+        </article>
+      </li>
+      <li class="waypoint side-left">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="SoCET">
+              <img src="assets/logos/socet.png" alt="SoCET logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>Matrix-Multiplication Accelerator</h4>
+              <p class="role">Undergraduate Researcher <span class="paren">&middot; SoCET</span></p>
+              <p class="meta">Purdue University &middot; Dec. 2025 &ndash; June 2026</p>
+            </div>
+          </div>
+          <p class="card-body">
+            Designed a SystemVerilog matrix-multiplication accelerator with a custom FSM datapath and verified it through RTL testbenches. Wrote the MMIO bus driver that lets a CPU talk to the accelerator, then benchmarked hardware against software matrix-multiply to prove the win. When synthesis constraints got in the way, I re-architected the multiplier datapath around shift-based arithmetic.
+          </p>
+          <ul class="tags"><li>SystemVerilog</li><li>RTL</li><li>FSM Design</li><li>MMIO</li><li>Synthesis</li></ul>
+        </article>
+      </li>
+      <li class="waypoint side-right">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="MFS">
+              <img src="assets/logos/midtown.png" alt="Midtown Family Services logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>Midtown Family Services Platform</h4>
+              <p class="role">Team Lead <span class="paren">&middot; Hack The Future</span></p>
+              <p class="meta">Oct. 2025 &ndash; May 2026</p>
+            </div>
+          </div>
+          <p class="card-body">
+            I led a team of developers building a full-stack website for Midtown Family Services, a nonprofit supporting struggling families. Together we shipped an authentication page, a volunteer portal, an events page, an analytics dashboard, and an admin portal. I personally built the admin portal and the backend middleware &mdash; including a rate limiter guarding our API endpoints using Upstash Redis &mdash; and owned the MongoDB schema design, keeping user records consistent and every password hashed.
+          </p>
+          <ul class="tags"><li>MERN</li><li>MongoDB</li><li>Upstash Redis</li><li>Auth</li><li>Team Lead</li></ul>
+        </article>
+      </li>
+      <li class="waypoint side-left">
+        <span class="marker" aria-hidden="true"></span>
+        <article class="vellum card">
+          <div class="card-top">
+            <div class="logo-slot" data-monogram="SF">
+              <img src="assets/logos/showflow.png" alt="ShowFlow logo" loading="lazy">
+            </div>
+            <div class="card-heads">
+              <h4>ShowFlow</h4>
+              <p class="role">Founder &amp; Inventor</p>
+              <p class="meta">2023 &ndash; 2024</p>
+            </div>
+          </div>
+          <p class="card-body">
+            A water-conservation sensor built on Arduino using ultrasonic and Hall-effect sensors with custom water-detection algorithms. I filed a utility patent for it and wrote the full business plan &mdash; market analysis, manufacturing strategy, and sales channels.
+          </p>
+          <ul class="tags"><li>Arduino</li><li>Sensors</li><li>Patent Filed</li><li>Hardware</li></ul>
+        </article>
+      </li>
+    </ol>
+  </section>
+
+  <!-- ================= MY BRAIN ================= -->
+  <section id="brain" class="section section-brain">
+    <header class="section-head">
+      <div class="cartouche">
+        <h2>My Brain</h2>
+        <p>Hover a rune inside the mind to see what&rsquo;s rattling around in there.</p>
+      </div>
+    </header>
+
+    <div class="brain-stage">
+      <svg class="brain-svg" viewBox="100 78 456 416" role="group"
+           aria-label="An illustrated brain containing three interests">
+        <defs>
+          <radialGradient id="brainWash" cx="42%" cy="38%" r="72%">
+            <stop offset="0%" stop-color="#f3ded0"/>
+            <stop offset="55%" stop-color="#e7c3ae"/>
+            <stop offset="100%" stop-color="#cf9c86"/>
+          </radialGradient>
+          <filter id="inkBleed" x="-12%" y="-12%" width="124%" height="124%">
+            <feGaussianBlur stdDeviation="1.1"/>
+          </filter>
+          <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffe9a8" stop-opacity=".95"/>
+            <stop offset="70%" stop-color="#e8c34a" stop-opacity=".35"/>
+            <stop offset="100%" stop-color="#e8c34a" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- brain stem -->
+        <path class="brain-stem" d="M392 404 C 400 436, 396 462, 374 482"
+              fill="none" stroke="#3a2415" stroke-width="16" stroke-linecap="round"/>
+        <path class="brain-stem-fill" d="M392 404 C 400 436, 396 462, 374 482"
+              fill="none" stroke="#d8ac93" stroke-width="10" stroke-linecap="round"/>
+
+        <!-- outer contour -->
+        <path class="brain-outline"
+              d="M168 306
+                 C 122 288, 114 232, 154 208
+                 C 140 164, 182 132, 224 148
+                 C 234 106, 292 92, 322 122
+                 C 352 92, 412 96, 432 136
+                 C 480 132, 514 168, 504 212
+                 C 540 232, 544 284, 508 306
+                 C 518 342, 494 372, 458 370
+                 C 454 406, 410 428, 372 410
+                 C 356 434, 316 436, 298 414
+                 C 266 430, 224 418, 212 390
+                 C 170 386, 146 340, 168 306 Z"
+              fill="url(#brainWash)" stroke="#3a2415" stroke-width="5" stroke-linejoin="round"/>
+
+        <!-- folds -->
+        <g class="brain-folds" fill="none" stroke="#3a2415" stroke-width="2.6"
+           stroke-linecap="round" opacity=".72" filter="url(#inkBleed)">
+          <path d="M186 232 C 224 202, 248 246, 288 216"/>
+          <path d="M196 300 C 236 272, 260 314, 302 286"/>
+          <path d="M204 358 C 240 336, 262 368, 300 350"/>
+          <path d="M258 158 C 284 182, 254 208, 278 234"/>
+          <path d="M330 140 C 358 172, 322 198, 350 230"/>
+          <path d="M406 152 C 436 182, 402 210, 428 242"/>
+          <path d="M330 300 C 366 274, 392 314, 430 288"/>
+          <path d="M344 360 C 378 340, 400 370, 434 348"/>
+          <path d="M452 210 C 482 222, 478 258, 452 268"/>
+          <path d="M470 312 C 494 302, 500 334, 478 344"/>
+        </g>
+
+        <!-- cerebellum hatching -->
+        <g fill="none" stroke="#3a2415" stroke-width="1.8" opacity=".5">
+          <path d="M416 388 C 434 380, 452 382, 462 372"/>
+          <path d="M406 400 C 426 394, 446 396, 456 386"/>
+        </g>
+
+        <!-- ============ NODES ============ -->
+
+        <!-- keyboard -->
+        <a class="node node-keys" href="https://keyonics.com" target="_blank" rel="noopener noreferrer"
+           data-key="keys" aria-label="Mechanical keyboards — opens keyonics.com">
+          <circle class="node-glow" cx="212" cy="268" r="62" fill="url(#nodeGlow)"/>
+          <circle class="node-disc" cx="212" cy="268" r="42"/>
+          <g class="node-art" transform="translate(212 268)">
+            <rect x="-25" y="-16" width="50" height="32" rx="5" fill="none" stroke="currentColor" stroke-width="3"/>
+            <g fill="currentColor">
+              <rect x="-19" y="-10" width="7" height="6" rx="1.4"/>
+              <rect x="-9"  y="-10" width="7" height="6" rx="1.4"/>
+              <rect x="1"   y="-10" width="7" height="6" rx="1.4"/>
+              <rect x="11"  y="-10" width="8" height="6" rx="1.4"/>
+              <rect x="-19" y="-1"  width="7" height="6" rx="1.4"/>
+              <rect x="-9"  y="-1"  width="7" height="6" rx="1.4"/>
+              <rect x="1"   y="-1"  width="7" height="6" rx="1.4"/>
+              <rect x="11"  y="-1"  width="8" height="6" rx="1.4"/>
+              <rect x="-14" y="8"   width="28" height="5" rx="1.6"/>
+            </g>
+          </g>
+          <g class="node-link-hint" transform="translate(243 236)">
+            <circle r="11" fill="#3a2415" opacity=".85"/>
+            <path d="M-4 4 L4 -4 M0 -4 h4 v4" fill="none" stroke="#f6e7c9"
+                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+        </a>
+
+        <!-- philosophy: middle + largest -->
+        <g class="node node-mind" data-key="mind" tabindex="0" role="button"
+           aria-label="Something I've been thinking about">
+          <circle class="node-glow" cx="348" cy="252" r="92" fill="url(#nodeGlow)"/>
+          <circle class="node-disc is-big" cx="348" cy="252" r="62"/>
+          <g class="node-art" transform="translate(348 252)">
+            <path d="M0 -30 C 16 -30, 28 -18, 28 -2 C 28 10, 20 16, 15 24 C 13 28, 12 31, 12 34
+                     L -12 34 C -12 31, -13 28, -15 24 C -20 16, -28 10, -28 -2 C -28 -18, -16 -30, 0 -30 Z"
+                  fill="none" stroke="currentColor" stroke-width="3.4" stroke-linejoin="round"/>
+            <path d="M-12 40 h24 M-9 47 h18" fill="none" stroke="currentColor"
+                  stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M-8 34 C -8 16, 0 12, 0 0 C 0 12, 8 16, 8 34" fill="none"
+                  stroke="currentColor" stroke-width="2.4" stroke-linecap="round" opacity=".85"/>
+            <g stroke="currentColor" stroke-width="2.6" stroke-linecap="round" opacity=".65">
+              <path d="M-40 -34 l-8 -8"/><path d="M40 -34 l8 -8"/><path d="M0 -44 v-10"/>
+              <path d="M-46 -6 h-11"/><path d="M46 -6 h11"/>
+            </g>
+          </g>
+        </g>
+
+        <!-- music -->
+        <g class="node node-music" data-key="music" tabindex="0" role="button"
+           aria-label="Music I love">
+          <circle class="node-glow" cx="466" cy="272" r="62" fill="url(#nodeGlow)"/>
+          <circle class="node-disc" cx="466" cy="272" r="42"/>
+          <g class="node-art" transform="translate(466 272)">
+            <path d="M-4 14 V-20 L22 -26 V8" fill="none" stroke="currentColor"
+                  stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"/>
+            <ellipse cx="-11" cy="15" rx="8" ry="6.2" fill="currentColor"
+                     transform="rotate(-18 -11 15)"/>
+            <ellipse cx="15" cy="9" rx="8" ry="6.2" fill="currentColor"
+                     transform="rotate(-18 15 9)"/>
+            <path d="M-4 -11 L22 -17" fill="none" stroke="currentColor" stroke-width="3.2"
+                  stroke-linecap="round"/>
+          </g>
+        </g>
+      </svg>
+
+      <!-- the panel that fills in on hover -->
+      <div class="vellum thought" id="thought" aria-live="polite">
+        <div class="thought-inner" data-state="idle">
+          <h3 class="thought-title">Inside the mind</h3>
+          <p class="thought-text">
+            Three things live in here. Hover &mdash; or tap &mdash; a glowing rune inside the brain
+            and I&rsquo;ll tell you about it. The one in the middle is the one I think about most.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="vellum footer-card">
+      <p class="footer-quote">&ldquo;Not all those who wander are lost.&rdquo;</p>
+      <ul class="footer-links">
+        <li><a href="mailto:shah1462@purdue.edu">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 6h18v12H3z M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          shah1462@purdue.edu</a></li>
+        <li><a href="https://github.com/Arav-Shah27" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z" fill="currentColor"/></svg>
+          GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/arav-shah-6a986b35b/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM10 9h3.8v1.7h.05c.53-1 1.83-2.05 3.75-2.05 4 0 4.4 2.5 4.4 5.8V21h-4v-5.6c0-1.34-.03-3.06-1.9-3.06-1.9 0-2.2 1.46-2.2 2.96V21h-4z" fill="currentColor"/></svg>
+          LinkedIn</a></li>
+      </ul>
+      <p class="footer-fine">Purdue University &middot; B.S. Computer Engineering &middot; Built by Arav Shah</p>
+    </div>
+  </footer>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
