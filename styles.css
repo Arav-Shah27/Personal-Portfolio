@@ -403,7 +403,6 @@ button{ font:inherit; color:inherit; }
   transition:opacity .6s ease;
 }
 .project:hover{ border-color:var(--gold-soft); }
-.project:hover::before{ opacity:1; }
 .project > *{ position:relative; }
 
 .project-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.75rem; }
