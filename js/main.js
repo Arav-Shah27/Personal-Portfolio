@@ -87,15 +87,6 @@
   nav.addEventListener('focusin', function () { nav.classList.remove('is-hidden'); });
   update();
 
-  /* ---------- project cards: light follows the pointer ------------------- */
-  Array.prototype.forEach.call(document.querySelectorAll('.project'), function (card) {
-    card.addEventListener('pointermove', function (e) {
-      var r = card.getBoundingClientRect();
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    });
-  });
-
   /* ---------- toast + copy email ----------------------------------------- */
   var toast = document.getElementById('toast');
   var toastTimer = null;

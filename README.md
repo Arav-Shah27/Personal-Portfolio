@@ -33,7 +33,26 @@ load the essays, because browsers block reading local files; use the server.
 | Essays                         | `essays/` — full guide in `essays/README.md`       |
 | Logos                          | drop PNGs into `assets/logos/`                     |
 | Colors                         | `styles.css`, the variables at the top (`--gold`…) |
+| Fonts                          | the Google Fonts `<link>` in `index.html`, plus `--font-content` / `--font-chrome` in `styles.css` |
 | Cursor dust amount             | `js/cursor.js`, `distance / 10` in `shed()` — bigger number, less dust |
+
+## The design system
+
+Everything visual comes from the tokens at the top of `styles.css`, not from
+per-component values. There is one type scale, four line heights, one 4px
+spacing scale, three corner radii, three durations and two easing curves.
+
+Type has two faces with fixed jobs:
+
+- **Literata** (serif) carries content: the name, headings, body copy, essays.
+- **IBM Plex Mono** carries chrome: nav, dates, tags, counters, the footer.
+
+Every small mono label shares the single `.label` class, so they can't drift
+apart. Mono labels are lowercase; mono data (dates, monograms) keeps its
+natural case. Ranges use en dashes (2025 – 2026), not hyphens or em dashes.
+
+If you add something, reuse a token rather than typing a new value. That
+consistency is most of what separates a designed page from a generated one.
 
 ## Details worth knowing
 

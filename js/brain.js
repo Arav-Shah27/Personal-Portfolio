@@ -21,6 +21,21 @@
   var current = null;
   var returnFocus = null;
   var hideTimer = null;
+  var loadingTimer = null;
+
+  /* Show the progress bar only if the fetch is slow enough to notice. A local
+     or cached essay arrives in a few milliseconds, and flashing a loading
+     state for that long looks broken rather than responsive. */
+  function startLoading() {
+    window.clearTimeout(loadingTimer);
+    bodyEl.setAttribute('aria-busy', 'true');
+    loadingTimer = window.setTimeout(function () { reader.classList.add('is-loading'); }, 120);
+  }
+  function stopLoading() {
+    window.clearTimeout(loadingTimer);
+    reader.classList.remove('is-loading');
+    bodyEl.setAttribute('aria-busy', 'false');
+  }
 
   /* ---------- load the list ---------------------------------------------- */
   fetch('essays/index.json', { cache: 'no-cache' })
@@ -40,7 +55,7 @@
     list.innerHTML = '';
     var li = document.createElement('li');
     var p = document.createElement('p');
-    p.className = 'essay-note';
+    p.className = 'essay-note label';
     p.textContent = text;
     li.appendChild(p);
     list.appendChild(li);
@@ -70,10 +85,10 @@
       row.className = 'essay-row';
 
       var title = (e.title || '').trim();
-      row.appendChild(span('essay-num', String(i + 1).padStart(2, '0')));
+      row.appendChild(span('essay-num label', String(i + 1).padStart(2, '0')));
       row.appendChild(span('essay-title' + (title ? '' : ' is-empty'), title || 'Untitled'));
-      row.appendChild(span('essay-meta', metaLine(e)));
-      var arrow = span('essay-arrow', '→');
+      row.appendChild(span('essay-meta label', metaLine(e)));
+      var arrow = span('essay-arrow label', '→');
       arrow.setAttribute('aria-hidden', 'true');
       row.appendChild(arrow);
 
@@ -101,19 +116,23 @@
     titleEl.classList.toggle('is-empty', !title);
     bodyEl.innerHTML = '';
     document.title = (title || 'Untitled') + ' — Arav Shah';
+    startLoading();
     showReader();
 
     fetch('essays/' + slug + '.md', { cache: 'no-cache' })
       .then(function (r) { return r.ok ? r.text() : ''; })
       .then(function (md) {
         if (current !== slug) return;              /* reader has moved on */
+        stopLoading();
         md = md.trim();
         bodyEl.innerHTML = md
           ? renderMarkdown(md)
           : '<p class="reader-empty">Nothing written here yet.</p>';
       })
       .catch(function () {
-        if (current === slug) bodyEl.innerHTML = '<p class="reader-empty">Couldn’t load this essay.</p>';
+        if (current !== slug) return;
+        stopLoading();
+        bodyEl.innerHTML = '<p class="reader-empty">Couldn’t load this essay.</p>';
       });
   }
 
@@ -133,6 +152,7 @@
     reader.classList.remove('is-open');
     document.documentElement.classList.remove('reader-open');
     document.title = baseTitle;
+    stopLoading();
     hideTimer = window.setTimeout(function () { reader.hidden = true; bodyEl.innerHTML = ''; }, 520);
     if (returnFocus && returnFocus.focus) returnFocus.focus({ preventScroll: true });
     else if (reader.contains(document.activeElement)) document.activeElement.blur();
