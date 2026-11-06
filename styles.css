@@ -754,7 +754,7 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
 }
 .footer-ball{
   position:absolute; left:50%;
-  opacity:.85;
+  opacity:.9;
 }
 
 /* ============================== RESPONSIVE =============================== */
