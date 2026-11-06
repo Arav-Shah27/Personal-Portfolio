@@ -225,7 +225,8 @@ button{ font:inherit; color:inherit; }
 .hero-img{
   position:absolute; inset:-14% 0;
   background:url('assets/shire.jpg') center 58% / cover no-repeat;
-  filter:brightness(.4) saturate(.72) contrast(1.06);
+  /* --flash is set by js/lightning.js while a bolt lights the sky */
+  filter:brightness(calc(.4 + var(--flash, 0) * .32)) saturate(.72) contrast(1.06);
   will-change:transform;
 }
 .hero-bg::after{
@@ -730,6 +731,30 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
 
 @media (pointer:coarse){
   .ring-cursor, .ring-ghost, .dust{ display:none !important; }
+}
+
+/* ============================== LIGHTNING ================================ */
+/* pixel art layers drawn by js/lightning.js; each canvas holds art pixels
+   and CSS scales them up without smoothing */
+
+.pixel-layer{
+  pointer-events:none;
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+}
+.hero-sky{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:-1;
+  mix-blend-mode:screen;
+}
+.pop{
+  position:fixed; left:0; top:0;
+  z-index:9999;
+}
+.footer-ball{
+  position:absolute; left:50%;
+  opacity:.85;
 }
 
 /* ============================== RESPONSIVE =============================== */

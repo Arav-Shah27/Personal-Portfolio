@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pixel lab · Arav Shah</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0c0b09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/edit/editor.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230c0b09'/><path d='M18 4 9 18h6l-2 10 10-15h-6z' fill='%23d9b45a'/></svg>">
+</head>
+<body class="lab">
+
+<header class="lab-top">
+  <a class="lab-home label" href="/">&larr; arav shah</a>
+  <h1 class="lab-title">pixel lab</h1>
+  <span class="label" id="save-mode"></span>
+</header>
+
+<div class="lab-grid">
+
+  <!-- ---------------------------------------------------- effect browser -->
+  <aside class="lab-side" aria-label="Effects">
+    <div class="side-tabs" role="tablist">
+      <button type="button" role="tab" class="label is-on" data-tab="library" aria-selected="true">library</button>
+      <button type="button" role="tab" class="label" data-tab="saved" aria-selected="false">saved <span id="saved-count"></span></button>
+    </div>
+    <input class="field" id="search" type="search" placeholder="search effects…" autocomplete="off">
+    <div class="list" id="library"></div>
+    <div class="list" id="saved" hidden></div>
+    <button type="button" class="btn ghost" id="new-code">+ new effect from code</button>
+  </aside>
+
+  <!-- -------------------------------------------------------------- stage -->
+  <main class="lab-main">
+    <div class="stage-head">
+      <div>
+        <p class="label" id="fx-id"></p>
+        <h2 class="stage-name" id="fx-name">loading…</h2>
+        <p class="stage-desc" id="fx-desc"></p>
+      </div>
+      <button type="button" class="btn ghost" id="toggle-code" aria-pressed="false">&lt;/&gt; code</button>
+    </div>
+
+    <div class="stage" id="stage"><canvas id="cv" aria-label="Effect preview"></canvas></div>
+
+    <div class="transport">
+      <button type="button" class="btn icon" id="play" aria-label="Pause">❚❚</button>
+      <button type="button" class="btn icon" id="restart" aria-label="Restart">↺</button>
+      <input type="range" id="scrub" min="0" max="1" step="0.001" value="0" aria-label="Time">
+      <span class="label time" id="time">0.00s</span>
+    </div>
+    <div class="transport small">
+      <label class="label">speed
+        <select id="speed"><option value="0.25">¼×</option><option value="0.5">½×</option><option value="1" selected>1×</option><option value="2">2×</option></select>
+      </label>
+      <label class="label">zoom
+        <select id="zoom"><option value="auto" selected>fit</option><option>1</option><option>2</option><option>3</option><option>4</option><option>6</option></select>
+      </label>
+      <label class="label">backdrop
+        <select id="bg"><option value="site">site</option><option value="dark">dark</option><option value="ground">ground</option><option value="sky">sky</option><option value="light">light</option><option value="none">transparent</option></select>
+      </label>
+      <label class="label check" id="actor-wrap"><input type="checkbox" id="actor" checked> character</label>
+    </div>
+
+    <div class="code" id="code-wrap" hidden>
+      <p class="label">The effect's own source. Edit it and press run (or ⌘/Ctrl + Enter). The rules for writing one are in
+        <a href="https://github.com/patch-gg/pixelfx/blob/main/docs/AUTHORING.md" target="_blank" rel="noopener noreferrer">AUTHORING.md</a>.</p>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Effect source"></textarea>
+      <div class="row">
+        <button type="button" class="btn" id="run">run code</button>
+        <span class="label err" id="code-err" role="status"></span>
+      </div>
+    </div>
+  </main>
+
+  <!-- ------------------------------------------------------ options + save -->
+  <aside class="lab-panel" aria-label="Customize">
+    <section class="panel">
+      <div class="panel-head">
+        <h3 class="label">customize</h3>
+        <button type="button" class="link label" id="reset">reset</button>
+      </div>
+      <div id="opts"></div>
+    </section>
+
+    <section class="panel">
+      <h3 class="label">save</h3>
+      <input class="field" id="save-name" placeholder="name it, e.g. gold storm bolt" maxlength="60">
+      <textarea class="field" id="save-notes" rows="3" placeholder="notes for later: where it goes on the site, how often it plays…"></textarea>
+      <button type="button" class="btn" id="save">save</button>
+      <p class="label status" id="save-status" role="status"></p>
+      <div class="row wrap">
+        <button type="button" class="btn ghost" id="copy-prompt">copy prompt for claude</button>
+        <button type="button" class="btn ghost" id="dl-json">download .json</button>
+        <button type="button" class="btn ghost" id="dl-sheet">sprite sheet .png</button>
+      </div>
+    </section>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script type="module" src="/edit/editor.js"></script>
+</body>
+</html>
