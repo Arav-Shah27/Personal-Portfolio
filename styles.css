@@ -301,7 +301,7 @@ button{ font:inherit; color:inherit; }
 }
 .scroll-hint span{ display:inline-block; animation:drift 2.4s var(--ease) infinite; }
 .scroll-hint:hover{ color:var(--text); }
-@keyframes drift{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(4px); } }
+@keyframes drift{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(5px); } }
 
 /* the hero settles in, one line after another */
 .js .load-in{
