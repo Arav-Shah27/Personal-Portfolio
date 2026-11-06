@@ -126,7 +126,7 @@ async function start() {
         schedule(9000 + Math.random() * 9000);
       }, delay);
     }
-    schedule(3800);
+    schedule(3500);
 
     /* click the sky and it strikes there */
     let lastClick = 0;
