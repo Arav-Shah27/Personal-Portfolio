@@ -207,6 +207,17 @@
     });
   }, { passive: true });
 
+  /* up and down arrows move between essays once one has focus */
+  list.addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    var rows = Array.prototype.slice.call(list.querySelectorAll('.essay-row'));
+    var i = rows.indexOf(document.activeElement);
+    if (i < 0) return;
+    e.preventDefault();
+    var next = rows[Math.max(0, Math.min(rows.length - 1, i + (e.key === 'ArrowDown' ? 1 : -1)))];
+    next.focus();
+  });
+
   window.addEventListener('popstate', syncWithUrl);
   backBtn.addEventListener('click', closeEssay);
   document.addEventListener('keydown', function (e) {
