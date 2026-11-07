@@ -488,12 +488,29 @@ button{ font:inherit; color:inherit; }
   color:var(--text-muted);
   text-wrap:pretty;
 }
-.tags{ margin:var(--space-4) 0 0; }
+/* tags sit in small pills, each its own little chip */
+.tags{
+  display:flex; flex-wrap:wrap; gap:var(--space-2);
+  margin:var(--space-4) 0 0; padding:0;
+  list-style:none;
+}
+.tags li{
+  padding:2px var(--space-2);
+  border:1px solid var(--line);
+  border-radius:var(--radius-pill);
+  font-family:var(--font-chrome);
+  font-size:var(--text-2xs);
+  font-weight:var(--weight-medium);
+  line-height:var(--leading-normal);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-faint);
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
 
 /* whatever you're hovering comes up a little brighter than the rest */
-.entry-desc, .project-desc, .tags{ transition:color var(--dur-base) var(--ease); }
+.entry-desc, .project-desc{ transition:color var(--dur-base) var(--ease); }
 .entry:hover .entry-desc, .project:hover .project-desc{ color:rgba(236,228,210,.8); }
-.entry:hover .tags, .project:hover .tags{ color:var(--text-muted); }
+.entry:hover .tags li, .project:hover .tags li{ color:var(--text-muted); border-color:var(--line-strong); }
 
 /* ---- projects ---- */
 
@@ -965,7 +982,8 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
   .hero-content::before{ display:none; }
   .hero-name{ text-shadow:none; color:#111; }
   .hero-lede, .entry-desc, .project-desc, .entry-role, .project-role, .section-sub{ color:#333; }
-  .label, .tags, .dim{ color:#666; }
+  .label, .tags li, .dim{ color:#666; }
+  .tags li{ border-color:#ccc; }
   .eyebrow, .hero-hello, .hero-meta .sep{ color:#8a6a1f; }
   .section{ padding:var(--space-6) 0; }
   .js .reveal, .js .load-in{ opacity:1; transform:none; filter:none; animation:none; }
