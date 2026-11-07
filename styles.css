@@ -776,8 +776,7 @@ button{ font:inherit; color:inherit; }
 .reader-read{
   position:absolute; left:0; right:0; bottom:0;
   height:1px;
-  background:var(--gold);
-  opacity:.7;
+  background:linear-gradient(90deg, var(--gold-line), var(--gold) 60%, var(--gold-bright));
   transform:scaleX(var(--read, 0));
   transform-origin:left;
 }
