@@ -168,6 +168,7 @@ button{ font:inherit; color:inherit; }
     transform var(--dur-slow) var(--ease),
     background-color var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease),
     padding var(--dur-base) var(--ease);
 }
 .nav.is-scrolled{
@@ -176,6 +177,7 @@ button{ font:inherit; color:inherit; }
   -webkit-backdrop-filter:blur(14px) saturate(1.15);
           backdrop-filter:blur(14px) saturate(1.15);
   border-bottom-color:var(--line);
+  box-shadow:0 8px 30px rgba(0,0,0,.25);
 }
 .nav.is-hidden{ transform:translateY(-100%); }
 
