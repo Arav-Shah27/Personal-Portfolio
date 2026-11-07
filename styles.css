@@ -179,6 +179,17 @@ button{ font:inherit; color:inherit; }
 }
 .nav.is-hidden{ transform:translateY(-100%); }
 
+/* a hairline of gold across the very top that fills as you read down */
+.progress{
+  position:fixed; top:0; left:0; right:0;
+  z-index:60;
+  height:1px;
+  background:linear-gradient(90deg, var(--gold-line), var(--gold) 70%, var(--gold-bright));
+  transform:scaleX(var(--progress, 0));
+  transform-origin:left;
+  pointer-events:none;
+}
+
 .nav-mark{
   display:flex; align-items:center; gap:var(--space-2);
   font-family:var(--font-chrome);

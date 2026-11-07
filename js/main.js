@@ -45,6 +45,7 @@
   var heroImg = document.querySelector('.hero-img');
   var heroContent = document.querySelector('.hero-content');
   var scrollHint = document.querySelector('.scroll-hint');
+  var progress = document.querySelector('.progress');
 
   var lastY = window.scrollY;
   var ticking = false;
@@ -55,6 +56,9 @@
     var vh = window.innerHeight;
 
     nav.classList.toggle('is-scrolled', y > 24);
+
+    var room = root.scrollHeight - vh;
+    if (progress) progress.style.setProperty('--progress', room > 0 ? Math.min(1, y / room).toFixed(4) : 0);
 
     /* tuck the nav away while reading downward, bring it back on the way up */
     if (Math.abs(y - lastY) > 6) {
