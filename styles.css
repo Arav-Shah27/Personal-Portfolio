@@ -1078,7 +1078,11 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
     gap:var(--space-3);
     padding:var(--space-4) var(--space-5);
   }
-  .essay-meta{ display:none; }
+  /* the date and reading time tuck under the title instead of disappearing */
+  .essay-row{ row-gap:var(--space-1); }
+  .essay-num, .essay-arrow{ grid-row:1 / span 2; }
+  .essay-meta{ grid-column:2; grid-row:2; }
+  .essay-meta:empty{ display:none; }
   .brain-box-head{ padding:var(--space-4) var(--space-5); }
   .footer{ flex-direction:column; align-items:flex-start; }
   /* narrow essay columns: let long words break instead of leaving ragged gaps */
