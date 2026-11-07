@@ -348,6 +348,9 @@ button{ font:inherit; color:inherit; }
 .copy-email.is-copied .icon-check{ opacity:1; transform:none; }
 .hero-meta{ margin:var(--space-6) 0 0; color:rgba(236,228,210,.5); }
 .hero-meta .sep{ margin:0 var(--space-1); color:var(--gold); }
+.hero-meta .keep{ white-space:nowrap; }
+/* when it won't fit on one line, break between the two halves, not inside one */
+@media (max-width:400px){ .hero-meta .sep{ display:block; height:0; overflow:hidden; } }
 
 .scroll-hint{
   position:absolute; left:50%; bottom:var(--space-6);
