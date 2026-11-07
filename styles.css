@@ -406,6 +406,21 @@ button{ font:inherit; color:inherit; }
 
 .dim{ color:var(--text-faint); }
 
+/* a small live light next to anything still going on */
+.now{ display:inline-flex; align-items:center; gap:var(--space-2); }
+.now::before{
+  content:'';
+  flex:none;
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--gold);
+  animation:glow 2.8s var(--ease) infinite;
+}
+@keyframes glow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(217,180,90,.45); }
+  50%{ box-shadow:0 0 0 4px rgba(217,180,90,0); }
+}
+
 /* ---- experiences ---- */
 
 .timeline{ list-style:none; margin:0; padding:0; }
@@ -821,6 +836,6 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
   html{ scroll-behavior:auto; }
   .js .load-in, .js .reveal{ opacity:1; transform:none; animation:none; transition:none; }
   .js .hero-img{ animation:none; }
-  .scroll-hint, .scroll-hint span, .reader-progress::after{ animation:none; }
+  .scroll-hint, .scroll-hint span, .reader-progress::after, .now::before{ animation:none; }
   .reader, .reader-article{ transition:none; }
 }
