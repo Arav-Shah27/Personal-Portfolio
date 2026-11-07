@@ -106,7 +106,12 @@
       var email = button.getAttribute('data-email');
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(email).then(
-          function () { showToast('copied ' + email); },
+          function () {
+            showToast('copied ' + email);
+            button.classList.add('is-copied');
+            window.clearTimeout(button._copiedTimer);
+            button._copiedTimer = window.setTimeout(function () { button.classList.remove('is-copied'); }, 1600);
+          },
           function () { window.location.href = 'mailto:' + email; }
         );
       } else {

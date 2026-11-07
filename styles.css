@@ -317,6 +317,12 @@ button{ font:inherit; color:inherit; }
   color:var(--gold-bright);
   transform:translateY(var(--lift));
 }
+/* the envelope turns into a check for a moment after the email is copied */
+.copy-email{ position:relative; }
+.copy-email svg{ transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease); }
+.copy-email .icon-check{ position:absolute; opacity:0; transform:scale(.6); color:var(--gold-bright); }
+.copy-email.is-copied svg:not(.icon-check){ opacity:0; transform:scale(.6); }
+.copy-email.is-copied .icon-check{ opacity:1; transform:none; }
 .hero-meta{ margin:var(--space-6) 0 0; color:rgba(236,228,210,.5); }
 
 .scroll-hint{
