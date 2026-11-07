@@ -69,6 +69,10 @@
     return s;
   }
 
+  function readMinutes(md) {
+    return Math.max(1, Math.round(md.trim().split(/\s+/).length / 230));
+  }
+
   function metaLine(e) {
     return [e.tag, e.date].filter(function (x) { return x && String(x).trim(); }).join(' · ');
   }
@@ -98,6 +102,15 @@
 
       row.setAttribute('data-slug', e.slug);
       row.addEventListener('click', function () { openEssay(e.slug, true, row); });
+
+      /* finished essays show how long they take to read, right in the list */
+      if (title) {
+        fetch('essays/' + e.slug + '.md').then(function (r) { return r.ok ? r.text() : ''; }).then(function (md) {
+          if (!md.trim()) return;
+          var meta = row.querySelector('.essay-meta');
+          meta.textContent = [meta.textContent, readMinutes(md) + ' min'].filter(Boolean).join(' · ');
+        }).catch(function () {});
+      }
       li.appendChild(row);
       list.appendChild(li);
     });
@@ -133,8 +146,7 @@
         stopLoading();
         md = md.trim();
         if (md) {
-          var minutes = Math.max(1, Math.round(md.split(/\s+/).length / 230));
-          metaEl.textContent = [metaLine(e), minutes + ' min read'].filter(Boolean).join(' · ');
+          metaEl.textContent = [metaLine(e), readMinutes(md) + ' min read'].filter(Boolean).join(' · ');
         }
         bodyEl.innerHTML = md
           ? renderMarkdown(md)
