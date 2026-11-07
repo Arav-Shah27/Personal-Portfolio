@@ -218,6 +218,30 @@
     next.focus();
   });
 
+  /* A- / A+ in the reader bar; the choice is remembered for next time */
+  var SIZES = [0.92, 1, 1.1, 1.22];
+  var sizeAt = 1;
+  try {
+    var saved = localStorage.getItem('reader-size');
+    if (saved !== null && !isNaN(+saved)) sizeAt = Math.max(0, Math.min(SIZES.length - 1, +saved));
+  } catch (_) {}
+  var sizeButtons = reader.querySelectorAll('[data-size]');
+  function applySize() {
+    reader.style.setProperty('--reader-scale', SIZES[sizeAt]);
+    Array.prototype.forEach.call(sizeButtons, function (b) {
+      var d = +b.getAttribute('data-size');
+      b.disabled = d < 0 ? sizeAt === 0 : sizeAt === SIZES.length - 1;
+    });
+  }
+  Array.prototype.forEach.call(sizeButtons, function (b) {
+    b.addEventListener('click', function () {
+      sizeAt = Math.max(0, Math.min(SIZES.length - 1, sizeAt + +b.getAttribute('data-size')));
+      try { localStorage.setItem('reader-size', sizeAt); } catch (_) {}
+      applySize();
+    });
+  });
+  applySize();
+
   window.addEventListener('popstate', syncWithUrl);
   backBtn.addEventListener('click', closeEssay);
   document.addEventListener('keydown', function (e) {

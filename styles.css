@@ -695,6 +695,20 @@ button{ font:inherit; color:inherit; }
   padding:var(--space-5) var(--gutter);
   background:linear-gradient(var(--bg) 55%, rgba(12,11,9,0));
 }
+.reader-tools{ display:flex; align-items:center; gap:var(--space-3); }
+.reader-tool{
+  padding:var(--space-1) var(--space-2);
+  border:0; border-radius:var(--radius-sm);
+  background:none;
+  font-family:var(--font-chrome);
+  font-size:var(--text-xs);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-faint);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), background-color var(--dur-base) var(--ease);
+}
+.reader-tool:hover{ color:var(--gold-bright); background:rgba(217,180,90,.08); }
+.reader-tool:disabled{ opacity:.35; pointer-events:none; }
 .reader-back{
   padding:var(--space-1) 0;
   border:0; background:none;
@@ -767,7 +781,7 @@ button{ font:inherit; color:inherit; }
 }
 .reader-title.is-empty{ font-style:italic; color:var(--text-faint); }
 
-.reader-body{ color:rgba(236,228,210,.86); }
+.reader-body{ color:rgba(236,228,210,.86); font-size:calc(var(--text-base) * var(--reader-scale, 1)); }
 .reader-body > :first-child{ margin-top:0; }
 .reader-body p{ margin:0 0 var(--space-5); text-wrap:pretty; }
 /* a gold drop cap to open each essay, like the first page of a book */
