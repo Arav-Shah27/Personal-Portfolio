@@ -309,13 +309,16 @@ button{ font:inherit; color:inherit; }
   display:grid; place-items:center;
   width:2.5rem; height:2.5rem;
   padding:0; border:0; background:none;
+  border-radius:50%;
   color:var(--text-muted);
-  transition:color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  transition:color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease), filter var(--dur-base) var(--ease);
 }
+.socials :focus-visible{ border-radius:50%; outline-offset:2px; }
 .socials svg{ width:1.25rem; height:1.25rem; }
 .socials a:hover, .socials button:hover{
   color:var(--gold-bright);
   transform:translateY(var(--lift));
+  filter:drop-shadow(0 0 6px rgba(240,207,122,.35));
 }
 /* the envelope turns into a check for a moment after the email is copied */
 .copy-email{ position:relative; }
