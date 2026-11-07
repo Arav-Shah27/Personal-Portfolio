@@ -618,7 +618,8 @@ button{ font:inherit; color:inherit; }
   overflow:hidden;
 }
 .brain-box-head{
-  display:flex; justify-content:space-between;
+  display:flex; flex-wrap:wrap; justify-content:space-between; gap:var(--space-1) var(--space-4);
+  white-space:nowrap;
   padding:var(--space-4) var(--space-6);
   border-bottom:1px solid var(--line);
 }

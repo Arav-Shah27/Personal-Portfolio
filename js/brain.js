@@ -75,7 +75,9 @@
 
   function renderList() {
     if (!essays.length) { note('No essays yet.'); return; }
-    countEl.textContent = essays.length + (essays.length === 1 ? ' entry' : ' entries');
+    var done = essays.filter(function (e) { return (e.title || '').trim(); }).length;
+    var drafts = essays.length - done;
+    countEl.textContent = done + ' published' + (drafts ? ' · ' + drafts + ' in the works' : '');
     list.innerHTML = '';
 
     essays.forEach(function (e, i) {
