@@ -307,6 +307,10 @@ button{ font:inherit; color:inherit; }
 }
 .scroll-hint span{ display:inline-block; animation:drift 2.4s var(--ease) infinite; }
 .scroll-hint:hover{ color:var(--text); }
+/* arrives last, after the intro has settled. fill "backwards" only, so once
+   it's done the scroll fade in js/main.js owns the opacity again */
+.js .scroll-hint{ animation:fade-in var(--dur-slow) var(--ease) backwards; animation-delay:calc(var(--delay-intro) + 9 * var(--stagger)); }
+@keyframes fade-in{ from{ opacity:0; } }
 @keyframes drift{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(5px); } }
 
 /* the hero settles in, one line after another */
@@ -792,6 +796,6 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
   .js .load-in, .js .reveal{ opacity:1; transform:none; animation:none; transition:none; }
-  .scroll-hint span, .reader-progress::after{ animation:none; }
+  .scroll-hint, .scroll-hint span, .reader-progress::after{ animation:none; }
   .reader, .reader-article{ transition:none; }
 }
