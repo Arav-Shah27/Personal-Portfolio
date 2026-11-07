@@ -232,6 +232,9 @@ button{ font:inherit; color:inherit; }
   filter:brightness(calc(.4 + var(--flash, 0) * .32)) saturate(.72) contrast(1.06);
   will-change:transform;
 }
+/* the painting eases in from a touch closer rather than snapping on */
+.js .hero-img{ animation:settle 1.6s var(--ease-entrance) backwards; }
+@keyframes settle{ from{ opacity:0; transform:scale(1.04); } }
 .hero-bg::after{
   content:'';
   position:absolute; inset:0;
@@ -796,6 +799,7 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
   .js .load-in, .js .reveal{ opacity:1; transform:none; animation:none; transition:none; }
+  .js .hero-img{ animation:none; }
   .scroll-hint, .scroll-hint span, .reader-progress::after{ animation:none; }
   .reader, .reader-article{ transition:none; }
 }
