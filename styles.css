@@ -695,6 +695,21 @@ button{ font:inherit; color:inherit; }
   padding:var(--space-5) var(--gutter);
   background:linear-gradient(var(--bg) 55%, rgba(12,11,9,0));
 }
+/* once the big title scrolls away, a small copy of it shows up in the bar */
+.reader-bar-title{
+  position:absolute; left:50%; top:50%;
+  max-width:min(40vw, 32rem);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-size:var(--text-md);
+  font-weight:var(--weight-medium);
+  color:var(--text-muted);
+  opacity:0;
+  transform:translate(-50%, -30%);
+  pointer-events:none;
+  transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.reader.is-past-title .reader-bar-title{ opacity:1; transform:translate(-50%, -50%); }
+@media (max-width:620px){ .reader-bar-title{ display:none; } }
 .reader-tools{ display:flex; align-items:center; gap:var(--space-3); }
 .reader-tool{
   padding:var(--space-1) var(--space-2);

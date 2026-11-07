@@ -118,6 +118,9 @@
     metaEl.textContent = metaLine(e);
     titleEl.textContent = title || 'Untitled';
     titleEl.classList.toggle('is-empty', !title);
+    var barTitle = document.getElementById('reader-bar-title');
+    if (barTitle) barTitle.textContent = title || 'Untitled';
+    reader.classList.remove('is-past-title');
     bodyEl.innerHTML = '';
     document.title = (title || 'Untitled') + ' — Arav Shah';
     startLoading();
@@ -204,6 +207,7 @@
       readTick = false;
       var room = reader.scrollHeight - reader.clientHeight;
       reader.style.setProperty('--read', room > 0 ? Math.min(1, reader.scrollTop / room).toFixed(4) : 0);
+      reader.classList.toggle('is-past-title', reader.scrollTop > titleEl.offsetTop + titleEl.offsetHeight - 40);
     });
   }, { passive: true });
 
