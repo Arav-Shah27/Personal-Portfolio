@@ -314,6 +314,24 @@ button{ font:inherit; color:inherit; }
   transition:color var(--dur-base) var(--ease), transform var(--dur-base) var(--ease), filter var(--dur-base) var(--ease);
 }
 .socials :focus-visible{ border-radius:50%; outline-offset:2px; }
+/* a quiet label under each icon on hover, taken from its aria-label */
+.socials a, .socials button{ position:relative; }
+.socials a::after, .socials button::after{
+  content:attr(aria-label);
+  position:absolute; top:calc(100% + var(--space-1)); left:50%;
+  font-family:var(--font-chrome);
+  font-size:var(--text-2xs);
+  letter-spacing:var(--tracking-label);
+  text-transform:lowercase;
+  white-space:nowrap;
+  color:var(--text-faint);
+  opacity:0;
+  transform:translate(-50%, calc(var(--space-1) * -1));
+  pointer-events:none;
+  transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.socials a:hover::after, .socials button:hover::after,
+.socials a:focus-visible::after, .socials button:focus-visible::after{ opacity:1; transform:translate(-50%, 0); }
 .socials svg{ width:1.25rem; height:1.25rem; }
 .socials a:hover, .socials button:hover{
   color:var(--gold-bright);
