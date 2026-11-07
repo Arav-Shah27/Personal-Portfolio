@@ -126,6 +126,10 @@
         if (current !== slug) return;              /* reader has moved on */
         stopLoading();
         md = md.trim();
+        if (md) {
+          var minutes = Math.max(1, Math.round(md.split(/\s+/).length / 230));
+          metaEl.textContent = [metaLine(e), minutes + ' min read'].filter(Boolean).join(' · ');
+        }
         bodyEl.innerHTML = md
           ? renderMarkdown(md)
           : '<p class="reader-empty">Nothing written here yet.</p>';
