@@ -489,6 +489,7 @@ button{ font:inherit; color:inherit; }
   margin-top:var(--space-6);
 }
 .project{
+  position:relative;
   display:flex; flex-direction:column;
   padding:clamp(var(--space-5), 3vw, var(--space-6));
   border:1px solid var(--line);
@@ -497,6 +498,16 @@ button{ font:inherit; color:inherit; }
   transition:transform var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
 }
 .project:hover{ border-color:var(--gold-line); }
+/* light catching the top edge of the card */
+.project::before{
+  content:'';
+  position:absolute; top:-1px; left:var(--radius-lg); right:var(--radius-lg);
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+  opacity:0;
+  transition:opacity var(--dur-slow) var(--ease);
+}
+.project:hover::before{ opacity:.8; }
 .project-top{
   display:flex; align-items:center; justify-content:space-between;
   margin-bottom:var(--space-6);
