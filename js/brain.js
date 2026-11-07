@@ -260,6 +260,8 @@
 
   window.addEventListener('popstate', syncWithUrl);
   backBtn.addEventListener('click', closeEssay);
+  var doneBtn = document.getElementById('reader-done');
+  if (doneBtn) doneBtn.addEventListener('click', closeEssay);
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && current !== null) closeEssay();
   });

@@ -867,6 +867,22 @@ button{ font:inherit; color:inherit; }
   border-radius:50%;
   opacity:.8;
 }
+/* a way out at the bottom, so you don't have to scroll back up for it */
+.reader-end{ display:flex; justify-content:center; margin-top:var(--space-7); }
+.reader-done{
+  padding:var(--space-2) var(--space-4);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-pill);
+  background:none;
+  font-family:var(--font-chrome);
+  font-size:var(--text-xs);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.reader-done:hover{ color:var(--gold-bright); border-color:var(--gold-line); }
+.reader.is-loading .reader-end{ visibility:hidden; }
 .reader-empty{ font-family:var(--font-chrome); font-size:var(--text-sm); color:var(--text-faint); }
 
 /* ================================ FOOTER ================================= */
