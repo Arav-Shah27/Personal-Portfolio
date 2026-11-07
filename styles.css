@@ -79,7 +79,8 @@
   --measure-page: 1120px;
   --measure-prose: 64ch;
   --measure-reader: 660px;
-  --gutter: clamp(var(--space-5), 5vw, var(--space-7));
+  /* never narrower than the notch when a phone is on its side */
+  --gutter: max(clamp(var(--space-5), 5vw, var(--space-7)), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
