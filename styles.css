@@ -480,6 +480,11 @@ button{ font:inherit; color:inherit; }
 }
 .tags{ margin:var(--space-4) 0 0; }
 
+/* whatever you're hovering comes up a little brighter than the rest */
+.entry-desc, .project-desc, .tags{ transition:color var(--dur-base) var(--ease); }
+.entry:hover .entry-desc, .project:hover .project-desc{ color:rgba(236,228,210,.8); }
+.entry:hover .tags, .project:hover .tags{ color:var(--text-muted); }
+
 /* ---- projects ---- */
 
 .projects{
