@@ -136,6 +136,7 @@ button{ font:inherit; color:inherit; }
   font-weight:var(--weight-medium);
   line-height:var(--leading-normal);
   letter-spacing:var(--tracking-label);
+  font-variant-numeric:tabular-nums;
   color:var(--text-faint);
 }
 
