@@ -798,6 +798,12 @@ button{ font:inherit; color:inherit; }
 
 .reader-body{ color:rgba(236,228,210,.86); font-size:calc(var(--text-base) * var(--reader-scale, 1)); }
 .reader-body > :first-child{ margin-top:0; }
+/* when the essay arrives, its first few paragraphs settle in one after another */
+.reader-body > *{ animation:rise-in var(--dur-slow) var(--ease-entrance) backwards; }
+.reader-body > :nth-child(2){ animation-delay:70ms; }
+.reader-body > :nth-child(3){ animation-delay:140ms; }
+.reader-body > :nth-child(n+4){ animation-delay:210ms; }
+@keyframes rise-in{ from{ opacity:0; transform:translateY(var(--space-2)); } }
 .reader-body p{ margin:0 0 var(--space-5); text-wrap:pretty; }
 /* a gold drop cap to open each essay, like the first page of a book */
 .reader-body > p:first-child:not(.reader-empty)::first-letter{
@@ -1045,6 +1051,7 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
   .js .hero-img{ animation:none; }
   .scroll-hint, .scroll-hint span, .reader-progress::after, .now::before{ animation:none; }
   .reader, .reader-article{ transition:none; }
+  .reader-body > *{ animation:none; }
 }
 
 /* ================================ PRINT ================================== */
