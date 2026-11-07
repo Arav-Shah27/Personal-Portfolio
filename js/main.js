@@ -115,6 +115,15 @@
     heroBg.style.transform = 'scale(1.02)';
   }
 
+  /* ---------- a soft light that follows the mouse over project cards ------ */
+  Array.prototype.forEach.call(document.querySelectorAll('.project'), function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left).toFixed(0) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top).toFixed(0) + 'px');
+    });
+  });
+
   /* ---------- toast + copy email ----------------------------------------- */
   var toast = document.getElementById('toast');
   var toastTimer = null;

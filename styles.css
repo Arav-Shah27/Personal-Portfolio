@@ -565,7 +565,8 @@ button{ font:inherit; color:inherit; }
   content:'';
   position:absolute; inset:0;
   border-radius:inherit;
-  background:radial-gradient(120% 70% at 50% 0%, rgba(217,180,90,.07), transparent 70%);
+  /* follows the mouse around the card (js/main.js sets --mx and --my) */
+  background:radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), rgba(217,180,90,.08), transparent 65%);
   opacity:0;
   pointer-events:none;
   transition:opacity var(--dur-slow) var(--ease);
