@@ -947,3 +947,25 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
   .scroll-hint, .scroll-hint span, .reader-progress::after, .now::before{ animation:none; }
   .reader, .reader-article{ transition:none; }
 }
+
+/* ================================ PRINT ================================== */
+/* if someone prints the page (or saves it as a PDF), give them the words on
+   plain paper and leave the painting, the lightning and the chrome behind */
+
+@media print{
+  html, body{ background:#fff; color:#111; }
+  body::before, .nav, .progress, .skip, .scroll-hint, .socials, .hero-bg,
+  .pixel-layer, .ring-cursor, .ring-ghost, .dust, .toast, .reader, .to-top{ display:none !important; }
+  .hero{ min-height:0; padding:var(--space-6) 0; }
+  .hero-content{ transform:none !important; opacity:1 !important; }
+  .hero-content::before{ display:none; }
+  .hero-name{ text-shadow:none; color:#111; }
+  .hero-lede, .entry-desc, .project-desc, .entry-role, .project-role, .section-sub{ color:#333; }
+  .label, .tags, .dim{ color:#666; }
+  .eyebrow, .hero-hello, .hero-meta .sep{ color:#8a6a1f; }
+  .section{ padding:var(--space-6) 0; }
+  .js .reveal, .js .load-in{ opacity:1; transform:none; filter:none; animation:none; }
+  .entry, .project{ break-inside:avoid; }
+  .project{ background:none; border-color:#ccc; }
+  .footer::before{ background:#ccc; }
+}
