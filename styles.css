@@ -387,6 +387,8 @@ button{ font:inherit; color:inherit; }
   font-weight:var(--weight-medium);
 }
 .group-label::after{ content:''; flex:1; height:1px; background:var(--line); }
+/* the count sits at the far end of the rule */
+.group-label .count{ order:1; color:var(--gold); }
 
 .logo{
   position:relative;
