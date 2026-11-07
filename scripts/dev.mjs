@@ -90,7 +90,11 @@ createServer(async (req, res) => {
       file += ".html";
       st = await stat(file).catch(() => null);
     }
-    if (!st) return send(res, 404, "not found", "text/plain");
+    // same as Vercel: a missing page gets the site's own 404.html
+    if (!st) {
+      const page = await readFile(join(ROOT, "404.html")).catch(() => null);
+      return page ? send(res, 404, page, TYPES[".html"]) : send(res, 404, "not found", "text/plain");
+    }
     send(res, 200, await readFile(file), TYPES[extname(file).toLowerCase()] ?? "application/octet-stream");
   } catch (e) {
     send(res, 500, { error: String(e.message ?? e) });
