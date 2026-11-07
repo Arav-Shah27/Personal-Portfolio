@@ -198,8 +198,12 @@ button{ font:inherit; color:inherit; }
   color:var(--text-muted);
   transition:color var(--dur-base) var(--ease);
 }
-.nav-mark svg{ color:var(--gold); }
+.nav-mark svg{
+  color:var(--gold);
+  transition:color var(--dur-base) var(--ease), filter var(--dur-base) var(--ease);
+}
 .nav-mark:hover{ color:var(--text); }
+.nav-mark:hover svg{ color:var(--gold-bright); filter:drop-shadow(0 0 4px rgba(240,207,122,.55)); }
 
 .nav-links{ display:flex; gap:clamp(var(--space-4), 3vw, var(--space-6)); }
 .nav-links a{
