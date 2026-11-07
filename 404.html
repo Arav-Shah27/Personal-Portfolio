@@ -40,6 +40,7 @@
     transition:border-color var(--dur-base) var(--ease);
   }
   .lost a:hover{ border-color:var(--gold-bright); }
+  .lost-sky{ position:fixed; inset:0; width:100%; height:100%; z-index:0; mix-blend-mode:screen; }
 </style>
 </head>
 <body>
@@ -52,5 +53,39 @@
   <p>But this page is. Whatever you were looking for isn&rsquo;t here.</p>
   <a href="/">&larr; back to the shire</a>
 </main>
+<canvas class="pixel-layer lost-sky" aria-hidden="true"></canvas>
+<script type="module">
+  /* every few seconds a bolt comes down onto the ring (pixelfx sky-bolt, same as the homepage) */
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const [{ createFrame, clearFrame, createFx, composite }, bolt] = await Promise.all([
+      import('/pixelfx/src/core/index.js'),
+      import('/pixelfx/src/fx/lightning/sky-bolt.js'),
+    ]);
+    const S = 3, canvas = document.querySelector('.lost-sky'), ring = document.querySelector('.lost svg');
+    const ctx = canvas.getContext('2d');
+    let frame, img, fx = null, last = 0;
+    const size = () => {
+      canvas.width = Math.ceil(innerWidth / S); canvas.height = Math.ceil(innerHeight / S);
+      frame = createFrame(canvas.width, canvas.height); img = ctx.createImageData(canvas.width, canvas.height);
+    };
+    size(); addEventListener('resize', size);
+    const strike = () => {
+      const r = ring.getBoundingClientRect();
+      fx = createFx(bolt, { x: (r.left + r.width / 2) / S, y: -6, length: r.top / S + 6, aim: 0,
+        seed: (Math.random() * 1e6) | 0, palette: bolt.STORM_GOLD, thickness: 1.1, lean: 0.15 });
+      last = 0; requestAnimationFrame(tick);
+    };
+    const tick = (now) => {
+      const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60; last = now;
+      fx.update(dt); clearFrame(frame);
+      if (!fx.done()) fx.draw(frame);
+      composite(frame, img.data, null); ctx.putImageData(img, 0, 0);
+      ring.style.filter = `drop-shadow(0 0 ${10 + bolt.flash(fx.t) * 18}px rgba(240,207,122,${0.35 + bolt.flash(fx.t) * 0.5}))`;
+      if (!fx.done()) requestAnimationFrame(tick);
+    };
+    setTimeout(strike, 900);
+    setInterval(() => { if (!document.hidden) strike(); }, 7000);
+  }
+</script>
 </body>
 </html>
