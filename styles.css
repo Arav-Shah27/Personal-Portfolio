@@ -598,6 +598,17 @@ button{ font:inherit; color:inherit; }
   text-wrap:pretty;
 }
 
+/* a small ornament between the big sections: rule, ring, rule */
+.divider{
+  display:flex; align-items:center; justify-content:center; gap:var(--space-4);
+  max-width:14rem;
+  margin:0 auto;
+}
+.divider::before, .divider::after{ content:''; flex:1; height:1px; }
+.divider::before{ background:linear-gradient(90deg, transparent, var(--gold-line)); }
+.divider::after{ background:linear-gradient(90deg, var(--gold-line), transparent); }
+.divider{ background:radial-gradient(circle, transparent 3px, var(--gold) 3.5px, var(--gold) 5px, transparent 5.5px) center / 12px 12px no-repeat; height:12px; }
+
 /* =============================== MY BRAIN ================================ */
 
 .brain-box{
