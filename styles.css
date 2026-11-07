@@ -211,7 +211,8 @@ button{ font:inherit; color:inherit; }
 }
 .nav-links a:hover,
 .nav-links a.is-active{ color:var(--text); }
-.nav-links a.is-active::after{ transform:scaleX(1); }
+.nav-links a:hover::after{ transform:scaleX(.35); background:var(--gold-line); }
+.nav-links a.is-active::after{ transform:scaleX(1); background:var(--gold); }
 
 /* ================================ HERO =================================== */
 
