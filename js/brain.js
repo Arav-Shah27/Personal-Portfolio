@@ -261,12 +261,19 @@
       b.disabled = d < 0 ? sizeAt === 0 : sizeAt === SIZES.length - 1;
     });
   }
+  function bumpSize(d) {
+    sizeAt = Math.max(0, Math.min(SIZES.length - 1, sizeAt + d));
+    try { localStorage.setItem('reader-size', sizeAt); } catch (_) {}
+    applySize();
+  }
   Array.prototype.forEach.call(sizeButtons, function (b) {
-    b.addEventListener('click', function () {
-      sizeAt = Math.max(0, Math.min(SIZES.length - 1, sizeAt + +b.getAttribute('data-size')));
-      try { localStorage.setItem('reader-size', sizeAt); } catch (_) {}
-      applySize();
-    });
+    b.addEventListener('click', function () { bumpSize(+b.getAttribute('data-size')); });
+  });
+  /* and from the keyboard: + and - while an essay is open */
+  document.addEventListener('keydown', function (e) {
+    if (current === null || e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === '+' || e.key === '=') bumpSize(1);
+    else if (e.key === '-' || e.key === '_') bumpSize(-1);
   });
   applySize();
 
