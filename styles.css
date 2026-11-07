@@ -644,8 +644,11 @@ button{ font:inherit; color:inherit; }
 .reader-hint{
   padding:0 var(--space-2);
   border:1px solid var(--line-strong);
+  border-bottom-width:2px;
   border-radius:var(--radius-sm);
 }
+/* phones don't have an esc key, so don't advertise one */
+@media (pointer:coarse){ .reader-hint{ display:none; } }
 
 /* An essay is fetched when you open it. The bar only appears if that takes
    long enough to notice, so a fast load never flashes a loading state. */
