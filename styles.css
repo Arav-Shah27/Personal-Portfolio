@@ -639,6 +639,18 @@ button{ font:inherit; color:inherit; }
   transition:background-color var(--dur-base) var(--ease);
 }
 .essay-row:hover{ background:rgba(217,180,90,.035); }
+/* a gold bar slides down the left edge of the row you're on */
+.essay-row{ position:relative; }
+.essay-row::before{
+  content:'';
+  position:absolute; left:0; top:0; bottom:0;
+  width:2px;
+  background:var(--gold);
+  transform:scaleY(0);
+  transform-origin:top;
+  transition:transform var(--dur-base) var(--ease);
+}
+.essay-row:hover::before, .essay-row:focus-visible::before{ transform:scaleY(1); }
 .essay-row:focus-visible{ outline-offset:-6px; }
 
 .essay-title{
