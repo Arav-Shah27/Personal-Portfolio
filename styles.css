@@ -327,6 +327,7 @@ button{ font:inherit; color:inherit; }
   font-weight:var(--weight-semibold);
   line-height:var(--leading-display);
   letter-spacing:var(--tracking-display);
+  text-wrap:balance;
 }
 .section-sub{
   max-width:var(--measure-prose);
@@ -405,6 +406,7 @@ button{ font:inherit; color:inherit; }
   font-size:var(--text-2xl);
   font-weight:var(--weight-semibold);
   line-height:var(--leading-tight);
+  text-wrap:balance;
   transition:color var(--dur-base) var(--ease);
 }
 .entry:hover .entry-title{ color:var(--gold-bright); }
@@ -447,6 +449,7 @@ button{ font:inherit; color:inherit; }
   font-size:var(--text-xl);
   font-weight:var(--weight-semibold);
   line-height:var(--leading-tight);
+  text-wrap:balance;
   transition:color var(--dur-base) var(--ease);
 }
 .project:hover .project-title{ color:var(--gold-bright); }
@@ -581,6 +584,7 @@ button{ font:inherit; color:inherit; }
   font-weight:var(--weight-semibold);
   line-height:var(--leading-display);
   letter-spacing:var(--tracking-display);
+  text-wrap:balance;
 }
 .reader-title.is-empty{ font-style:italic; color:var(--text-faint); }
 
