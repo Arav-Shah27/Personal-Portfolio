@@ -774,7 +774,7 @@ button{ font:inherit; color:inherit; }
   letter-spacing:var(--tracking-label);
   color:var(--text-faint);
 }
-.footer p{ margin:0; }
+.footer p{ margin:0; color:var(--text-muted); }
 .footer ul{ display:flex; gap:var(--space-5); margin:0; padding:0; list-style:none; }
 .footer a{ position:relative; transition:color var(--dur-base) var(--ease); }
 .footer a:hover{ color:var(--gold-bright); }
