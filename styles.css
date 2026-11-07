@@ -403,6 +403,10 @@ button{ font:inherit; color:inherit; }
   background:var(--surface);
 }
 .logo img.is-missing{ display:none; }
+.logo{ transition:border-color var(--dur-base) var(--ease), background-color var(--dur-base) var(--ease); }
+.logo::before{ transition:color var(--dur-base) var(--ease); }
+.entry:hover .logo, .project:hover .logo{ border-color:var(--gold-line); background:rgba(217,180,90,.06); }
+.entry:hover .logo::before, .project:hover .logo::before{ color:var(--gold); }
 
 .dim{ color:var(--text-faint); }
 
