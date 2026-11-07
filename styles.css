@@ -508,6 +508,16 @@ button{ font:inherit; color:inherit; }
   transition:opacity var(--dur-slow) var(--ease);
 }
 .project:hover::before{ opacity:.8; }
+.project::after{
+  content:'';
+  position:absolute; inset:0;
+  border-radius:inherit;
+  background:radial-gradient(120% 70% at 50% 0%, rgba(217,180,90,.07), transparent 70%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity var(--dur-slow) var(--ease);
+}
+.project:hover::after{ opacity:1; }
 .project-top{
   display:flex; align-items:center; justify-content:space-between;
   margin-bottom:var(--space-6);
