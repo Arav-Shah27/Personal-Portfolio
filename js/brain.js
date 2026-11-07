@@ -218,6 +218,18 @@
     next.focus();
   });
 
+  /* copy a link straight to the open essay */
+  var linkBtn = document.getElementById('reader-link');
+  if (linkBtn) linkBtn.addEventListener('click', function () {
+    var url = location.href;
+    var say = function (m) { if (window.siteToast) window.siteToast(m); };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(function () { say('link copied'); }, function () { say(url); });
+    } else {
+      say(url);
+    }
+  });
+
   /* A- / A+ in the reader bar; the choice is remembered for next time */
   var SIZES = [0.92, 1, 1.1, 1.22];
   var sizeAt = 1;

@@ -133,6 +133,7 @@
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(function () { toast.classList.remove('is-shown'); }, 2000);
   }
+  window.siteToast = showToast;   /* the essay reader uses it too */
 
   Array.prototype.forEach.call(document.querySelectorAll('.copy-email'), function (button) {
     button.addEventListener('click', function () {
