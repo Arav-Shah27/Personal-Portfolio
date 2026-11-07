@@ -1080,6 +1080,8 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
   .essay-meta{ display:none; }
   .brain-box-head{ padding:var(--space-4) var(--space-5); }
   .footer{ flex-direction:column; align-items:flex-start; }
+  /* narrow essay columns: let long words break instead of leaving ragged gaps */
+  .reader-body p{ hyphens:auto; -webkit-hyphens:auto; }
 }
 /* the smallest phones: tighten the nav so the three links fit with room to breathe */
 @media (max-width:400px){
