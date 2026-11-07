@@ -698,7 +698,7 @@ button{ font:inherit; color:inherit; }
 .reader-body > :first-child{ margin-top:0; }
 .reader-body p{ margin:0 0 var(--space-5); text-wrap:pretty; }
 /* a gold drop cap to open each essay, like the first page of a book */
-.reader-body > p:first-child::first-letter{
+.reader-body > p:first-child:not(.reader-empty)::first-letter{
   float:left;
   margin:.06em var(--space-2) 0 0;
   font-size:3.6em;
