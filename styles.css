@@ -662,6 +662,17 @@ button{ font:inherit; color:inherit; }
 }
 @keyframes progress{ to{ transform:translateX(100%); } }
 
+/* how far through the essay you are, along the bottom of the bar */
+.reader-read{
+  position:absolute; left:0; right:0; bottom:0;
+  height:1px;
+  background:var(--gold);
+  opacity:.7;
+  transform:scaleX(var(--read, 0));
+  transform-origin:left;
+}
+.reader.is-loading .reader-read{ opacity:0; }
+
 .reader-article{
   max-width:var(--measure-reader);
   margin:0 auto;

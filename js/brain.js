@@ -145,6 +145,7 @@
     window.clearTimeout(hideTimer);
     reader.hidden = false;
     reader.scrollTop = 0;
+    reader.style.setProperty('--read', 0);
     document.documentElement.classList.add('reader-open');
     void reader.offsetWidth;          /* commit the un-hidden state so it fades in */
     reader.classList.add('is-open');
@@ -190,6 +191,18 @@
       hideReader();
     }
   }
+
+  /* fill the line under the bar as you read */
+  var readTick = false;
+  reader.addEventListener('scroll', function () {
+    if (readTick) return;
+    readTick = true;
+    window.requestAnimationFrame(function () {
+      readTick = false;
+      var room = reader.scrollHeight - reader.clientHeight;
+      reader.style.setProperty('--read', room > 0 ? Math.min(1, reader.scrollTop / room).toFixed(4) : 0);
+    });
+  }, { passive: true });
 
   window.addEventListener('popstate', syncWithUrl);
   backBtn.addEventListener('click', closeEssay);
