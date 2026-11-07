@@ -830,14 +830,19 @@ button{ font:inherit; color:inherit; }
 .js .reveal{
   opacity:0;
   transform:translateY(var(--space-3));
-  transition:opacity var(--dur-slow) var(--ease-entrance), transform var(--dur-slow) var(--ease-entrance);
+  filter:blur(4px);
+  transition:
+    opacity var(--dur-slow) var(--ease-entrance),
+    transform var(--dur-slow) var(--ease-entrance),
+    filter var(--dur-slow) var(--ease-entrance);
 }
-.js .reveal.is-in{ opacity:1; transform:none; }
+.js .reveal.is-in{ opacity:1; transform:none; filter:none; }
 /* projects are revealed and also lift on hover, so they carry one combined
    transition list (a second `transition` would silently replace the first) */
 .js .project.reveal{
   transition:
     opacity var(--dur-slow) var(--ease-entrance),
+    filter var(--dur-slow) var(--ease-entrance),
     transform var(--dur-base) var(--ease),
     border-color var(--dur-base) var(--ease);
 }
@@ -934,7 +939,7 @@ html.has-ring, html.has-ring *{ cursor:none !important; }
 
 @media (prefers-reduced-motion:reduce){
   html{ scroll-behavior:auto; }
-  .js .load-in, .js .reveal{ opacity:1; transform:none; animation:none; transition:none; }
+  .js .load-in, .js .reveal{ opacity:1; transform:none; filter:none; animation:none; transition:none; }
   .js .hero-img{ animation:none; }
   .scroll-hint, .scroll-hint span, .reader-progress::after, .now::before{ animation:none; }
   .reader, .reader-article{ transition:none; }
