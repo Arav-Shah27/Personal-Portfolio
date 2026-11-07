@@ -85,8 +85,10 @@
 *,*::before,*::after{ box-sizing:border-box; }
 
 html{
+  color-scheme:dark;
   scroll-behavior:smooth;
   scrollbar-gutter:stable;
+  scrollbar-color:rgba(236,228,210,.16) var(--bg);
   -webkit-text-size-adjust:100%;
   background:var(--bg);
 }
