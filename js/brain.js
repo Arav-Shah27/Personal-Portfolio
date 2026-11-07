@@ -87,6 +87,7 @@
       row.className = 'essay-row';
 
       var title = (e.title || '').trim();
+      if (!title) row.classList.add('is-draft');
       row.appendChild(span('essay-num label', String(i + 1).padStart(2, '0')));
       row.appendChild(span('essay-title' + (title ? '' : ' is-empty'), title || 'Untitled'));
       /* an essay without a title yet is still being written */
