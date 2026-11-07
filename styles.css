@@ -349,7 +349,12 @@ button{ font:inherit; color:inherit; }
   padding:clamp(var(--space-9), 14vh, var(--space-10)) var(--gutter);
 }
 .section-head{ margin-bottom:clamp(var(--space-7), 8vh, var(--space-9)); }
-.eyebrow{ margin:0 0 var(--space-4); color:var(--gold); }
+.eyebrow{
+  display:flex; align-items:center; gap:var(--space-3);
+  margin:0 0 var(--space-4);
+  color:var(--gold);
+}
+.eyebrow::before{ content:''; width:var(--space-6); height:1px; background:var(--gold-line); }
 .section-title{
   margin:0;
   font-size:var(--text-3xl);
