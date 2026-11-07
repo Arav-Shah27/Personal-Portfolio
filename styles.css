@@ -556,9 +556,9 @@ button{ font:inherit; color:inherit; }
   border:1px solid var(--line);
   border-radius:var(--radius-lg);
   background:linear-gradient(180deg, rgba(236,228,210,.035), rgba(236,228,210,.012));
-  transition:transform var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+  transition:transform var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease), box-shadow var(--dur-base) var(--ease);
 }
-.project:hover{ border-color:var(--gold-line); }
+.project:hover{ border-color:var(--gold-line); box-shadow:0 18px 40px -20px rgba(0,0,0,.7), 0 0 0 1px rgba(217,180,90,.04); }
 /* light catching the top edge of the card */
 .project::before{
   content:'';
@@ -989,7 +989,8 @@ button{ font:inherit; color:inherit; }
     opacity var(--dur-slow) var(--ease-entrance),
     filter var(--dur-slow) var(--ease-entrance),
     transform var(--dur-base) var(--ease),
-    border-color var(--dur-base) var(--ease);
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 .js .project.reveal.is-in:hover{ transform:translateY(var(--lift)); }
 .project:not(.reveal):hover{ transform:translateY(var(--lift)); }
