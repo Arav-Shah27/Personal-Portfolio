@@ -736,6 +736,16 @@ button{ font:inherit; color:inherit; }
 }
 .reader-body hr{ height:1px; margin:var(--space-8) 0; border:0; background:var(--line-strong); }
 .reader-body img{ margin:var(--space-6) 0; border-radius:var(--radius-md); }
+/* a small gold ring (the same one as the logo) to sign off the essay */
+.reader-body:has(> :not(.reader-empty))::after{
+  content:'';
+  display:block;
+  width:10px; height:10px;
+  margin:var(--space-8) auto 0;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  opacity:.8;
+}
 .reader-empty{ font-family:var(--font-chrome); font-size:var(--text-sm); color:var(--text-faint); }
 
 /* ================================ FOOTER ================================= */
