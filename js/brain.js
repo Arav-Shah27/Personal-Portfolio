@@ -229,8 +229,18 @@
     return u;
   }
 
+  /* typewriter quotes to curly ones (didn't -> didn’t), leaving `code` alone */
+  function smartQuotes(text) {
+    return text.split(/(`[^`]+`)/).map(function (part, i) {
+      if (i % 2) return part;
+      return part
+        .replace(/(^|[\s(\[\u2014-])'/g, '$1\u2018').replace(/'/g, '\u2019')
+        .replace(/(^|[\s(\[\u2014-])"/g, '$1\u201c').replace(/"/g, '\u201d');
+    }).join('');
+  }
+
   function inline(text) {
-    var s = escapeHtml(text);
+    var s = escapeHtml(smartQuotes(text));
 
     /* pull code spans out first so nothing inside them gets formatted; the
        placeholder uses a raw "<", which escaped text can never contain */
