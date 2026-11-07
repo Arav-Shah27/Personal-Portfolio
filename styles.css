@@ -324,6 +324,7 @@ button{ font:inherit; color:inherit; }
 .copy-email.is-copied svg:not(.icon-check){ opacity:0; transform:scale(.6); }
 .copy-email.is-copied .icon-check{ opacity:1; transform:none; }
 .hero-meta{ margin:var(--space-6) 0 0; color:rgba(236,228,210,.5); }
+.hero-meta .sep{ margin:0 var(--space-1); color:var(--gold); }
 
 .scroll-hint{
   position:absolute; left:50%; bottom:var(--space-6);
