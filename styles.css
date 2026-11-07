@@ -776,8 +776,18 @@ button{ font:inherit; color:inherit; }
 }
 .footer p{ margin:0; }
 .footer ul{ display:flex; gap:var(--space-5); margin:0; padding:0; list-style:none; }
-.footer a{ transition:color var(--dur-base) var(--ease); }
+.footer a{ position:relative; transition:color var(--dur-base) var(--ease); }
 .footer a:hover{ color:var(--gold-bright); }
+.footer a::after{
+  content:'';
+  position:absolute; left:0; right:0; bottom:-2px;
+  height:1px;
+  background:var(--gold);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform var(--dur-slow) var(--ease);
+}
+.footer a:hover::after{ transform:scaleX(1); }
 
 /* ================================ TOAST ================================== */
 
