@@ -635,6 +635,8 @@ button{ font:inherit; color:inherit; }
   transition:color var(--dur-base) var(--ease);
 }
 .reader-back:hover{ color:var(--gold-bright); }
+.reader-back span{ display:inline-block; transition:transform var(--dur-base) var(--ease); }
+.reader-back:hover span{ transform:translateX(calc(var(--space-1) * -1)); }
 .reader-hint{
   padding:0 var(--space-2);
   border:1px solid var(--line-strong);
