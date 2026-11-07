@@ -91,6 +91,30 @@
   nav.addEventListener('focusin', function () { nav.classList.remove('is-hidden'); });
   update();
 
+  /* ---------- the painting leans a little toward the mouse ---------------- */
+  /* only with a real mouse; it's scaled up 2% so the shift never shows an edge */
+  var heroBg = document.querySelector('.hero-bg');
+  var hero = document.querySelector('.hero');
+  if (heroBg && hero && !reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+    var tx = 0, ty = 0, cx = 0, cy = 0, leaning = false;
+    var lean = function () {
+      cx += (tx - cx) * 0.06;
+      cy += (ty - cy) * 0.06;
+      heroBg.style.transform = 'translate3d(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px,0) scale(1.02)';
+      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) window.requestAnimationFrame(lean);
+      else leaning = false;
+    };
+    var aim = function (x, y) {
+      tx = x; ty = y;
+      if (!leaning) { leaning = true; window.requestAnimationFrame(lean); }
+    };
+    hero.addEventListener('pointermove', function (e) {
+      aim((e.clientX / window.innerWidth - 0.5) * -12, (e.clientY / window.innerHeight - 0.5) * -8);
+    });
+    hero.addEventListener('pointerleave', function () { aim(0, 0); });
+    heroBg.style.transform = 'scale(1.02)';
+  }
+
   /* ---------- toast + copy email ----------------------------------------- */
   var toast = document.getElementById('toast');
   var toastTimer = null;
