@@ -333,6 +333,7 @@ button{ font:inherit; color:inherit; }
   max-width:var(--measure-prose);
   margin:var(--space-4) 0 0;
   color:var(--text-muted);
+  text-wrap:pretty;
 }
 
 .group + .group{ margin-top:clamp(var(--space-8), 12vh, var(--space-9)); }
@@ -420,6 +421,7 @@ button{ font:inherit; color:inherit; }
   max-width:var(--measure-prose);
   margin:0;
   color:var(--text-muted);
+  text-wrap:pretty;
 }
 .tags{ margin:var(--space-4) 0 0; }
 
@@ -463,6 +465,7 @@ button{ font:inherit; color:inherit; }
   flex:1;
   margin:var(--space-4) 0 0;
   color:var(--text-muted);
+  text-wrap:pretty;
 }
 
 /* =============================== MY BRAIN ================================ */
@@ -590,7 +593,7 @@ button{ font:inherit; color:inherit; }
 
 .reader-body{ color:rgba(236,228,210,.86); }
 .reader-body > :first-child{ margin-top:0; }
-.reader-body p{ margin:0 0 var(--space-5); }
+.reader-body p{ margin:0 0 var(--space-5); text-wrap:pretty; }
 .reader-body h2{
   margin:var(--space-8) 0 var(--space-4);
   font-size:var(--text-2xl);
