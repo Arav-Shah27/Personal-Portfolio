@@ -268,7 +268,10 @@ button{ font:inherit; color:inherit; }
   font-weight:var(--weight-semibold);
   line-height:var(--leading-display);
   letter-spacing:var(--tracking-display);
-  text-shadow:0 2px 50px rgba(0,0,0,.45);
+  /* the second shadow catches the light when a bolt flashes behind it */
+  text-shadow:
+    0 2px 50px rgba(0,0,0,.45),
+    0 0 calc(8px + var(--flash, 0) * 40px) rgba(240,207,122, calc(var(--flash, 0) * .32));
 }
 .hero-lede{
   max-width:34em;
