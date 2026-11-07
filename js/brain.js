@@ -87,7 +87,8 @@
       var title = (e.title || '').trim();
       row.appendChild(span('essay-num label', String(i + 1).padStart(2, '0')));
       row.appendChild(span('essay-title' + (title ? '' : ' is-empty'), title || 'Untitled'));
-      row.appendChild(span('essay-meta label', metaLine(e)));
+      /* an essay without a title yet is still being written */
+      row.appendChild(span('essay-meta label', metaLine(e) || (title ? '' : 'in the works')));
       var arrow = span('essay-arrow label', '→');
       arrow.setAttribute('aria-hidden', 'true');
       row.appendChild(arrow);
