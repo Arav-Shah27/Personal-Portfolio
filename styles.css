@@ -332,6 +332,8 @@ button{ font:inherit; color:inherit; }
   pointer-events:none;
   transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
 }
+/* a tap on a phone leaves hover stuck on, so the labels are mouse-only */
+@media (hover:none){ .socials a::after, .socials button::after{ display:none; } }
 .socials a:hover::after, .socials button:hover::after,
 .socials a:focus-visible::after, .socials button:focus-visible::after{ opacity:1; transform:translate(-50%, 0); }
 .socials svg{ width:1.25rem; height:1.25rem; }
