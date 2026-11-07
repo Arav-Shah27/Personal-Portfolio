@@ -465,7 +465,8 @@ button{ font:inherit; color:inherit; }
   padding-top:var(--space-2);
 }
 /* the dates read first, the place sits quietly under them */
-.entry-when > :first-child{ color:var(--text-muted); }
+.entry-when > :first-child{ color:var(--text-muted); transition:color var(--dur-base) var(--ease); }
+.entry:hover .entry-when > :first-child{ color:var(--gold); }
 .entry-top{ display:flex; align-items:center; gap:var(--space-4); margin-bottom:var(--space-4); }
 .entry-title{
   margin:0;
