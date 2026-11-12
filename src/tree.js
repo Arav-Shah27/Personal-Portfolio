@@ -56,7 +56,7 @@ export async function startTree(storm) {
     }
     if (s.grow < 1) gsap.to(s, { grow: 1, duration: 0.6 });
     tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
-    if (folded) tl.to(s, { fold: 1, duration: 1.5 }, 0).to(s, { cam: 1, duration: 1.7 }, 0.15);
-    else tl.to(s, { cam: 0, duration: 1.5 }, 0).to(s, { fold: 0, duration: 1.7 }, 0.2);
+    if (folded) tl.to(s, { fold: 1, duration: 2.2, ease: "power1.inOut" }, 0).to(s, { cam: 1, duration: 2 }, 0.1);
+    else tl.to(s, { cam: 0, duration: 1.8 }, 0).to(s, { fold: 0, duration: 2.2, ease: "power1.inOut" }, 0.1);
   });
 }

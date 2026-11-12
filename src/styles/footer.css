@@ -1,7 +1,7 @@
 /* ================================ FOOTER =================================
    The Party Tree stands over the footer: a voxel tree on a QR code (drawn
-   by the stage inside .party-tree). Folded, a crisp flat copy of the code
-   (.party-qr) is laid over the top so phones can scan it cleanly.
+   by the stage inside .party-tree). Folded, the ground turns over into the
+   code itself; .party-qr is a flat copy for when WebGL isn't available.
    ========================================================================== */
 
 .footer{
@@ -33,10 +33,10 @@ html.no-stage .party-tree{ width:min(100%, 18rem); }
   translate:-50% -50%;
   image-rendering:pixelated;
   opacity:0;
-  transition:opacity 500ms var(--ease);
   pointer-events:none;
 }
-.party-tree[aria-pressed="true"] .party-qr,
+/* the flat image is only for when there's no 3D to fold: with the stage,
+   the ground itself becomes the code */
 html.no-stage .party-qr{ opacity:1; }
 .party-hint{ margin:0; color:var(--text-muted); }
 

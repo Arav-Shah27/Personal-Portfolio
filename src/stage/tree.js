@@ -100,22 +100,37 @@ export function createTree(stage, { box }) {
 
       float backOut(float t) { float c = 1.7; t -= 1.0; return 1.0 + (c + 1.0) * t * t * t + c * t * t; }
 
+      /* exactly a step on the gold ramp, so the folded code has no dither
+         noise in it: light squares are pure cream, dark squares page black */
+      const float QR_LIGHT = 0.876;
+
       void main() {
         float tree = step(1.5, aKind);
-        /* grow bottom-up, fold top-down */
+        float ground = 1.0 - tree;
+
+        /* the tree grows bottom-up and folds away top-down */
         float g = clamp((uGrow * 1.5 - aTurn * 1.1 - aRand * 0.1) / 0.4, 0.0, 1.0);
         float f = clamp((uFold * 1.5 - (1.0 - aTurn) * 1.1 - aRand * 0.1) / 0.4, 0.0, 1.0);
+
+        /* the ground turns over tile by tile, in a wave running out from the
+           trunk, and lands flat as the code */
+        float d = length(aPos.xz) / 29.0;
+        float flip = clamp((uFold * 1.7 - d * 0.95 - aRand * 0.06) / 0.5, 0.0, 1.0) * ground;
+        float ang = flip * 3.14159265;
+        float ca = cos(ang), sa = sin(ang);
+        mat3 rx = mat3(1.0, 0.0, 0.0, 0.0, ca, sa, 0.0, -sa, ca);
+
         float s = mix(1.0, backOut(g) * (1.0 - f), tree);
         vec3 p = aPos;
-        p.y = mix(p.y, mix(p.y, 0.0, f) , tree);
-        /* the ground flattens as it becomes a code */
-        float ground = 1.0 - tree;
-        p.y = mix(p.y, p.y * (1.0 - uFold), ground);
-        vec3 wp = p + position * s;
+        p.y = mix(p.y, 0.0, f * tree);
+        p.y = mix(p.y, 0.0, flip) + sin(flip * 3.14159265) * 0.9;
+        vec3 local = ground > 0.5 ? rx * position : position * s;
+        vec3 n = ground > 0.5 ? rx * normal : normal;
+        vec3 wp = p + local;
 
         vec3 L = normalize(vec3(-0.45, 0.85, 0.35));
-        float lam = 0.42 + 0.58 * max(0.0, dot(normal, L));
-        float top = step(0.5, normal.y);
+        float lam = 0.42 + 0.58 * max(0.0, dot(n, L));
+        float top = step(0.5, n.y);
         float base =
           aKind < 0.5 ? mix(0.3, 0.6, top) :                 /* light ground: the code's light squares */
           aKind < 1.5 ? 0.03 :                               /* dark ground: the code's dark squares */
@@ -123,8 +138,9 @@ export function createTree(stage, { box }) {
           aKind < 3.5 ? 0.58 + aRand * 0.38 :                /* leaves */
                         0.75 + 0.2 * sin(uTime * 5.0 + aRand * 20.0);  /* lanterns */
         vL = aKind > 3.5 ? base : base * lam;
-        /* the code reads cleaner the flatter it gets */
-        vL = mix(vL, aKind < 0.5 ? 0.9 : aKind < 1.5 ? 0.0 : vL, uFold * ground);
+        /* past halfway through its turn, a tile shows its final colour */
+        float settled = smoothstep(0.45, 0.6, flip);
+        vL = mix(vL, aKind < 0.5 ? QR_LIGHT : 0.0, settled);
         gl_Position = projectionMatrix * modelViewMatrix * vec4(wp, 1.0);
       }
     `,
@@ -140,24 +156,39 @@ export function createTree(stage, { box }) {
 
   /* the camera swings from a three-quarter view down to straight overhead */
   const camera = new THREE.PerspectiveCamera(32, 1, 1, 400);
-  const A = new THREE.Vector3(54, 44, 61), B = new THREE.Vector3(0, 70, 0.001);
-  const lookA = new THREE.Vector3(0, 4.5, 0), lookB = new THREE.Vector3(0, 0, 0);
+  const A = new THREE.Vector3(54, 44, 61), B = new THREE.Vector3();
+  const lookA = new THREE.Vector3(0, 4.5, 0), lookB = new THREE.Vector3();
   const tmp = new THREE.Vector3(), look = new THREE.Vector3();
   const state = { grow: 0, fold: 0, cam: 0 };
 
-  function place(aspect) {
+  /* Overhead, the code is framed so every module is a whole number of
+     pixels and every module edge lands on a pixel edge. Looking straight
+     down at a flat plane, the projection is exact, so the folded code is as
+     crisp as a printed one. */
+  const TOP = 0.5, HEIGHT = 70;           /* tile tops sit at y = 0.5 */
+  function overhead(w, h) {
+    const mod = Math.max(1, Math.floor(Math.min(w, h) / (qr.size + 2)));
+    const fov = (2 * Math.atan(h / mod / 2 / (HEIGHT - TOP)) * 180) / Math.PI;
+    /* nudge the code so its edges fall on pixel boundaries */
+    const fx = ((w / 2 + 0.5 * mod) % 1) / mod;
+    const fz = ((h / 2 + 0.5 * mod) % 1) / mod;
+    return { fov, fx, fz };
+  }
+
+  function place(w, h) {
     const k = state.cam;
     const e = k * k * (3 - 2 * k);
+    const o = overhead(w, h);
+    B.set(o.fx, HEIGHT, o.fz + 0.0001);
+    lookB.set(o.fx, 0, o.fz);
     tmp.lerpVectors(A, B, e);
     /* arc over rather than cutting straight through */
     tmp.y += Math.sin(e * Math.PI) * 12;
     camera.position.copy(tmp);
     look.lerpVectors(lookA, lookB, e);
     camera.lookAt(look);
-    /* overhead, the whole code (and its quiet border) just fits */
-    const fovB = (2 * Math.atan((qr.size * 0.5 * 1.02) / 70) * 180) / Math.PI;
-    camera.fov = 32 + (fovB - 32) * e;
-    camera.aspect = aspect;
+    camera.fov = 32 + (o.fov - 32) * e;
+    camera.aspect = w / h;
     camera.updateProjectionMatrix();
   }
 
@@ -181,7 +212,7 @@ export function createTree(stage, { box }) {
       const x = Math.floor(rect.left / px), w = Math.ceil(rect.width / px);
       const y = h - Math.ceil(rect.bottom / px), hh = Math.ceil(rect.height / px);
       mesh.rotation.y = (1 - state.cam) * Math.sin(frame.t * 0.25) * 0.18;
-      place(w / hh);
+      place(w, hh);
       renderer.setViewport(x, y, w, hh);
       renderer.setScissor(x, y, w, hh);
       renderer.setScissorTest(true);
