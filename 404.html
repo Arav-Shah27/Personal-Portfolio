@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Not found — Arav Shah</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#0c0b09">
-<link rel="stylesheet" href="/styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230c0b09'/><circle cx='16' cy='16' r='8.5' fill='none' stroke='%23d9b45a' stroke-width='3.2'/></svg>">
+<meta name="theme-color" content="#0a0806">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230a0806'/><circle cx='16' cy='16' r='8.5' fill='none' stroke='%23d9b45a' stroke-width='3.2'/></svg>">
+<script>document.documentElement.classList.add('js');</script>
 <style>
   .lost{
     position:relative; z-index:1;
@@ -17,73 +17,48 @@
     padding:var(--gutter);
     text-align:center;
   }
-  .lost svg{ color:var(--gold); filter:drop-shadow(0 0 10px rgba(240,207,122,.35)); }
+  .lost-code{
+    margin:0;
+    font-family:var(--font-pixel);
+    font-size:var(--text-sm);
+    letter-spacing:.2em;
+    color:var(--gold-bright);
+  }
   .lost h1{
     margin:0;
-    font-size:var(--text-3xl);
-    font-weight:var(--weight-semibold);
-    line-height:var(--leading-display);
-    letter-spacing:var(--tracking-display);
+    max-width:12ch;
+    font-family:var(--font-display);
+    font-size:clamp(3.25rem, 2rem + 6vw, 7.5rem);
+    font-weight:500;
+    line-height:.9;
+    letter-spacing:-.03em;
+    text-wrap:balance;
+    text-shadow:0 2px 30px rgba(0,0,0,.85), 0 0 calc(var(--flash, 0) * 40px) rgba(240,207,122,calc(var(--flash, 0) * .5));
   }
-  .lost p{ margin:0; max-width:28em; color:var(--text-muted); text-wrap:balance; }
+  .lost p{ margin:0; max-width:28em; color:var(--text); text-wrap:balance; text-shadow:0 1px 14px rgba(0,0,0,.95); }
   .lost a{
-    margin-top:var(--space-4);
+    margin-top:var(--space-5);
+    padding:var(--space-2) var(--space-5);
+    border:1px solid var(--gold-line);
+    border-radius:var(--radius-pill);
+    background:rgba(10,8,6,.75);
     font-family:var(--font-chrome);
     font-size:var(--text-sm);
     letter-spacing:var(--tracking-label);
     color:var(--gold-bright);
-    border-bottom:1px solid var(--gold-line);
-    padding-bottom:2px;
-    transition:border-color var(--dur-base) var(--ease);
+    transition:border-color var(--dur-base) var(--ease), background-color var(--dur-base) var(--ease);
   }
-  .lost a:hover{ border-color:var(--gold-bright); }
-  .lost-sky{ position:fixed; inset:0; width:100%; height:100%; z-index:0; mix-blend-mode:screen; }
+  .lost a:hover{ border-color:var(--gold-bright); background:rgba(20,13,4,.9); }
+  html.no-stage body{ background:#0a0806 url(/assets/shire.jpg) center / cover; background-blend-mode:multiply; }
 </style>
 </head>
 <body>
 <main class="lost">
-  <svg viewBox="0 0 24 24" width="40" height="40" aria-hidden="true">
-    <circle cx="12" cy="12" r="7.2" fill="none" stroke="currentColor" stroke-width="2.4"/>
-  </svg>
-  <p class="label">404</p>
+  <p class="lost-code">404</p>
   <h1>Not all who wander are lost.</h1>
   <p>But this page is. Whatever you were looking for isn&rsquo;t here.</p>
   <a href="/">&larr; back to the shire</a>
 </main>
-<canvas class="pixel-layer lost-sky" aria-hidden="true"></canvas>
-<script type="module">
-  import "/src/fonts.js";
-  /* every few seconds a bolt comes down onto the ring (pixelfx sky-bolt, same as the homepage) */
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const [{ createFrame, clearFrame, createFx, composite }, bolt] = await Promise.all([
-      import('/pixelfx/src/core/index.js'),
-      import('/pixelfx/src/fx/lightning/sky-bolt.js'),
-    ]);
-    const S = 3, canvas = document.querySelector('.lost-sky'), ring = document.querySelector('.lost svg');
-    const ctx = canvas.getContext('2d');
-    let frame, img, fx = null, last = 0;
-    const size = () => {
-      canvas.width = Math.ceil(innerWidth / S); canvas.height = Math.ceil(innerHeight / S);
-      frame = createFrame(canvas.width, canvas.height); img = ctx.createImageData(canvas.width, canvas.height);
-    };
-    size(); addEventListener('resize', size);
-    const strike = () => {
-      const r = ring.getBoundingClientRect();
-      fx = createFx(bolt, { x: (r.left + r.width / 2) / S, y: -6, length: r.top / S + 6, aim: 0,
-        seed: (Math.random() * 1e6) | 0, palette: bolt.STORM_GOLD, thickness: 1.1, lean: 0.15 });
-      last = 0; requestAnimationFrame(tick);
-    };
-    const tick = (now) => {
-      const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60; last = now;
-      fx.update(dt); clearFrame(frame);
-      if (!fx.done()) fx.draw(frame);
-      composite(frame, img.data, null); ctx.putImageData(img, 0, 0);
-      ring.style.filter = `drop-shadow(0 0 ${10 + bolt.flash(fx.t) * 18}px rgba(240,207,122,${0.35 + bolt.flash(fx.t) * 0.5}))`;
-      if (!fx.done()) requestAnimationFrame(tick);
-    };
-    setTimeout(strike, 900);
-    setInterval(() => { if (!document.hidden) strike(); }, 7000);
-  }
-</script>
+<script type="module" src="/src/notfound.js"></script>
 </body>
 </html>
