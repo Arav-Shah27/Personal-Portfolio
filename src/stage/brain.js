@@ -244,6 +244,7 @@ export function createBrain(stage, { box, tags, onOpen }) {
     setEssays,
     active: visible,
     animating: () => true,
+    fast: () => dragging || hot >= 0 || uniforms.uFocusT.value < 2,
     draw(renderer, target, frame) {
       const dt = frame.dt;
       if (!dragging) { spinV += (0.12 - spinV) * Math.min(1, dt * 1.5); spin += spinV * dt * (reduceMotion ? 0 : 1); }

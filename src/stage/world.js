@@ -313,6 +313,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     },
     active: () => ready,
     animating: () => true,
+    fast: () => bolts.length > 0 || boltsDirty || Math.abs(state.mouse.x - state.mouseTarget.x) + Math.abs(state.mouse.y - state.mouseTarget.y) > 0.002,
     draw(renderer, target, frame) {
       updateBolts(frame.dt);
       state.mouse.lerp(state.mouseTarget, 1 - Math.pow(0.001, frame.dt));

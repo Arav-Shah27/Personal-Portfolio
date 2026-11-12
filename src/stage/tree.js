@@ -172,6 +172,7 @@ export function createTree(stage, { box }) {
     state,
     active: visible,
     animating: () => true,
+    fast: () => (state.grow > 0 && state.grow < 1) || (state.fold > 0 && state.fold < 1) || (state.cam > 0 && state.cam < 1),
     draw(renderer, target, frame) {
       uniforms.uGrow.value = state.grow;
       uniforms.uFold.value = state.fold;

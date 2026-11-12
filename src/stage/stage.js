@@ -82,14 +82,26 @@ export function createStage() {
 
   /* under reduced motion the clock stands still: the stage only redraws when
      something asks it to (a scroll, a resize), so nothing drifts on its own */
-  let clock = 0;
+  let clock = 0, owed = 0;
+  /* Pixel art doesn't need 60 frames a second to drift: ambient motion (the
+     clouds, the board's current, the brain turning) runs at 30. Anything
+     that answers you (a bolt, a scroll, a drag, the tree folding) gets every
+     frame. */
+  let scrolled = false;
+  window.addEventListener("scroll", () => { scrolled = true; dirty = true; }, { passive: true });
   gsap.ticker.add((time, deltaMs) => {
     const dt = Math.min(0.05, deltaMs / 1000);
-    const moving = !reduceMotion && layers.some((l) => l.active() && l.animating());
+    owed += dt;
+    const live = layers.filter((l) => l.active());
+    const moving = !reduceMotion && live.some((l) => l.animating());
     if (paused || (!moving && !dirty)) return;
-    if (!reduceMotion) clock += dt;
-    dirty = false;
-    render(clock, dt);
+    const fast = dirty || scrolled || live.some((l) => l.fast?.());
+    if (!fast && owed < 1 / 31) return;
+    if (!reduceMotion) clock += owed;
+    const step = Math.min(0.05, owed);
+    owed = 0;
+    dirty = scrolled = false;
+    render(clock, step);
   });
 
   return {
