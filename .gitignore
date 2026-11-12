@@ -3,3 +3,8 @@ Thumbs.db
 node_modules/
 .vercel
 *.log
+
+# agent skills installed locally (not part of the site)
+.claude/
+.agents/
+skills-lock.json
