@@ -19,6 +19,7 @@
      unwelcome) the ring loader plays before the page opens */
   (function (d) {
     d.classList.add('js');
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('reduce-motion');
     try {
       if (!sessionStorage.getItem('seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('has-loader');
     } catch (e) {}

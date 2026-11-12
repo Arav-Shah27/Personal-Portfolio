@@ -35,8 +35,6 @@ export function startDescent(storm) {
     return;
   }
 
-  run.style.setProperty("--run", "320svh");
-
   const cam = { lz: 0 };
   const apply = () => { state.zoom = Math.exp(cam.lz); };
 

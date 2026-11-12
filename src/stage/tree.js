@@ -9,23 +9,11 @@
    by its height, so nothing is updated on the CPU while it animates.
    ========================================================================== */
 import * as THREE from "three";
-import qrcode from "qrcode-generator";
-
-export const LINKEDIN = "https://www.linkedin.com/in/arav-shah-6a986b35b/";
-const QUIET = 4;   /* the blank border a scanner needs around the code */
+import { qrMatrix } from "../qr.js";
 
 function rng(seed) {
   let s = seed >>> 0;
   return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
-}
-
-export function qrMatrix(text = LINKEDIN) {
-  const q = qrcode(0, "M");
-  q.addData(text);
-  q.make();
-  const n = q.getModuleCount(), size = n + QUIET * 2;
-  const dark = (r, c) => r >= QUIET && c >= QUIET && r < n + QUIET && c < n + QUIET && q.isDark(r - QUIET, c - QUIET);
-  return { size, dark };
 }
 
 /* kinds: 0 light ground, 1 dark ground, 2 bark, 3 leaves, 4 lantern */

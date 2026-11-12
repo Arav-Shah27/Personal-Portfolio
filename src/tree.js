@@ -3,7 +3,7 @@
    it into a QR code for my LinkedIn (and back again).
    ========================================================================== */
 import { gsap, ScrollTrigger, reduceMotion } from "./lib/motion.js";
-import { createTree, qrMatrix } from "./stage/tree.js";
+import { qrMatrix } from "./qr.js";
 
 /* the flat, crisp code: one canvas pixel per module, scaled up by CSS */
 function paintQr(canvas, qr) {
@@ -15,7 +15,7 @@ function paintQr(canvas, qr) {
   for (let r = 0; r < qr.size; r++) for (let c = 0; c < qr.size; c++) if (qr.dark(r, c)) ctx.fillRect(c, r, 1, 1);
 }
 
-export function startTree(storm) {
+export async function startTree(storm) {
   const button = document.querySelector(".party-tree");
   if (!button) return;
   const hint = document.querySelector(".party-hint");
@@ -30,6 +30,7 @@ export function startTree(storm) {
     return;
   }
 
+  const { createTree } = await import("./stage/tree.js");
   const tree = storm.stage.add(createTree(storm.stage, { box: button }));
   paintQr(canvas, tree.qr);
   const s = tree.state;

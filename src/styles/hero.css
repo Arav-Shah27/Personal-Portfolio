@@ -6,7 +6,8 @@
 
 /* a tall runway: while it scrolls past, the hero holds still (sticky) and
    the camera dives into the door. src/descent.js drives it. */
-.hero-run{ position:relative; height:var(--run, 100svh); }
+.hero-run{ position:relative; height:100svh; }
+html.js:not(.reduce-motion):not(.no-stage) .hero-run{ height:320svh; }
 
 .hero{
   position:sticky; top:0;
