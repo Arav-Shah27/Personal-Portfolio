@@ -206,10 +206,15 @@ export function createBrain(stage, { box, tags, onOpen }) {
     });
     box.addEventListener("pointerleave", () => { leanX = leanY = 0; dragging = false; focus(-1); });
   }
-  box.addEventListener("pointerdown", (e) => { dragging = true; lastX = e.clientX; box.setPointerCapture?.(e.pointerId); });
+  let downX = null;
+  box.addEventListener("pointerdown", (e) => {
+    dragging = true; lastX = downX = e.clientX;
+    box.setPointerCapture?.(e.pointerId);
+  });
   box.addEventListener("pointerup", (e) => {
-    const moved = Math.abs(e.clientX - lastX) > 3;
-    dragging = false;
+    if (downX === null) return;                  /* only a press that started here */
+    const moved = Math.abs(e.clientX - downX) > 4;
+    dragging = false; downX = null;
     const i = nearest(e.clientX, e.clientY);
     if (i >= 0 && !moved) onOpen?.(essays[i].slug);
   });
