@@ -196,3 +196,12 @@ button{ font:inherit; color:inherit; }
     scroll-behavior:auto !important;
   }
 }
+
+/* high-contrast / forced-colors mode: the system picks the colours, so the
+   gold pixel world steps aside and the words stand on their own */
+@media (forced-colors:active){
+  .stage, .loader, .brain-viz, .chip-die, .pixel-layer, .ring-cursor, .ring-ghost, .dust, .spark-dot{ display:none !important; }
+  html.has-ring, html.has-ring *{ cursor:auto !important; }
+  .hero-name .ch, .section-title, .hero-lede, .entry-desc{ text-shadow:none; }
+  .party-qr{ opacity:1; forced-color-adjust:none; }
+}
