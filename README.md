@@ -24,13 +24,14 @@ vercel.json             caching + clean URLs
 ## Run it locally
 
 ```bash
-cd ~/arav-portfolio && node scripts/dev.mjs
+cd ~/arav-portfolio && npm install && npm run dev
 ```
 
 Then open http://localhost:4173 (and http://localhost:4173/edit for the pixel
-lab). `python3 -m http.server 4173` still works for the site itself, but only
-the Node server lets the pixel lab save into `pixelfx/custom/`. Opening `index.html` by double-clicking won't
-load the essays, because browsers block reading local files; use the server.
+lab, which can save straight into `pixelfx/custom/` while the dev server runs).
+`npm run build` makes the production site in `dist/`, and `npm run preview`
+serves that build on http://localhost:4174. Vercel runs the same build on
+every push (see `vercel.json`).
 
 ## Common edits
 
