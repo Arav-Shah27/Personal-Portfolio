@@ -240,25 +240,28 @@
     </div>
   </section>
 
-  <div class="divider" aria-hidden="true"></div>
-
   <!-- =============================== MY BRAIN ============================= -->
-  <section class="section" id="brain">
-    <header class="section-head reveal">
-            <h2 class="section-title">My Brain</h2>
-      <p class="section-sub">
-        Things I&rsquo;ve been thinking about: people, how we live, and what goes on in our heads.
-      </p>
-    </header>
+  <section class="section brain-section" id="brain">
+    <!-- the brain itself is drawn on the stage, inside this box (src/stage/brain.js) -->
+    <div class="brain-viz" aria-hidden="true"><div class="brain-tags"></div></div>
 
-    <div class="brain-box reveal">
-      <div class="brain-box-head label">
-        <span>essays</span>
-        <span id="essay-count"></span>
+    <div class="brain-copy">
+      <header class="section-head reveal">
+        <h2 class="section-title">My Brain</h2>
+        <p class="section-sub">
+          Things I&rsquo;ve been thinking about: people, how we live, and what goes on in our heads.
+        </p>
+      </header>
+
+      <div class="brain-box reveal">
+        <div class="brain-box-head label">
+          <span>essays</span>
+          <span id="essay-count"></span>
+        </div>
+        <ol class="essay-list" id="essay-list" aria-live="polite">
+          <!-- rows are built from essays/index.json by js/brain.js -->
+        </ol>
       </div>
-      <ol class="essay-list" id="essay-list" aria-live="polite">
-        <!-- rows are built from essays/index.json by js/brain.js -->
-      </ol>
     </div>
   </section>
 
