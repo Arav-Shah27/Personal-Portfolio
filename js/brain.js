@@ -114,6 +114,11 @@
       li.appendChild(row);
       list.appendChild(li);
     });
+    /* the brain on the stage puts a node in it for every essay */
+    window.siteEssays = essays.map(function (e, i) {
+      return { slug: e.slug, num: String(i + 1).padStart(2, '0'), draft: !(e.title || '').trim() };
+    });
+    window.dispatchEvent(new CustomEvent('essays:ready', { detail: window.siteEssays }));
   }
 
   /* ---------- open / close ------------------------------------------------ */

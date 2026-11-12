@@ -6,6 +6,7 @@
 import { reduceMotion, finePointer } from "./lib/motion.js";
 import { createStage } from "./stage/stage.js";
 import { createWorld } from "./stage/world.js";
+import { createBrain } from "./stage/brain.js";
 
 export function startStorm() {
   const stage = createStage();
@@ -64,6 +65,35 @@ export function startStorm() {
     window.addEventListener("pointermove", (e) => {
       world.state.mouseTarget.set(e.clientX / window.innerWidth - 0.5, e.clientY / window.innerHeight - 0.5);
     }, { passive: true });
+  }
+
+  /* the brain, with a node for every essay in My Brain */
+  const box = document.querySelector(".brain-viz");
+  if (box) {
+    const rowFor = (slug) => document.querySelector(`.essay-row[data-slug="${slug}"]`);
+    const brain = stage.add(createBrain(stage, {
+      box, tags: box.querySelector(".brain-tags"),
+      onOpen: (slug) => rowFor(slug)?.click(),
+    }));
+    const link = (list) => {
+      brain.setEssays(list);
+      list.forEach((e, i) => {
+        const row = rowFor(e.slug);
+        row?.addEventListener("pointerenter", () => brain.focus(i));
+        row?.addEventListener("focus", () => brain.focus(i));
+        row?.addEventListener("pointerleave", () => brain.focus(-1));
+        row?.addEventListener("blur", () => brain.focus(-1));
+      });
+    };
+    if (window.siteEssays) link(window.siteEssays);
+    window.addEventListener("essays:ready", (e) => link(e.detail));
+    /* and a node hovered on the brain lights its row */
+    box.addEventListener("pointermove", () => {
+      document.querySelectorAll(".essay-row").forEach((r) => r.classList.remove("is-hot"));
+      const t = box.querySelector(".brain-tag.is-hot");
+      if (t) rowFor((window.siteEssays || []).find((e) => e.num === t.textContent)?.slug)?.classList.add("is-hot");
+    });
+    box.addEventListener("pointerleave", () => document.querySelectorAll(".essay-row.is-hot").forEach((r) => r.classList.remove("is-hot")));
   }
 
   if (import.meta.env.DEV) window.__storm = { stage, world };
