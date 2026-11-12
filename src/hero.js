@@ -44,12 +44,13 @@ export function startHero() {
     if (flash < 0.01 && !lit) return;
     lit = flash >= 0.01;
     const sx = x * window.innerWidth;
-    for (const ch of chars) {
-      const r = ch.getBoundingClientRect();
-      const dx = (r.left + r.width / 2 - sx) / window.innerWidth;
-      const k = flash * Math.exp(-Math.abs(dx) * 1.8);
-      ch.style.setProperty("--lit", k.toFixed(3));
+    /* read every letter's position first, then write: interleaving the two
+       would force a layout per letter, every frame of the flash */
+    const centers = chars.map((ch) => { const r = ch.getBoundingClientRect(); return r.left + r.width / 2; });
+    chars.forEach((ch, i) => {
+      const dx = (centers[i] - sx) / window.innerWidth;
+      ch.style.setProperty("--lit", (flash * Math.exp(-Math.abs(dx) * 1.8)).toFixed(3));
       ch.style.setProperty("--dir", Math.sign(dx) || 1);
-    }
+    });
   });
 }
