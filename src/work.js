@@ -57,6 +57,11 @@ function route() {
 function chips() {
   if (reduceMotion || !finePointer) return;
   document.querySelectorAll(".project").forEach((card) => {
+    /* picking a chip up sends a little current out into the board under it */
+    card.addEventListener("pointerenter", () => {
+      const r = card.getBoundingClientRect();
+      window.siteRipple?.(r.left + r.width / 2, r.top + r.height / 2);
+    });
     const tilt = (rx, ry) => gsap.to(card, { "--rx": `${rx}deg`, "--ry": `${ry}deg`, duration: 0.6, ease: "power3.out", overwrite: "auto" });
     card.addEventListener("pointermove", (e) => {
       const r = card.getBoundingClientRect();
