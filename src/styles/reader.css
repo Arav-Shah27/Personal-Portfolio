@@ -14,10 +14,11 @@
   background:
     radial-gradient(120% 70% at 50% 0%, rgba(240,207,122,.05), transparent 60%),
     #0d0a07;
-  clip-path:circle(0% at var(--ox) var(--oy));
+  clip-path:circle(0 at var(--ox) var(--oy));
   transition:clip-path 800ms cubic-bezier(.7,0,.2,1);
 }
-.reader.is-open{ clip-path:circle(150% at var(--ox) var(--oy)); }
+/* a radius of 150vmax covers the whole screen from any starting point */
+.reader.is-open{ clip-path:circle(150vmax at var(--ox) var(--oy)); }
 html.reduce-motion .reader{ transition:opacity var(--dur-base) var(--ease); clip-path:none; opacity:0; }
 html.reduce-motion .reader.is-open{ opacity:1; }
 
@@ -34,9 +35,9 @@ html.reduce-motion .reader.is-open{ opacity:1; }
   position:absolute; left:50%; top:50%;
   max-width:min(40vw, 32rem);
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
-  font-family:var(--font-display);
+  font-family:var(--font-title);
   font-size:var(--text-lg);
-  font-weight:500;
+  font-weight:400;
   color:var(--text);
   opacity:0;
   transform:translate(-50%, -30%);
@@ -123,14 +124,14 @@ html.reduce-motion .reader.is-open{ opacity:1; }
   margin:0 auto;
   max-width:16ch;
   font-family:var(--font-display);
-  font-size:clamp(2.8rem, 1.8rem + 4vw, 5.25rem);
-  font-weight:500;
-  line-height:.98;
-  letter-spacing:-.02em;
+  font-size:clamp(3rem, 2rem + 4vw, 5.5rem);
+  font-weight:400;
+  line-height:1;
+  letter-spacing:0;
   text-align:center;
   text-wrap:balance;
 }
-.reader-title.is-empty{ font-style:italic; color:var(--text-faint); }
+.reader-title.is-empty{ color:var(--text-faint); }
 /* the ring from the logo, under the title */
 .reader-title::after{
   content:'';
@@ -144,8 +145,8 @@ html.reduce-motion .reader.is-open{ opacity:1; }
 
 .reader-body{
   color:rgba(239,230,210,.88);
-  font-size:calc(1.125rem * var(--reader-scale, 1));
-  line-height:1.78;
+  font-size:calc(1.4rem * var(--reader-scale, 1));
+  line-height:1.42;
 }
 .reader-body > :first-child{ margin-top:0; }
 /* the words ink in, left to right, a block at a time */
@@ -167,28 +168,28 @@ html.reduce-motion .reader-body > *{ animation:none; -webkit-mask-image:none; ma
   float:left;
   margin:.08em var(--space-3) 0 0;
   font-family:var(--font-display);
-  font-size:4.6em;
-  font-weight:600;
-  line-height:.78;
+  font-size:3.6em;
+  font-weight:400;
+  line-height:.8;
   color:var(--gold-bright);
 }
 .reader-body h2{
   margin:var(--space-8) 0 var(--space-4);
-  font-family:var(--font-display);
-  font-size:clamp(1.9rem, 1.5rem + 1vw, 2.4rem);
-  font-weight:500;
-  line-height:1.1;
+  font-family:var(--font-title);
+  font-size:clamp(2.1rem, 1.7rem + 1vw, 2.6rem);
+  font-weight:400;
+  line-height:1;
   color:var(--text);
 }
 .reader-body h3{
   margin:var(--space-7) 0 var(--space-3);
-  font-family:var(--font-display);
-  font-size:1.6rem;
-  font-weight:600;
-  line-height:1.15;
+  font-family:var(--font-title);
+  font-size:1.8rem;
+  font-weight:400;
+  line-height:1.05;
   color:var(--text);
 }
-.reader-body strong{ font-weight:600; color:var(--text); }
+.reader-body strong{ color:var(--gold-bright); }
 .reader-body a{
   color:var(--gold-bright);
   text-decoration:underline;
@@ -202,10 +203,9 @@ html.reduce-motion .reader-body > *{ animation:none; -webkit-mask-image:none; ma
   position:relative;
   margin:var(--space-8) 0;
   padding:0 0 0 var(--space-6);
-  font-family:var(--font-display);
-  font-size:1.6em;
-  font-style:italic;
-  line-height:1.3;
+  font-family:var(--font-title);
+  font-size:1.5em;
+  line-height:1.15;
   color:var(--text);
 }
 .reader-body blockquote::before{
@@ -261,3 +261,6 @@ html.reduce-motion .reader-body > *{ animation:none; -webkit-mask-image:none; ma
 @media (max-width:600px){
   .reader-body{ hyphens:auto; -webkit-hyphens:auto; }
 }
+
+/* the pixel faces have no italic, so emphasis is carried by colour */
+.reader-body em{ font-style:normal; color:var(--gold-bright); }

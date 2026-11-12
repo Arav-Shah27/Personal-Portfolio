@@ -129,10 +129,17 @@
     if (pushHistory) history.pushState({ essay: slug }, '', '#brain/' + slug);
     /* the reader grows out of a circle from wherever it was opened */
     var from = opener || list.querySelector('[data-slug="' + slug + '"]');
-    if (from && current === null) {
-      var fr = from.getBoundingClientRect();
-      reader.style.setProperty('--ox', Math.round(fr.left + Math.min(fr.width, 80) / 2) + 'px');
-      reader.style.setProperty('--oy', Math.round(fr.top + fr.height / 2) + 'px');
+    if (current === null) {
+      /* from the row if it's on screen; from the middle if it isn't (a
+         shared link, or a row scrolled out of view) */
+      var ox = window.innerWidth / 2, oy = window.innerHeight / 2;
+      var fr = from && from.getBoundingClientRect();
+      if (fr && fr.bottom > 0 && fr.top < window.innerHeight) {
+        ox = fr.left + Math.min(fr.width, 80) / 2;
+        oy = fr.top + fr.height / 2;
+      }
+      reader.style.setProperty('--ox', Math.round(ox) + 'px');
+      reader.style.setProperty('--oy', Math.round(oy) + 'px');
     }
     /* remember the row itself rather than document.activeElement: Safari
        doesn't focus a button when it's clicked, so that would just be <body> */
