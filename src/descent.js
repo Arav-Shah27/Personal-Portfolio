@@ -64,7 +64,7 @@ export function startDescent(storm) {
     .to(".hero-line--b", { xPercent: 120, yPercent: 30, opacity: 0, filter: "blur(8px)", duration: 0.42, ease: "power2.in" }, 0.02)
     /* into the door */
     .to(cam, { lz: Math.log(7), duration: 0.74, ease: "power1.in", onUpdate: apply }, 0.04)
-    .to(state, { open: 1, duration: 0.38, ease: "power1.inOut" }, 0.46)
+    .to(state, { open: 1, duration: 0.4, ease: "power1.inOut" }, 0.4)
     .to(state, { painting: 0, board: 1, duration: 0.1 }, 0.86);
 
   /* once there's text over it, the board steps back to a whisper */

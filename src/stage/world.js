@@ -185,7 +185,12 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
            brass knob */
         float dDoor = length(p - DOOR);
         night += vec3(0.11) * exp(-abs(dDoor - (DOOR_R + 34.0)) / 22.0);
-        night += vec3(0.5) * exp(-length(p - vec2(806.0, 815.0)) / 9.0);
+        night += vec3(0.5) * exp(-length(p - vec2(816.0, 782.0)) / 9.0);
+        /* as you come in close, current gathers: the door's edge burns into
+           a ring of light and the knob glows hot, just before it opens */
+        float charge = smoothstep(1.25, 3.2, uZoom) * (1.0 - uOpen);
+        night += vec3(0.75) * exp(-abs(dDoor - DOOR_R) / (3.0 + 10.0 / uZoom)) * charge;
+        night += vec3(0.9) * exp(-length(p - vec2(816.0, 782.0)) / (6.0 + 8.0 * charge)) * charge;
 
         /* the watercolour sky becomes cloud, lit from inside when it strikes */
         float blue = smoothstep(0.03, 0.16, col.b - max(col.r, col.g) * 0.92);
@@ -303,7 +308,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     state,
     strike,
     toScreen,
-    KNOB: { x: 806, y: 815 },
+    KNOB: { x: 816, y: 782 },
     get flash() { return flash; },
     get bolting() { return bolts.length > 0; },
     resize({ w, h, px }) {
