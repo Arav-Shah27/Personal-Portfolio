@@ -22,7 +22,9 @@
 import * as THREE from "three";
 import { createFrame, clearFrame, createFx, composite } from "../../pixelfx/src/core/index.js";
 import * as skyBolt from "../../pixelfx/src/fx/lightning/sky-bolt.js";
-import shireUrl from "../../assets/shire.jpg";
+/* a lighter encode of the painting: the stage dithers it, so the extra
+   JPEG quality of the original would never show */
+import shireUrl from "../../assets/shire-stage.jpg";
 
 /* landmarks in the painting, in its own pixels (1800 x 1688, y down) */
 export const PAINTING = { w: 1800, h: 1688 };
