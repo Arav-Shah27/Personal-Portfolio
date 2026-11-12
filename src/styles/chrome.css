@@ -1,0 +1,131 @@
+/* ==========================================================================
+   Chrome that floats over everything: the toast, the ring cursor and its
+   spark, the small pixel layers from js/lightning.js, and the stage canvas.
+   ========================================================================== */
+
+/* ================================ TOAST ================================== */
+
+.toast{
+  position:fixed; left:50%; bottom:calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  z-index:1100;
+  display:flex; align-items:center; gap:var(--space-2);
+  box-shadow:0 10px 30px rgba(0,0,0,.45);
+  padding:var(--space-2) var(--space-4);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-md);
+  background:rgba(21,19,15,.94);
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  color:var(--text);
+  opacity:0;
+  pointer-events:none;
+  transform:translate(-50%, var(--space-2));
+  transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.toast::before{
+  content:'';
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 6px rgba(240,207,122,.6);
+}
+.toast.is-shown{ opacity:1; transform:translate(-50%, 0); }
+
+/* ============================== RING CURSOR ============================== */
+
+html.has-ring, html.has-ring *{ cursor:none !important; }
+
+.ring-cursor, .ring-ghost{
+  position:fixed; left:0; top:0;
+  width:1.75rem; height:1.75rem;
+  margin:-.875rem 0 0 -.875rem;    /* centered without a second transform */
+  pointer-events:none;
+  opacity:0;
+  will-change:transform;
+}
+.ring-cursor{ z-index:10002; transition:opacity var(--dur-base) var(--ease); }
+.ring-cursor.is-visible{ opacity:1; }
+.ring-cursor svg, .ring-ghost svg{ display:block; width:100%; height:100%; overflow:visible; }
+
+.ring-inner{
+  width:100%; height:100%;
+  filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.6));
+  transition:transform var(--dur-slow) var(--ease-entrance), filter var(--dur-base) var(--ease);
+}
+.ring-cursor.is-hover .ring-inner{
+  transform:scale(1.42);
+  filter:drop-shadow(0 0 6px rgba(240,200,110,.5)) drop-shadow(0 1px 1.5px rgba(0,0,0,.5));
+}
+.ring-cursor.is-down .ring-inner{ transform:scale(.78); transition-duration:var(--dur-fast); }
+.ring-cursor.is-hover.is-down .ring-inner{ transform:scale(1.14); }
+
+.ring-script{ opacity:0; transition:opacity var(--dur-slow) var(--ease); }
+.ring-cursor.is-hover .ring-script{ opacity:1; }
+.ring-script-spin{
+  transform-origin:20px 20px;
+  animation:inscribe 18s linear infinite;
+  animation-play-state:paused;
+}
+.ring-cursor.is-hover .ring-script-spin{ animation-play-state:running; }
+@keyframes inscribe{ to{ transform:rotate(360deg); } }
+
+.ring-ghost{ z-index:10001; transition:opacity var(--dur-base) var(--ease); }
+
+/* the exact point under the pointer, and the charge over things you can touch */
+.spark-dot{
+  position:fixed; left:-2px; top:-2px;
+  z-index:10003;
+  width:4px; height:4px;
+  background:#fff3cf;
+  pointer-events:none;
+  box-shadow:0 0 6px rgba(240,207,122,.9);
+  transition:opacity var(--dur-base) var(--ease);
+}
+html:not(.has-ring) .spark-dot{ display:none; }
+.spark-dot.is-charged{ animation:charge 520ms steps(3) infinite; }
+@keyframes charge{ 50%{ box-shadow:0 0 12px 2px rgba(255,243,207,.95); background:#fff; } }
+.ring-cursor.is-charged .ring-inner{ filter:drop-shadow(0 0 7px rgba(240,207,122,.75)) drop-shadow(0 1px 1.5px rgba(0,0,0,.5)); }
+.dust{ position:fixed; inset:0; z-index:10000; pointer-events:none; }
+
+@media (pointer:coarse){
+  .ring-cursor, .ring-ghost, .dust, .spark-dot{ display:none !important; }
+}
+
+/* ============================== LIGHTNING ================================ */
+/* pixel art layers drawn by js/lightning.js; each canvas holds art pixels
+   and CSS scales them up without smoothing */
+
+.pixel-layer{
+  pointer-events:none;
+  image-rendering:pixelated;
+  image-rendering:crisp-edges;
+}
+.hero-sky{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  z-index:-1;
+  mix-blend-mode:screen;
+}
+.pop{
+  position:fixed; left:0; top:0;
+  z-index:9999;
+}
+.footer-ball{
+  position:absolute; left:50%;
+  opacity:.9;
+}
+
+/* ================================ STAGE ================================== */
+/* one fixed canvas behind everything, drawn at one texel per art pixel and
+   scaled up here with hard edges (src/stage/) */
+.stage{
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  z-index:0;
+  pointer-events:none;
+  image-rendering:pixelated;
+  opacity:0;
+  transition:opacity 900ms var(--ease);
+}
+html.stage-ready .stage{ opacity:1; }
+html.has-stage .hero-bg{ display:none; }

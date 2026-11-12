@@ -1,0 +1,194 @@
+/* ==========================================================================
+   Arav Shah: the base. Tokens, page defaults and the one shared label.
+
+   Everything is built from the tokens in :root, so the page keeps one
+   rhythm. Type has four faces, each with one job:
+     Cormorant             display  - the name, section and essay titles
+     Literata              content  - body copy, essays
+     IBM Plex Mono         chrome   - nav, labels, dates, tags
+     Geist Pixel           data     - counters, numbers, chip markings
+
+   The page sits on the stage (src/stage/): one canvas of dithered gold
+   pixel art behind everything, so the CSS stays flat and dark on purpose.
+   ========================================================================== */
+
+:root{
+  /* ---- color ---- */
+  --bg:          #0a0806;
+  --surface:     #15130f;
+  --line:        rgba(236,228,210,.09);
+  --line-strong: rgba(236,228,210,.17);
+
+  --text:        #ece4d2;
+  --text-muted:  rgba(236,228,210,.68);
+  --text-faint:  rgba(236,228,210,.56);
+
+  --gold:        #d9b45a;
+  --gold-bright: #f0cf7a;
+  --gold-line:   rgba(217,180,90,.3);
+
+  /* ---- type ---- */
+  --font-display: 'Cormorant Variable', 'Cormorant Garamond', Garamond, serif;
+  --font-content: 'Literata Variable', 'Literata', 'Iowan Old Style', Georgia, serif;
+  --font-chrome:  'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-pixel:   'Geist Pixel', 'IBM Plex Mono', ui-monospace, monospace;
+
+  /* one scale; every size on the page is one of these */
+  --text-2xs: 0.6875rem;                          /* 11 - monograms        */
+  --text-xs:  0.75rem;                            /* 12 - labels, dates    */
+  --text-sm:  0.8125rem;                          /* 13 - nav, footer      */
+  --text-md:  0.9375rem;                          /* 15 - secondary copy   */
+  --text-base:1.0625rem;                          /* 17 - body             */
+  --text-lg:  1.1875rem;                          /* 19 - lede             */
+  --text-xl:  clamp(1.375rem, 1.7vw, 1.625rem);   /* card titles           */
+  --text-2xl: clamp(1.75rem, 2.4vw, 2.125rem);    /* entry + essay titles  */
+  --text-3xl: clamp(2.5rem, 5vw, 3.5rem);         /* section titles        */
+  --text-4xl: clamp(3.5rem, 9.5vw, 7rem);         /* the name              */
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+
+  /* four line heights, chosen by role rather than per element */
+  --leading-display: 1.05;
+  --leading-tight:   1.2;
+  --leading-normal:  1.5;
+  --leading-prose:   1.7;
+
+  --tracking-label: .08em;                        /* every mono micro-label */
+  --tracking-display: -.02em;
+
+  /* ---- space: a 4px scale ---- */
+  --space-1: .25rem;   --space-2: .5rem;    --space-3: .75rem;
+  --space-4: 1rem;     --space-5: 1.5rem;   --space-6: 2rem;
+  --space-7: 3rem;     --space-8: 4rem;     --space-9: 6rem;   --space-10: 8rem;
+
+  /* ---- shape ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* ---- motion: three speeds, two curves ---- */
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+  --dur-slow: 600ms;
+  --ease: cubic-bezier(.22,.61,.36,1);            /* everyday transitions   */
+  --ease-entrance: cubic-bezier(.16,1,.3,1);      /* things arriving        */
+  --delay-intro: 120ms;                           /* first paint settles    */
+  --stagger: 90ms;                                /* between intro lines    */
+  --lift: -2px;                                   /* one hover lift, shared */
+
+  /* ---- measure ---- */
+  --nav-h: 4.75rem;
+  --measure-page: 1200px;
+  --measure-prose: 64ch;
+  --measure-reader: 660px;
+  /* never narrower than the notch when a phone is on its side */
+  --gutter: max(clamp(var(--space-5), 5vw, var(--space-7)), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+
+html{
+  color-scheme:dark;
+  scroll-behavior:smooth;
+  scrollbar-gutter:stable;
+  scrollbar-color:#3a2709 var(--bg);
+  -webkit-text-size-adjust:100%;
+  background:var(--bg);
+}
+html.reader-open{ overflow:hidden; }
+/* Lenis does the easing itself; a CSS smooth scroll on top would fight it */
+html.has-lenis{ scroll-behavior:auto; }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-content);
+  font-size:var(--text-base);
+  font-weight:var(--weight-regular);
+  line-height:var(--leading-prose);
+  font-optical-sizing:auto;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+
+main, .footer{ position:relative; z-index:1; }
+
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+button{ font:inherit; color:inherit; }
+
+:focus-visible{
+  outline:1px solid var(--gold);
+  outline-offset:4px;
+  border-radius:var(--radius-sm);
+}
+
+/* one shared style for every mono micro-label on the page */
+.label{
+  font-family:var(--font-chrome);
+  font-size:var(--text-xs);
+  font-weight:var(--weight-medium);
+  line-height:var(--leading-normal);
+  letter-spacing:var(--tracking-label);
+  font-variant-numeric:tabular-nums;
+  color:var(--text-faint);
+}
+
+.skip{
+  position:fixed; top:var(--space-3); left:var(--space-3);
+  z-index:200;
+  padding:var(--space-2) var(--space-3);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-md);
+  background:var(--surface);
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  transform:translateY(-200%);
+  transition:transform var(--dur-base) var(--ease);
+}
+.skip:focus{ transform:none; }
+
+
+/* the browser's own surfaces get the palette too */
+::selection{ background:rgba(240,207,122,.35); color:#fffaf0; }
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{ background:#3a2709; border:2px solid var(--bg); border-radius:0; }
+::-webkit-scrollbar-thumb:hover{ background:#6e4b14; }
+
+/* ================================ PRINT ==================================
+   Printed (or saved as a PDF), the page is just the words on plain paper.
+   ========================================================================== */
+@media print{
+  html, body{ background:#fff; color:#111; }
+  .stage, .loader, .nav, .progress, .skip, .scroll-hint, .socials, .hero-bg, .brain-viz, .party,
+  .chip-die, .route-track, .route-node, .pixel-layer, .ring-cursor, .ring-ghost, .dust, .spark-dot,
+  .toast, .reader, .to-top, .sound{ display:none !important; }
+  .hero-run{ height:auto !important; }
+  .hero{ position:static; height:auto; }
+  .hero-name, .hero-line, .section-title{ color:#111 !important; text-shadow:none !important; transform:none !important; opacity:1 !important; filter:none !important; }
+  .hero-name .ch{ color:#111 !important; text-shadow:none !important; }
+  .hero-hello, .hero-foot, .reveal{ opacity:1 !important; filter:none !important; translate:none !important; }
+  .hero-lede, .entry-desc, .project-desc, .section-sub, .entry-title, .project-title{ color:#222; text-shadow:none; }
+  .entry-role, .project-role, .hero-meta .sep{ color:#7a5a12; }
+  .label, .tags li, .dim{ color:#555; }
+  .tags li{ background:none; border-color:#ccc; }
+  .project{ background:none; box-shadow:none; transform:none !important; border-color:#ccc; break-inside:avoid; }
+  .project::before, .project::after{ display:none; }
+  .entry{ break-inside:avoid; }
+}
+
+/* asked for less motion: nothing loops, nothing slides */
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    scroll-behavior:auto !important;
+  }
+}
