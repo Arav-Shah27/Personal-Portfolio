@@ -21,17 +21,21 @@ export function startDescent(storm) {
   if (!storm || reduceMotion) {
     /* no dive: the painting until the hero has gone, then the board */
     if (!state) return;
-    ScrollTrigger.create({
-      trigger: run, start: "bottom 40%",
-      onToggle: (self) => {
-        state.painting = self.isActive || self.progress > 0 ? 0 : 1;
-        state.board = state.open = 1 - state.painting;
-        state.zoom = 1;
-        state.dim = 0.45;
-        storm.stage.invalidate();
-      },
-      end: "max",
-    });
+    /* a plain check rather than a trigger: a jump straight past the hero
+       (a link, the End key) has to land on the board too */
+    let past = null;
+    const check = () => {
+      const now = window.scrollY > run.offsetTop + run.offsetHeight * 0.6;
+      if (now === past) return;
+      past = now;
+      state.painting = now ? 0 : 1;
+      state.board = state.open = now ? 1 : 0;
+      state.zoom = 1;
+      state.dim = 0.45;
+      storm.stage.invalidate();
+    };
+    window.addEventListener("scroll", check, { passive: true });
+    check();
     return;
   }
 

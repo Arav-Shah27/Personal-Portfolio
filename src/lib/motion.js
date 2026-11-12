@@ -11,6 +11,7 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 
 gsap.registerPlugin(ScrollTrigger);
+if (import.meta.env.DEV) window.__ST = ScrollTrigger;
 
 const mq = (q) => window.matchMedia(q);
 export const reduceMotion = mq("(prefers-reduced-motion: reduce)").matches;
