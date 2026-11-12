@@ -1,0 +1,103 @@
+/* =========================== WHAT I'VE DONE ==============================
+   Experiences are stops on a route, drawn like the dotted path on an old
+   map. As you read down, current runs along it (src/work.js scrubs --fill)
+   and each stop lights up when it arrives.
+   ========================================================================== */
+
+/* ---- the route ---------------------------------------------------------- */
+.route{
+  --when:11rem; --rail:2.5rem; --gap:clamp(var(--space-5), 3vw, var(--space-7));
+  --node-x:calc(var(--when) + var(--gap) + var(--rail) / 2);
+  position:relative;
+}
+.route-track{
+  position:absolute; top:var(--space-3); bottom:var(--space-3);
+  left:var(--node-x);
+  width:0;
+  border-left:1px dashed rgba(240,207,122,.32);
+}
+.route-fill{
+  position:absolute; top:0; left:-2px;
+  width:3px; height:100%;
+  background:linear-gradient(var(--gold), var(--gold-bright));
+  box-shadow:0 0 10px rgba(240,207,122,.55);
+  transform:scaleY(var(--fill, 0));
+  transform-origin:top;
+}
+.timeline{ list-style:none; margin:0; padding:0; }
+
+.entry{
+  position:relative;
+  display:grid;
+  grid-template-columns:var(--when) var(--rail) minmax(0, 1fr);
+  column-gap:var(--gap);
+  padding:var(--space-6) 0 var(--space-8);
+}
+.entry:last-child{ padding-bottom:var(--space-4); }
+
+.entry-when{
+  display:flex; flex-direction:column; gap:var(--space-1);
+  padding-top:.85rem;
+  text-align:right;
+}
+.entry-when .now{ justify-content:flex-end; }
+.entry-when > :first-child{ color:var(--text); }
+.entry-where{ color:var(--text-faint); }
+
+/* a stop on the route: an empty ring that fills when the current arrives */
+.route-node{
+  justify-self:center;
+  width:17px; height:17px;
+  margin-top:.95rem;
+  border:2px solid rgba(240,207,122,.45);
+  border-radius:50%;
+  background:var(--bg);
+  transition:background-color var(--dur-slow) var(--ease), border-color var(--dur-slow) var(--ease),
+             box-shadow var(--dur-slow) var(--ease), transform var(--dur-slow) var(--ease-entrance);
+}
+.entry.is-lit .route-node{
+  border-color:var(--gold-bright);
+  background:var(--gold);
+  box-shadow:0 0 0 5px rgba(240,207,122,.14), 0 0 22px rgba(240,207,122,.65);
+  transform:scale(1.08);
+}
+
+.entry-top{ display:flex; align-items:center; gap:var(--space-4); margin-bottom:var(--space-5); }
+.entry-title{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(2.1rem, 1.5rem + 1.6vw, 3rem);
+  font-weight:500;
+  line-height:1;
+  letter-spacing:-.015em;
+  text-wrap:balance;
+  text-shadow:0 1px 20px rgba(0,0,0,.8);
+  transition:color var(--dur-base) var(--ease);
+}
+.entry-title .dim{ font-style:italic; }
+.entry-role{
+  margin:var(--space-2) 0 0;
+  font-size:var(--text-md);
+  line-height:var(--leading-normal);
+  color:var(--gold-bright);
+}
+.entry-role .dim{ color:var(--text-muted); }
+.entry-desc{
+  max-width:60ch;
+  margin:0;
+  color:var(--text-muted);
+  text-wrap:pretty;
+  text-shadow:0 1px 12px rgba(0,0,0,.9);
+}
+.entry:hover .entry-title{ color:var(--gold-bright); }
+.entry:hover .logo{ border-color:var(--gold-line); }
+
+/* ---- smaller screens ---------------------------------------------------- */
+@media (max-width:760px){
+  .route{ --when:0px; --rail:1.5rem; --gap:var(--space-4); --node-x:calc(var(--rail) / 2); }
+  .entry{ grid-template-columns:var(--rail) minmax(0, 1fr); }
+  .entry-when{ grid-column:2; grid-row:1; flex-direction:row; flex-wrap:wrap; gap:0 var(--space-3); padding-top:.7rem; text-align:left; }
+  .entry-when .now{ justify-content:flex-start; }
+  .route-node{ grid-column:1; grid-row:1; margin-top:.8rem; width:15px; height:15px; }
+  .entry-body{ grid-column:2; margin-top:var(--space-4); }
+}

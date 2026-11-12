@@ -152,6 +152,12 @@ async function start() {
        shouldn't spark, and keyboard "clicks" (detail 0) have no position */
     document.addEventListener('click', (e) => {
       if (e.button !== 0 || e.detail === 0) return;
+      pop(e.clientX, e.clientY);
+    }, { passive: true });
+    /* the rest of the page can spark too (a stop on the route lighting up) */
+    window.sitePop = pop;
+
+    function pop(cx, cy) {
       let slot = pool.find((p) => !p.fx);
       if (!slot) {
         if (pool.length >= 4) return;
@@ -164,7 +170,7 @@ async function start() {
         slot = { ...surface(canvas, w, h), fx: null };
         pool.push(slot);
       }
-      slot.canvas.style.transform = `translate3d(${e.clientX - ox * S}px, ${e.clientY - oy * S}px, 0)`;
+      slot.canvas.style.transform = `translate3d(${cx - ox * S}px, ${cy - oy * S}px, 0)`;
       slot.canvas.style.opacity = '1';
       slot.fx = createFx(staticPop, { x: ox, y: oy, seed: seed(), palette: GOLD, arcs: 3 + ((Math.random() * 2) | 0) });
       const mine = slot.fx;
@@ -181,7 +187,7 @@ async function start() {
         paint(slot);
         return true;
       });
-    }, { passive: true });
+    }
   }
 
   /* ---------- 3. ball lightning over the footer line -------------------- */

@@ -1,0 +1,104 @@
+/* ============================== SECTIONS =================================
+   Shared by "What I've Done" and "My Brain": the big titles, the group
+   labels, logos, tags and the live dot. The board glows faintly behind all
+   of it, so type carries a soft dark shadow to keep its edges clean.
+   ========================================================================== */
+
+.section{
+  position:relative; z-index:1;
+  max-width:var(--measure-page);
+  margin:0 auto;
+  padding:clamp(var(--space-9), 16vh, 10rem) var(--gutter);
+}
+.section-head{ margin-bottom:clamp(var(--space-7), 10vh, var(--space-10)); }
+.section-title{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(3.5rem, 1.6rem + 7.2vw, 8.75rem);
+  font-weight:500;
+  line-height:.86;
+  letter-spacing:-.03em;
+  text-wrap:balance;
+  text-shadow:0 2px 30px rgba(0,0,0,.7);
+}
+.section-sub{
+  max-width:34em;
+  margin:var(--space-6) 0 0;
+  font-size:clamp(var(--text-base), .95rem + .3vw, var(--text-lg));
+  color:var(--text-muted);
+  text-wrap:pretty;
+}
+
+.group + .group{ margin-top:clamp(var(--space-9), 16vh, 10rem); }
+.group-label{
+  display:flex; align-items:center; gap:var(--space-4);
+  margin:0 0 var(--space-7);
+  color:var(--text-muted);
+}
+.group-label::after{ content:''; flex:1; height:1px; background:linear-gradient(90deg, var(--line-strong), var(--line)); }
+/* the count sits at the far end of the rule */
+.group-label .count{ order:1; font-family:var(--font-pixel); font-size:var(--text-sm); color:var(--gold); }
+
+/* ---- logos: the file if it's there, the monogram if it isn't ----------- */
+.logo{
+  position:relative;
+  flex:none;
+  display:grid; place-items:center;
+  width:2.75rem; height:2.75rem;
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-md);
+  background:rgba(10,8,6,.85);
+  overflow:hidden;
+  transition:border-color var(--dur-base) var(--ease);
+}
+.logo::before{
+  content:attr(data-monogram);
+  font-family:var(--font-pixel);
+  font-size:var(--text-2xs);
+  letter-spacing:.04em;
+  color:var(--gold);
+}
+.logo img{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:contain;
+  padding:var(--space-2);
+  background:var(--surface);
+}
+.logo img.is-missing{ display:none; }
+
+.dim{ color:var(--text-faint); }
+
+/* a small live light next to anything still going on */
+.now{ display:inline-flex; align-items:center; gap:var(--space-2); }
+.now::before{
+  content:'';
+  flex:none;
+  width:6px; height:6px;
+  background:var(--gold-bright);
+  animation:glow 2.8s var(--ease) infinite;
+}
+@keyframes glow{
+  0%,100%{ box-shadow:0 0 0 0 rgba(240,207,122,.5); }
+  50%{ box-shadow:0 0 0 5px rgba(240,207,122,0); }
+}
+
+/* ---- tags --------------------------------------------------------------- */
+.tags{
+  display:flex; flex-wrap:wrap; gap:var(--space-2);
+  margin:var(--space-5) 0 0; padding:0;
+  list-style:none;
+}
+.tags li{
+  padding:3px var(--space-2);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-sm);
+  background:rgba(10,8,6,.7);
+  font-family:var(--font-chrome);
+  font-size:var(--text-2xs);
+  font-weight:var(--weight-medium);
+  line-height:var(--leading-normal);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}

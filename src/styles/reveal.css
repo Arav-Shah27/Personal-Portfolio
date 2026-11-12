@@ -1,0 +1,25 @@
+/* =============================== REVEALS =================================
+   Things settle in as they scroll into view (js/main.js adds .is-in). They
+   move with `translate`, not `transform`, so a chip can reveal and tilt at
+   the same time without one cancelling the other.
+   ========================================================================== */
+.js .reveal{
+  opacity:0;
+  translate:0 1.25rem;
+  filter:blur(6px);
+  transition:
+    opacity 900ms var(--ease-entrance),
+    translate 900ms var(--ease-entrance),
+    filter 900ms var(--ease-entrance);
+}
+.js .reveal.is-in{ opacity:1; translate:none; filter:none; }
+.js .project.reveal{
+  transition:
+    opacity 900ms var(--ease-entrance),
+    translate 900ms var(--ease-entrance),
+    filter 900ms var(--ease-entrance),
+    border-color var(--dur-base) var(--ease),
+    box-shadow var(--dur-slow) var(--ease),
+    transform var(--dur-slow) var(--ease-entrance);
+}
+html.reduce-motion .reveal{ opacity:1; translate:none; filter:none; transition:none; }
