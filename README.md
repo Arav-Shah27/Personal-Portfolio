@@ -1,24 +1,52 @@
 # Arav Shah — Portfolio
 
-A single-page site with no build step and no dependencies: HTML, one stylesheet,
-a few small scripts, and a vendored copy of the pixelfx pixel-art library for
-the lightning.
+**Storm over the Shire.** One continuous scene you scroll through: lightning
+over the Shire at night, a dive through the round green door, a circuit board
+on the other side, a brain made of gold points, and a voxel tree growing out of
+a QR code. Everything visual is drawn by one WebGL canvas behind the page,
+rendered as dithered gold pixel art, so it all reads as one world.
+
+Every word on the page (the intro, experiences, projects, essays) is plain
+HTML, so it's readable, selectable, indexable, and works without WebGL.
 
 ```
-index.html              the page: home, what I've done, my brain
-styles.css              all styling
-js/cursor.js            the gold ring cursor and its dust trail
-js/main.js              nav, hero parallax, scroll reveals, copy-email
-js/brain.js             the essay list and reader
-js/lightning.js         pixel lightning: hero sky bolts, click pops, footer ball
+index.html              the page: home, what I've done, my brain, footer
+404.html                the lost page (same storm, more lightning)
+src/main.js             entry: loads the styles and starts everything below
+src/stage/              the WebGL world (three.js)
+  stage.js                one fixed canvas, one render target, 30fps when idle
+  dither.js               turns every frame into gold pixel art (4x4 Bayer)
+  palette.js              the gold ramp and the pixel size
+  world.js                the painting at night, the storm, the door, the board
+  brain.js                the brain made of points, with a node per essay
+  tree.js                 the Party Tree on its QR code
+src/storm.js            puts the stage on the page and wires up the brain
+src/descent.js          scrolling dives into the door (GSAP ScrollTrigger)
+src/hero.js             the name's intro and its letters catching the light
+src/work.js             the route that fills with current, chips that tilt
+src/dies.js             the little pixel animations inside each project chip
+src/tree.js             the Party Tree's grow and fold
+src/loader.js           the ring that charges up on a first visit
+src/sound.js            thunder, made in the browser (off by default)
+src/titles.js           titles that rise in, labels that flicker
+src/magnet.js           round buttons that lean toward the mouse
+src/mellon.js           type "mellon" anywhere
+src/qr.js               the LinkedIn QR code
+src/lib/motion.js       GSAP, ScrollTrigger and Lenis smooth scrolling
+src/styles/             one stylesheet per part of the page
+js/brain.js             the essay list and the reader
+js/main.js              nav state, reveals, copy-email, toast
+js/cursor.js            the ring cursor and its spark
+js/lightning.js         pixel pops on click, ball lightning over the footer
 edit/                   the pixel lab at /edit (customize + save pixel effects)
 pixelfx/                pixelfx library (MIT), plus my own effects
 pixelfx/custom/         >>> EFFECTS SAVED FROM THE PIXEL LAB <<<
-scripts/dev.mjs         local server (lets the pixel lab save into the project)
 essays/                 >>> YOUR ESSAYS — see essays/README.md <<<
-assets/shire.jpg        hero background
+assets/shire.jpg        the painting (shire-stage.jpg is a lighter copy for WebGL)
+assets/og.png           the share card
 assets/logos/           >>> YOUR LOGO PNGs — see assets/logos/README.md <<<
-vercel.json             caching + clean URLs
+scripts/lab-api.mjs     lets the pixel lab save into the project during npm run dev
+vite.config.js          the build; vercel.json tells Vercel to run it
 ```
 
 ## Run it locally
@@ -41,57 +69,43 @@ every push (see `vercel.json`).
 | An experience or project       | `index.html`, inside `id="work"`                   |
 | Essays                         | `essays/` — full guide in `essays/README.md`       |
 | Logos                          | drop PNGs into `assets/logos/`                     |
-| Colors                         | `styles.css`, the variables at the top (`--gold`…) |
-| Fonts                          | the Google Fonts `<link>` in `index.html`, plus `--font-content` / `--font-chrome` in `styles.css` |
-| Cursor dust amount             | `js/cursor.js`, `distance / 10` in `shed()` — bigger number, less dust |
+| Where the QR code points       | `LINKEDIN` in `src/qr.js`                          |
+| Colors                         | `src/styles/base.css` (`--gold`…) and the stage's ramp in `src/stage/palette.js` |
+| How chunky the pixels are      | `pixelSize()` in `src/stage/palette.js`            |
+| How often the sky strikes      | `ambient(...)` in `src/storm.js`                   |
+| How long the dive into the door is | `.hero-run` height in `src/styles/hero.css`    |
+
+A new project chip gets its die animation from the `data-die` name on its
+canvas: add a scene with that name to `SCENES` in `src/dies.js`.
 
 ## The design system
 
-Everything visual comes from the tokens at the top of `styles.css`, not from
-per-component values. There is one type scale, four line heights, one 4px
-spacing scale, three corner radii, three durations and two easing curves.
+Tokens live in `src/styles/base.css`; everything is built from them.
 
-Type has two faces with fixed jobs:
+- **Cormorant** sets the display type: the name, section and essay titles.
+- **Literata** carries the reading: body copy and essays.
+- **IBM Plex Mono** is chrome: nav, labels, dates, tags.
+- **Geist Pixel** is for numbers and markings: counters, chip part numbers.
 
-- **Literata** (serif) carries content: the name, headings, body copy, essays.
-- **IBM Plex Mono** carries chrome: nav, dates, tags, counters, the footer.
+Colour is one ramp of storm gold, from the page's own black to a white-hot
+core. The stage uses exactly that ramp, so the canvas and the CSS never
+disagree. Mono labels are lowercase; ranges use en dashes (2025 – 2026).
 
-Every small mono label shares the single `.label` class, so they can't drift
-apart. Mono labels are lowercase; mono data (dates, monograms) keeps its
-natural case. Ranges use en dashes (2025 – 2026), not hyphens or em dashes.
+## How it behaves
 
-If you add something, reuse a token rather than typing a new value. That
-consistency is most of what separates a designed page from a generated one.
-
-## Details worth knowing
-
-- **The cursor** only replaces the normal one on devices with a real mouse or
-  trackpad. Phones, tablets, and anyone with "reduce motion" turned on get the
-  standard cursor. Its easing is time-based, so it feels the same on 60Hz and
-  120Hz displays.
-- **Motion** — parallax, reveals, and the cursor all switch off under the
-  system's reduce-motion setting.
-- **Essays** are escaped before formatting is applied, so nothing written in a
-  `.md` file can inject HTML or scripts into the page.
-- **Essay links** are shareable: `yourdomain.com/#brain/<slug>` opens that essay
-  directly, and the browser back button closes it.
-
-## Lightning
-
-Three touches, all in the site's own gold (`STORM_GOLD` in
-`pixelfx/src/fx/lightning/sky-bolt.js`):
-
-- **Hero sky.** Every 9–18 s a distant bolt flickers down at the left or right
-  edge of the painting and the painting brightens with it (`--flash`). Click
-  the sky and a bolt comes down where you clicked.
-- **Clicks.** A tiny static pop wherever you click.
-- **Footer.** A small ball of lightning wanders over the footer line.
-
-Two of the effects were made for this site: `lightning/sky-bolt` and
-`lightning/static-pop`. The footer uses the library's `lightning/ball-lightning`,
-recolored. All of it loads after the page settles, pauses off screen, and is
-off entirely under reduce-motion. Tuning lives at the top of each section in
-`js/lightning.js` (how often bolts come, where, how big a pixel is).
+- **Reduced motion:** no dive, no intro, no ambient lightning, no smooth
+  scrolling; the painting simply gives way to a still board.
+- **No WebGL:** the painting shows as a graded image, the QR code shows flat,
+  and everything else works as normal.
+- **Phones:** native scrolling (no Lenis), a finer pixel grid, and the brain
+  sits under the essay list.
+- **Performance:** text paints first; three.js loads after as its own chunk.
+  The stage idles at 30fps, renders only what's on screen, and stops when the
+  tab is hidden.
+- **Essays** are escaped before formatting is applied, so nothing in a `.md`
+  file can inject HTML or scripts into the page. `yourdomain.com/#brain/<slug>`
+  opens an essay directly, and the back button closes it.
+- **Sound** is off until you switch it on in the nav, and remembered after.
 
 ## The pixel lab (/edit)
 
@@ -108,7 +122,7 @@ Saves are stored differently depending on where the lab runs:
 
 | where                   | saves go to                                     |
 |-------------------------|-------------------------------------------------|
-| `node scripts/dev.mjs`  | `pixelfx/custom/<name>.json` (+ `.js` for code) |
+| `npm run dev`           | `pixelfx/custom/<name>.json` (+ `.js` for code) |
 | the live Vercel site    | that browser's localStorage (download or copy the prompt to move them) |
 
 The live site is static hosting, so it has nowhere to write files. That also
