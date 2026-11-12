@@ -92,6 +92,40 @@ const SCENES = {
     const alarm = Math.floor(t * 0.55) % 3;
     for (let i = 0; i < 3; i++) p.rect(x1 - 22 + i * 8, 7, 5, 3, i <= alarm ? 0.35 + i * 0.25 : 0.12);
   },
+
+  /* a systolic array: operands march in from the left and the top, and each
+     cell flashes as the two meet and it multiplies */
+  socet(p, w, h, t) {
+    const rows = 3, gap = 4;
+    const cell = Math.max(5, Math.floor((h - 12 - (rows - 1) * gap) / rows));
+    const cols = Math.min(8, Math.floor((w - 60) / (cell + gap)));
+    const gw = cols * cell + (cols - 1) * gap, gh = rows * cell + (rows - 1) * gap;
+    const ox = Math.round((w - gw) / 2) + 6, oy = Math.round((h - gh) / 2) + 2;
+    for (let j = 0; j < rows; j++)
+      for (let i = 0; i < cols; i++) {
+        const x = ox + i * (cell + gap), y = oy + j * (cell + gap);
+        const wave = fract(t * 0.55 - (i + j) * 0.075);
+        const hit = Math.pow(1 - wave, 6);
+        const m = cell >> 1;
+        p.rect(x, y, cell, cell, 0.1 + hit * 0.85);
+        p.line(x, y, x + cell - 1, y, 0.3); p.line(x, y, x, y + cell - 1, 0.3);
+        if (i < cols - 1) p.line(x + cell, y + m, x + cell + gap - 1, y + m, 0.18);
+        if (j < rows - 1) p.line(x + m, y + cell, x + m, y + cell + gap - 1, 0.18);
+      }
+    /* the operand streams feeding in */
+    for (let j = 0; j < rows; j++) {
+      const y = oy + j * (cell + gap) + (cell >> 1);
+      for (let s = 0; s < 3; s++) {
+        const f = fract(t * 0.55 - j * 0.075 + s / 3);
+        p.rect(ox - 26 + Math.round(f * 20), y - 1, 2, 2, 0.6 * f);
+      }
+    }
+    for (let i = 0; i < cols; i++) {
+      const x = ox + i * (cell + gap) + (cell >> 1);
+      const f = fract(t * 0.55 - i * 0.075);
+      p.rect(x - 1, oy - 9 + Math.round(f * 6), 2, 2, 0.6 * f);
+    }
+  },
 };
 
 export function startDies() {
