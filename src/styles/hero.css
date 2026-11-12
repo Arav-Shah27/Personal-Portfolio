@@ -20,6 +20,10 @@ html.js:not(.reduce-motion):not(.no-stage) .hero-run{ height:320svh; }
 .hero-bg{ position:absolute; inset:0; z-index:-1; }
 .hero-img{
   position:absolute; inset:0;
+}
+/* only fetched when the stage can't run, so normal visits never download
+   the full-size painting twice */
+html.no-stage .hero-img{
   background:url('../../assets/shire.jpg') center 42% / cover no-repeat;
   filter:brightness(.3) saturate(.55) sepia(.35) contrast(1.1);
 }
