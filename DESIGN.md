@@ -23,18 +23,21 @@ sitting on top of it.
 
 ## Type
 
-All pixel faces, for a dark, cozy, storybook-at-night feel.
+Pixel letters for titles, a plain clean sans for reading. The pixel face is
+what ties the type to the dithered world; everything you read for more than a
+line stays in an ordinary, quiet face.
 
 | face | job | where |
 |---|---|---|
-| Jacquard 24 | display (pixel blackletter) | the name, section titles, essay titles, drop caps, the 404 |
-| Jersey 10 | titles | entries, projects, essay rows, "Hi, I'm", headings inside essays |
-| VT323 | reading | body copy and essays (22px, 1.42 leading) |
-| Tiny5 | chrome | nav, labels, dates, tags, counters, chip markings |
+| Pixelify Sans | display and titles | the name, section titles, entries, projects, essay titles, drop caps, the 404 |
+| Geist | reading | body copy and essays (17px, 1.7 leading; 18px and 1.75 in the reader) |
+| Geist Mono | chrome | nav, labels, dates, tags, counters, chip markings |
 
-Pixel faces have one weight and no italic, so `font-synthesis` is off and
-emphasis is carried by colour (gold), never by faux bold or slant. No negative
-tracking. Text over the stage always carries a soft dark shadow so its edges
+Pixelify only goes on big type: below about 20px its pixel grid smears, so
+small markings use Geist Mono instead. Titles sit at weight 500 so the strokes
+stay even, like a font drawn on a grid. `font-synthesis` is off: every face
+ships its real weights and Geist its real italics. No negative tracking on the
+pixel face. Text over the stage always carries a soft dark shadow so its edges
 stay clean on the dithering.
 
 ## Colour

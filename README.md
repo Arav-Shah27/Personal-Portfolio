@@ -83,10 +83,9 @@ canvas: add a scene with that name to `SCENES` in `src/dies.js`.
 
 Tokens live in `src/styles/base.css`; everything is built from them.
 
-- **Jacquard 24** (pixel blackletter) sets the display type: the name, section and essay titles.
-- **Jersey 10** sets the smaller titles: experiences, projects, essays in the list.
-- **VT323** carries the reading: body copy and essays.
-- **Tiny5** is chrome and numbers: nav, labels, dates, tags, counters.
+- **Pixelify Sans** (clean square pixel letters) sets every title: the name, sections, experiences, projects, essays.
+- **Geist** carries the reading: body copy and essays.
+- **Geist Mono** is chrome and numbers: nav, labels, dates, tags, counters.
 
 Colour is one ramp of storm gold, from the page's own black to a white-hot
 core. The stage uses exactly that ramp, so the canvas and the CSS never
