@@ -1,8 +1,7 @@
 import { defineConfig } from "vite";
 import { cp } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import { labApi } from "./scripts/lab-api.mjs";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = dirname(fileURLToPath(import.meta.url));
 
@@ -28,7 +27,11 @@ export default defineConfig({
   plugins: [
     {
       name: "pixel-lab-api",
-      configureServer(server) {
+      /* dev only, and loaded only then, so a production build never needs
+         anything from scripts/ */
+      async configureServer(server) {
+        const api = pathToFileURL(resolve(root, "scripts", "lab-api.mjs")).href;
+        const { labApi } = await import(/* @vite-ignore */ api);
         server.middlewares.use(labApi(root));
       },
     },
