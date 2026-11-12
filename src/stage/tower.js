@@ -4,6 +4,11 @@
    square of a real QR code for my LinkedIn, while the camera turns to look
    straight down at it. Tap again and the squares fly back up into the tower.
 
+   The eye isn't always home: it roams the site following you (src/eye.js)
+   and settles between the horns when you reach the tower, lighting the
+   stone around it. The voxel eye here only shows while the tower is
+   turning into the code and back, so the eye's squares join the code too.
+
    Every voxel is one instance of one cube, and each one knows two places:
    where it sits in the tower and which square of the code it becomes. The
    flight runs in the vertex shader off one number (uFold), so nothing is
@@ -37,13 +42,16 @@ function buildTower() {
   };
   const at = (a, y, w) => [SIDE[0] * a + VIEW.x * w, y, SIDE[1] * a + VIEW.z * w];
 
-  /* the eye first, so nothing else claims its voxels: a wide burning oval
-     with a black slit down the middle, floating between the horns */
+  /* the eye first, so nothing else claims its voxels: a black slit of a
+     pupil standing just in front of a wide burning oval, between the horns */
+  for (let b = -1.8; b <= 1.8; b += 0.3) {
+    const hw = 0.45 * (1 - (b / 2) ** 2) + 0.1;
+    for (let a = -hw; a <= hw; a += 0.3) put(...at(a, EYE_Y + b, 1.2), 6);
+  }
   for (let a = -3.2; a <= 3.2; a += 0.3)
     for (let b = -2; b <= 2; b += 0.3) {
       if ((a / 3.2) ** 2 + (b / 2) ** 2 > 1) continue;
-      const slit = Math.abs(a) < 0.55 * (1 - (b / 2) ** 2) + 0.1;
-      for (const w of [-0.4, 0.4]) put(...at(a, EYE_Y + b, w), slit ? 6 : 5);
+      for (const w of [-0.4, 0.4]) put(...at(a, EYE_Y + b, w), 5);
     }
 
   /* the tower: stepped tiers, each a hollow shell with ribs running up its
@@ -161,20 +169,21 @@ export function createTower(stage, { box }) {
     ["aRise", aRise, 1], ["aOrder", aOrder, 1], ["aRand", aRand, 1], ["aSpare", aSpare, 1]])
     geo.setAttribute(name, new THREE.InstancedBufferAttribute(arr, size));
 
-  const uniforms = { uGrow: { value: 0 }, uFold: { value: 0 }, uTime: { value: 0 } };
+  const uniforms = {
+    uGrow: { value: 0 }, uFold: { value: 0 }, uTime: { value: 0 },
+    uEyeHome: { value: 0 }, uEyeLit: { value: 0 }, uMod: { value: 4 },
+  };
   const material = new THREE.ShaderMaterial({
     uniforms,
     vertexShader: /* glsl */ `
       attribute vec3 aPos, aTarget;
       attribute float aKind, aTone, aRise, aOrder, aRand, aSpare;
-      uniform float uGrow, uFold, uTime;
-      varying float vL;
+      uniform float uGrow, uFold, uTime, uEyeHome, uEyeLit;
+      varying float vL, vSettle, vTone, vTop, vMottle;
+      varying vec2 vCell;
 
       float backOut(float t) { float c = 1.7; t -= 1.0; return 1.0 + (c + 1.0) * t * t * t + c * t * t; }
 
-      /* exactly a step on the gold ramp, so the finished code has no dither
-         noise in it: light squares are pure cream, dark squares page black */
-      const float QR_LIGHT = 0.876;
       const float SPAN = 0.85, FLIGHT = 0.6;
 
       void main() {
@@ -186,7 +195,9 @@ export function createTower(stage, { box }) {
         float t = clamp((uFold * (SPAN + FLIGHT + 0.05) - aOrder * SPAN - aRand * 0.05) / FLIGHT, 0.0, 1.0);
         float e = t * t * (3.0 - 2.0 * t);
         float hidden = step(1.5, aRise);
-        float s = mix(backOut(g) * (1.0 - hidden), 1.0, smoothstep(0.0, 0.3, t));
+        /* the eye's voxels only show when asked (they always join the code) */
+        float home = mix(1.0, backOut(clamp(uEyeHome, 0.0, 1.0)), step(4.5, aKind));
+        float s = mix(backOut(g) * (1.0 - hidden) * home, 1.0, smoothstep(0.0, 0.3, t));
         s *= 1.0 - aSpare * smoothstep(0.5, 0.9, t);
 
         /* a tumble of a whole number of quarter turns, so it lands square */
@@ -212,16 +223,39 @@ export function createTower(stage, { box }) {
           aKind < 5.5 ? 0.9 + 0.08 * sin(uTime * 2.2 + aPos.y * 1.7) :   /* the eye */
                         0.0;                                 /* its pupil */
         /* the eye lights the stone around it */
-        base += aKind < 2.5 ? 0.4 * smoothstep(13.0, 0.0, length(aPos - vec3(0.0, ${EYE_Y.toFixed(1)}, 0.0))) : 0.0;
+        base += aKind < 2.5 ? 0.4 * uEyeLit * smoothstep(13.0, 0.0, length(aPos - vec3(0.0, ${EYE_Y.toFixed(1)}, 0.0))) : 0.0;
         vL = aKind > 2.5 ? base : base * lam;
-        /* landing, a voxel takes on its square's exact colour */
-        vL = mix(vL, aTone * QR_LIGHT, smoothstep(0.7, 0.95, t));
+        /* landing, a voxel becomes a tile of the code (coloured in the
+           fragment shader) */
+        vSettle = smoothstep(0.7, 0.95, t);
+        vTone = aTone;
+        vTop = step(0.5, n.y);
+        vMottle = step(aRand, 0.55);
+        vCell = wp.xz - aTarget.xz + 0.5;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(wp, 1.0);
       }
     `,
     fragmentShader: /* glsl */ `
-      varying float vL;
-      void main() { gl_FragColor = vec4(vec3(vL), 0.0); }
+      uniform float uMod;
+      varying float vL, vSettle, vTone, vTop, vMottle;
+      varying vec2 vCell;
+
+      /* exactly step k of the gold ramp, so the finished code has no dither
+         noise in it */
+      float rampStep(float k) { return (k + 0.02) / 8.0; }
+
+      void main() {
+        /* The code is gold set in black stone, matching the tower. The gold
+           squares are one flat colour: a scanner sets its black/white line
+           block by block, and any shading inside the gold would fall below
+           that line and read as black. The texture goes in the stone
+           instead: about half the black squares are bricks with a faint lit
+           edge along the top and left, far too dark to ever read as gold. */
+        float e = 1.0 / max(uMod, 1.0);
+        float brick = max(step(vCell.x, e), step(vCell.y, e)) * vTop * vMottle;
+        float tile = vTone > 0.5 ? rampStep(6.0) : rampStep(brick);
+        gl_FragColor = vec4(vec3(mix(vL, tile, vSettle)), 0.0);
+      }
     `,
   });
   const mesh = new THREE.InstancedMesh(geo, material, n);
@@ -235,7 +269,13 @@ export function createTower(stage, { box }) {
   const A = new THREE.Vector3(75, 30, 86), B = new THREE.Vector3();
   const lookA = new THREE.Vector3(0, 27, 0), lookB = new THREE.Vector3();
   const tmp = new THREE.Vector3(), look = new THREE.Vector3();
-  const state = { grow: 0, fold: 0, cam: 0 };
+  /* eyeHome: the voxel eye is showing; eyeLit: the eye is home, lighting
+     the stone round it */
+  const state = { grow: 0, fold: 0, cam: 0, eyeHome: 0, eyeLit: 0 };
+  /* where the eye's socket is on screen, in CSS pixels, for the roaming eye
+     to fly back to */
+  const eye = { x: 0, y: 0, w: 48 };
+  const eyeC = new THREE.Vector3(), eyeE = new THREE.Vector3();
 
   /* Overhead, the code is framed so every module is a whole number of
      pixels and every module edge lands on a pixel edge. Looking straight
@@ -280,6 +320,7 @@ export function createTower(stage, { box }) {
   return {
     qr,
     state,
+    eye,
     active: visible,
     animating: () => true,
     fast: () => (state.grow > 0 && state.grow < 1) || (state.fold > 0 && state.fold < 1) || (state.cam > 0 && state.cam < 1),
@@ -287,6 +328,8 @@ export function createTower(stage, { box }) {
       uniforms.uGrow.value = state.grow;
       uniforms.uFold.value = state.fold;
       uniforms.uTime.value = frame.t;
+      uniforms.uEyeHome.value = state.eyeHome;
+      uniforms.uEyeLit.value = state.eyeLit;
       const { px, h } = frame;
       const bw = Math.ceil(rect.width / px), bh = Math.ceil(rect.height / px);
       /* draw into a wider area than the button, so the voxels in flight
@@ -296,12 +339,20 @@ export function createTower(stage, { box }) {
       const y = h - Math.ceil(rect.bottom / px) - my, hh = bh + 2 * my;
       mesh.rotation.y = (1 - state.cam) * Math.sin(frame.t * 0.25) * 0.18;
       place(w, hh, bw, bh);
+      uniforms.uMod.value = Math.max(1, Math.floor(Math.min(bw, bh) / (qr.size + 2)));
       renderer.setViewport(x, y, w, hh);
       renderer.setScissor(x, y, w, hh);
       renderer.setScissorTest(true);
       renderer.clearDepth();
       renderer.render(scene, camera);
       renderer.setScissorTest(false);
+
+      mesh.updateMatrixWorld();
+      const toCss = (v) => [(x + ((v.x + 1) / 2) * w) * px, (h - y - ((v.y + 1) / 2) * hh) * px];
+      eyeC.set(0, EYE_Y, 0).applyMatrix4(mesh.matrixWorld).project(camera);
+      eyeE.set(SIDE[0] * 3.2, EYE_Y, SIDE[1] * 3.2).applyMatrix4(mesh.matrixWorld).project(camera);
+      const [cx, cy] = toCss(eyeC), [ex, ey] = toCss(eyeE);
+      eye.x = cx; eye.y = cy; eye.w = 2 * Math.hypot(ex - cx, ey - cy);
     },
   };
 }

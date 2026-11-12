@@ -130,3 +130,17 @@ html:not(.has-ring) .spark-dot{ display:none; }
 }
 html.stage-ready .stage{ opacity:1; }
 html.has-stage .hero-bg{ display:none; }
+
+/* the eye from the dark tower, loose on the page (src/stage/eye.js): above
+   the content, below the nav, the reader and the cursor, and screened so
+   whatever is under it still shows through */
+.eye-sprite{
+  position:fixed; left:0; top:0;
+  z-index:40;
+  pointer-events:none;
+  visibility:hidden;
+  image-rendering:pixelated;
+  mix-blend-mode:screen;
+  will-change:transform;
+}
+@media print{ .eye-sprite{ display:none; } }

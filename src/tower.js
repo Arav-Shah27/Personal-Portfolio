@@ -4,12 +4,14 @@
    ========================================================================== */
 import { gsap, ScrollTrigger, reduceMotion } from "./lib/motion.js";
 import { qrMatrix } from "./qr.js";
+import { startEye } from "./eye.js";
 
-/* the flat, crisp code: one canvas pixel per module, scaled up by CSS */
+/* the flat, crisp code: one canvas pixel per module, scaled up by CSS, in
+   the tower's gold on black so it matches the 3D one */
 function paintQr(canvas, qr) {
   canvas.width = canvas.height = qr.size;
   const ctx = canvas.getContext("2d");
-  ctx.fillStyle = "#fff3cf";
+  ctx.fillStyle = "#d9b45a";
   ctx.fillRect(0, 0, qr.size, qr.size);
   ctx.fillStyle = "#0a0806";
   for (let r = 0; r < qr.size; r++) for (let c = 0; c < qr.size; c++) if (qr.dark(r, c)) ctx.fillRect(c, r, 1, 1);
@@ -35,6 +37,8 @@ export async function startTower(storm) {
   paintQr(canvas, tower.qr);
   const s = tower.state;
   if (import.meta.env.DEV) window.__tower = tower;
+  /* its eye is out on the page until you get here */
+  const eye = startEye(storm, tower, button);
 
   /* it rises when you get there */
   if (reduceMotion) s.grow = 1;
@@ -49,14 +53,16 @@ export async function startTower(storm) {
     button.setAttribute("aria-pressed", String(folded));
     hint.textContent = folded ? "scan for my linkedin · tap to raise it again" : "tap the tower";
     tl?.kill();
+    if (folded) eye.fold();
     if (reduceMotion) {
       Object.assign(s, { fold: folded ? 1 : 0, cam: folded ? 1 : 0, grow: 1 });
+      if (!folded) eye.unfolded();
       storm.stage.invalidate();
       return;
     }
     if (s.grow < 1) gsap.to(s, { grow: 1, duration: 0.6 });
     tl = gsap.timeline({ defaults: { ease: "power2.inOut" } });
     if (folded) tl.to(s, { fold: 1, duration: 2.2, ease: "power1.inOut" }, 0).to(s, { cam: 1, duration: 2 }, 0.1);
-    else tl.to(s, { cam: 0, duration: 1.8 }, 0).to(s, { fold: 0, duration: 2.2, ease: "power1.inOut" }, 0.1);
+    else tl.to(s, { cam: 0, duration: 1.8 }, 0).to(s, { fold: 0, duration: 2.2, ease: "power1.inOut" }, 0.1).add(() => eye.unfolded());
   });
 }
