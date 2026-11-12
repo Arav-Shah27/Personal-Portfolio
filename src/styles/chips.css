@@ -90,10 +90,10 @@
 .project-title{
   margin:0;
   font-family:var(--font-title);
-  font-size:clamp(2.1rem, 1.6rem + 1.2vw, 2.8rem);
-  font-weight:400;
-  line-height:.95;
-  letter-spacing:.01em;
+  font-size:clamp(1.6rem, 1.25rem + 1vw, 2.15rem);
+  font-weight:500;
+  line-height:1.05;
+  letter-spacing:0;
   text-wrap:balance;
   transition:color var(--dur-base) var(--ease);
 }

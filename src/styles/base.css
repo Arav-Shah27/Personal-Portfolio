@@ -2,11 +2,10 @@
    Arav Shah: the base. Tokens, page defaults and the one shared label.
 
    Everything is built from the tokens in :root, so the page keeps one
-   rhythm. Type is all pixel faces, each with one job:
-     Jacquard 24           display  - the name, section titles, essay titles
-     Jersey 10             titles   - entries, projects, essays in the list
-     VT323                 content  - body copy, essays
-     Tiny5                 chrome   - nav, labels, dates, tags, numbers
+   rhythm. Type has three faces, each with one job:
+     Pixelify Sans         display  - the name and every title
+     Geist                 content  - body copy, essays
+     Geist Mono            chrome   - nav, labels, dates, tags, numbers
 
    The page sits on the stage (src/stage/): one canvas of dithered gold
    pixel art behind everything, so the CSS stays flat and dark on purpose.
@@ -28,35 +27,35 @@
   --gold-line:   rgba(217,180,90,.3);
 
   /* ---- type ---- */
-  --font-display: 'Jacquard 24', 'Jersey 10', serif;
-  --font-title:   'Jersey 10', 'VT323', sans-serif;
-  --font-content: 'VT323', ui-monospace, 'SF Mono', Menlo, monospace;
-  --font-chrome:  'Tiny5', 'VT323', ui-monospace, monospace;
-  --font-pixel:   'Tiny5', 'VT323', ui-monospace, monospace;
+  --font-display: 'Pixelify Sans Variable', 'Pixelify Sans', ui-monospace, monospace;
+  --font-title:   var(--font-display);
+  --font-content: 'Geist Variable', 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-chrome:  'Geist Mono Variable', 'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-pixel:   var(--font-chrome);              /* counters, chip markings */
 
   /* one scale; every size on the page is one of these */
-  --text-2xs: 0.875rem;                           /* 14 - monograms        */
-  --text-xs:  1rem;                               /* 16 - labels, dates    */
-  --text-sm:  1.0625rem;                          /* 17 - nav, footer      */
-  --text-md:  1.25rem;                            /* 20 - secondary copy   */
-  --text-base:1.375rem;                           /* 22 - body             */
-  --text-lg:  1.5rem;                             /* 24 - lede             */
+  --text-2xs: 0.6875rem;                          /* 11 - monograms        */
+  --text-xs:  0.75rem;                            /* 12 - labels, dates    */
+  --text-sm:  0.8125rem;                          /* 13 - nav, footer      */
+  --text-md:  0.9375rem;                          /* 15 - secondary copy   */
+  --text-base:1.0625rem;                          /* 17 - body             */
+  --text-lg:  1.1875rem;                          /* 19 - lede             */
   --text-xl:  clamp(1.375rem, 1.7vw, 1.625rem);   /* card titles           */
   --text-2xl: clamp(1.75rem, 2.4vw, 2.125rem);    /* entry + essay titles  */
   --text-3xl: clamp(2.5rem, 5vw, 3.5rem);         /* section titles        */
   --text-4xl: clamp(3.5rem, 9.5vw, 7rem);         /* the name              */
 
   --weight-regular: 400;
-  --weight-medium:  400;                          /* pixel faces have one weight */
-  --weight-semibold:400;
+  --weight-medium:  500;
+  --weight-semibold:600;
 
   /* four line heights, chosen by role rather than per element */
   --leading-display: 1.05;
   --leading-tight:   1.2;
   --leading-normal:  1.5;
-  --leading-prose:   1.42;
+  --leading-prose:   1.7;
 
-  --tracking-label: .06em;                        /* every pixel micro-label */
+  --tracking-label: .06em;                        /* every mono micro-label */
   --tracking-display: 0;
 
   /* ---- space: a 4px scale ---- */
@@ -113,10 +112,9 @@ body{
   font-size:var(--text-base);
   font-weight:var(--weight-regular);
   line-height:var(--leading-prose);
-  /* pixel faces: never fake a bold or an italic, keep edges as crisp as
-     the browser allows */
+  /* every face ships its real weights and italics; never fake them */
   font-synthesis:none;
-  -webkit-font-smoothing:none;
+  -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
   overflow-x:hidden;
 }

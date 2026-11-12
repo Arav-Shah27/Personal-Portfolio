@@ -66,10 +66,10 @@
 .entry-title{
   margin:0;
   font-family:var(--font-title);
-  font-size:clamp(2.4rem, 1.8rem + 1.7vw, 3.4rem);
-  font-weight:400;
-  line-height:.95;
-  letter-spacing:.01em;
+  font-size:clamp(1.75rem, 1.3rem + 1.3vw, 2.5rem);
+  font-weight:500;
+  line-height:1.05;
+  letter-spacing:0;
   text-wrap:balance;
   text-shadow:0 1px 20px rgba(0,0,0,.8);
   transition:color var(--dur-base) var(--ease);

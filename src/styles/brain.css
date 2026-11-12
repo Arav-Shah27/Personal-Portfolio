@@ -79,9 +79,9 @@ html.no-stage .brain-viz{ display:none; }
 .essay-num{ font-family:var(--font-pixel); font-size:var(--text-sm); color:var(--gold); }
 .essay-title{
   font-family:var(--font-title);
-  font-size:clamp(1.9rem, 1.5rem + 1vw, 2.5rem);
-  font-weight:400;
-  line-height:1;
+  font-size:clamp(1.4rem, 1.15rem + .8vw, 1.9rem);
+  font-weight:500;
+  line-height:1.1;
   color:var(--text);
   text-wrap:balance;
   transition:color var(--dur-base) var(--ease), translate var(--dur-base) var(--ease);
