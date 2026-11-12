@@ -102,3 +102,7 @@
   color:var(--text-muted);
   transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
 }
+
+@media (max-width:760px){
+  .section{ padding-block:var(--space-9); }
+}

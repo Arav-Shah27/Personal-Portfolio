@@ -140,8 +140,8 @@ export function createTree(stage, { box }) {
 
   /* the camera swings from a three-quarter view down to straight overhead */
   const camera = new THREE.PerspectiveCamera(32, 1, 1, 400);
-  const A = new THREE.Vector3(46, 38, 52), B = new THREE.Vector3(0, 70, 0.001);
-  const lookA = new THREE.Vector3(0, 6.5, 0), lookB = new THREE.Vector3(0, 0, 0);
+  const A = new THREE.Vector3(54, 44, 61), B = new THREE.Vector3(0, 70, 0.001);
+  const lookA = new THREE.Vector3(0, 4.5, 0), lookB = new THREE.Vector3(0, 0, 0);
   const tmp = new THREE.Vector3(), look = new THREE.Vector3();
   const state = { grow: 0, fold: 0, cam: 0 };
 
