@@ -282,6 +282,24 @@
   document.addEventListener('mouseup', release);
   window.addEventListener('blur', release);
 
-  root.addEventListener('mouseleave', function () { setVisible(false); });
-  root.addEventListener('mouseenter', function () { if (started) setVisible(true); });
+  root.addEventListener('mouseleave', function () { setVisible(false); spark.style.opacity = 0; });
+  root.addEventListener('mouseenter', function () { if (started) { setVisible(true); spark.style.opacity = ''; } });
+
+  /* ---------- the spark: the exact point, with no easing ------------------
+     The ring trails a little behind on purpose, so a pixel of light sits
+     right under the pointer for aiming. Over the parts of the page that do
+     something when you touch them (the sky, the brain, the tree) it's
+     charged, and the ring hums with it. */
+  var spark = document.createElement('div');
+  spark.className = 'spark-dot';
+  document.body.appendChild(spark);
+  var CHARGED = '.hero, .brain-viz, .party-tree';
+  var NOT_CHARGED = 'a, button:not(.party-tree), p, h1, h2, ul, .no-strike';
+  document.addEventListener('mousemove', function (e) {
+    spark.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
+    var el = e.target;
+    var charged = !!(el && el.closest && el.closest(CHARGED) && !el.closest(NOT_CHARGED));
+    ring.classList.toggle('is-charged', charged);
+    spark.classList.toggle('is-charged', charged);
+  }, { passive: true });
 })();
