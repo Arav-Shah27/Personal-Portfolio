@@ -57,7 +57,7 @@
 /* the die window */
 .chip-die{
   position:relative;
-  height:clamp(6.5rem, 9vw, 8.5rem);
+  height:clamp(7.5rem, 10vw, 9.5rem);
   margin-bottom:var(--space-5);
   border:1px solid rgba(240,207,122,.16);
   border-radius:4px;
