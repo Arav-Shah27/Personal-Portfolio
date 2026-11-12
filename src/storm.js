@@ -18,7 +18,7 @@ export function startStorm() {
   const hero = document.querySelector(".hero");
 
   const world = stage.add(createWorld(stage, {
-    onReady: () => root.classList.add("stage-ready"),
+    onReady: () => { root.classList.add("stage-ready"); window.dispatchEvent(new Event("stage:ready")); },
     /* the flash goes out as a CSS variable and an event, so type and
        anything else can light up in step with the sky */
     onFlash: (flash, x) => {

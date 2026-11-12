@@ -14,9 +14,26 @@
 
 <link rel="preload" as="image" href="assets/shire.jpg">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230c0b09'/><circle cx='16' cy='16' r='8.5' fill='none' stroke='%23d9b45a' stroke-width='3.2'/></svg>">
-<script>document.documentElement.classList.add('js');</script>
+<script>
+  /* js is on; and on the first visit of a session (unless motion is
+     unwelcome) the ring loader plays before the page opens */
+  (function (d) {
+    d.classList.add('js');
+    try {
+      if (!sessionStorage.getItem('seen') && !matchMedia('(prefers-reduced-motion: reduce)').matches) d.classList.add('has-loader');
+    } catch (e) {}
+  })(document.documentElement);
+</script>
 </head>
 <body>
+
+<div class="loader" aria-hidden="true">
+  <svg class="loader-ring" viewBox="0 0 120 120">
+    <circle class="loader-track" cx="60" cy="60" r="44"/>
+    <circle class="loader-fill" cx="60" cy="60" r="44" pathLength="100"/>
+  </svg>
+  <span class="loader-count">000</span>
+</div>
 
 <a class="skip" href="#work">Skip to content</a>
 <div class="progress" aria-hidden="true"></div>

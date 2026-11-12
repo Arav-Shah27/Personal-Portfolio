@@ -1,0 +1,39 @@
+/* ================================ LOADER =================================
+   First visit only. The gold ring from the logo charges up while the page
+   loads, a bolt strikes it, and it opens out like the round door onto the
+   page. If the script never runs, it gets out of the way by itself.
+   ========================================================================== */
+.loader{ display:none; }
+html.has-loader .loader{
+  --open:0%;
+  position:fixed; inset:0;
+  z-index:2000;
+  display:grid; place-items:center;
+  background:#0a0806;
+  /* a hole the shape of the ring, which grows until the loader is gone */
+  -webkit-mask:radial-gradient(circle at 50% 50%, transparent var(--open), #000 calc(var(--open) + 1px));
+          mask:radial-gradient(circle at 50% 50%, transparent var(--open), #000 calc(var(--open) + 1px));
+  animation:loader-failsafe 0s 7s forwards;
+}
+@keyframes loader-failsafe{ to{ visibility:hidden; } }
+html.loaded .loader{ display:none; }
+
+.loader-ring{ width:clamp(6rem, 14vw, 9rem); overflow:visible; }
+.loader-ring circle{ fill:none; stroke-width:7; }
+.loader-track{ stroke:rgba(240,207,122,.12); }
+.loader-fill{
+  stroke:var(--gold);
+  stroke-dasharray:var(--fill, 0) 100;
+  transform:rotate(-90deg);
+  transform-origin:center;
+  filter:drop-shadow(0 0 6px rgba(240,207,122,.55));
+}
+.loader.is-struck .loader-fill{ stroke:#fff3cf; filter:drop-shadow(0 0 22px rgba(255,243,207,.95)); }
+.loader-count{
+  position:absolute;
+  font-family:var(--font-pixel);
+  font-size:var(--text-sm);
+  letter-spacing:.12em;
+  color:var(--gold);
+  translate:0 calc(clamp(6rem, 14vw, 9rem) / 2 + 2rem);
+}
