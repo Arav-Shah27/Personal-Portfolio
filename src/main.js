@@ -8,6 +8,7 @@ import { startWork } from "./work.js";
 import { startDies } from "./dies.js";
 import { startTree } from "./tree.js";
 import "../styles.css";
+import "./styles/nav.css";
 import "./styles/hero.css";
 import "./styles/sections.css";
 import "./styles/work.css";

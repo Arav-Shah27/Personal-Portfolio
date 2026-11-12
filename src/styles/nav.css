@@ -1,0 +1,102 @@
+/* ================================ NAV ====================================
+   Quiet over the painting, a solid strip once you're reading. No frosted
+   glass: the stage behind is pixel art, and blurring it just makes mud.
+   ========================================================================== */
+.nav{
+  position:fixed; top:0; left:0; right:0;
+  z-index:50;
+  display:flex; align-items:center; gap:clamp(var(--space-4), 3vw, var(--space-7));
+  height:var(--nav-h);
+  padding:0 var(--gutter);
+  border-bottom:1px solid transparent;
+  transition:transform var(--dur-slow) var(--ease), background-color var(--dur-base) var(--ease),
+             border-color var(--dur-base) var(--ease), height var(--dur-base) var(--ease);
+}
+.nav.is-scrolled{
+  height:calc(var(--nav-h) - .75rem);
+  background:rgba(10,8,6,.94);
+  border-bottom-color:var(--line);
+}
+.nav.is-hidden{ transform:translateY(-100%); }
+
+/* a hairline of gold across the very top that fills as you read down */
+.progress{
+  position:fixed; top:0; left:0; right:0;
+  z-index:60;
+  height:2px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transform:scaleX(var(--progress, 0));
+  transform-origin:left;
+  pointer-events:none;
+}
+
+.nav-mark{
+  display:flex; align-items:center; gap:var(--space-2);
+  margin-right:auto;
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  letter-spacing:var(--tracking-label);
+  color:var(--text);
+  text-shadow:0 1px 10px rgba(0,0,0,.8);
+}
+.nav-mark svg{ color:var(--gold); transition:color var(--dur-base) var(--ease), filter var(--dur-base) var(--ease), rotate 900ms var(--ease-entrance); }
+.nav-mark:hover svg{ color:var(--gold-bright); filter:drop-shadow(0 0 5px rgba(240,207,122,.7)); rotate:180deg; }
+
+.nav-links{ display:flex; gap:clamp(var(--space-4), 2.6vw, var(--space-6)); }
+.nav-links a{
+  position:relative;
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-2) 0;
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  text-shadow:0 1px 10px rgba(0,0,0,.8);
+  transition:color var(--dur-base) var(--ease);
+}
+/* the section you're in gets a lit pixel */
+.nav-links a::before{
+  content:'';
+  width:5px; height:5px;
+  background:var(--gold-bright);
+  box-shadow:0 0 8px rgba(240,207,122,.8);
+  transform:scale(0);
+  transition:transform var(--dur-base) var(--ease-entrance);
+}
+.nav-links a:hover{ color:var(--text); }
+.nav-links a.is-active{ color:var(--text); }
+.nav-links a.is-active::before{ transform:none; }
+
+/* ---- the thunder switch: off unless you turn it on ---------------------- */
+.sound{
+  display:inline-flex; align-items:center; gap:3px;
+  height:2.25rem;
+  padding:0 var(--space-3);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-pill);
+  background:rgba(10,8,6,.6);
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.sound:hover{ color:var(--text); border-color:var(--gold-line); }
+.sound-bars{ display:inline-flex; align-items:flex-end; gap:2px; height:12px; }
+.sound-bars i{ width:2px; height:2px; background:currentColor; transition:height var(--dur-base) var(--ease); }
+.sound[aria-pressed="true"]{ color:var(--gold-bright); border-color:var(--gold-line); }
+.sound[aria-pressed="true"] .sound-bars i{ animation:bars 900ms steps(4) infinite alternate; }
+.sound[aria-pressed="true"] .sound-bars i:nth-child(2){ animation-delay:-300ms; }
+.sound[aria-pressed="true"] .sound-bars i:nth-child(3){ animation-delay:-600ms; }
+@keyframes bars{ from{ height:2px; } to{ height:12px; } }
+html.reduce-motion .sound[aria-pressed="true"] .sound-bars i{ animation:none; height:8px; }
+
+@media (max-width:640px){
+  .nav-mark span{ display:none; }
+  .nav-links{ gap:var(--space-4); }
+  .nav-links a::before{ display:none; }
+}
+@media (max-width:400px){
+  .nav{ gap:var(--space-3); }
+  .nav-links{ gap:var(--space-3); }
+  .nav-links a{ font-size:var(--text-xs); }
+  .sound{ padding:0 var(--space-2); }
+}

@@ -52,7 +52,11 @@
     var y = window.scrollY;
     var vh = window.innerHeight;
 
-    nav.classList.toggle('is-scrolled', y > 24);
+    /* the nav stays see-through over the painting and the dive into the
+       door, and turns solid once there's reading to do */
+    var run = document.querySelector('.hero-run');
+    var solidAt = run ? run.offsetTop + run.offsetHeight - vh * 0.5 : 24;
+    nav.classList.toggle('is-scrolled', y > solidAt);
 
     var room = root.scrollHeight - vh;
     if (progress) progress.style.setProperty('--progress', room > 0 ? Math.min(1, y / room).toFixed(4) : 0);
