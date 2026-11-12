@@ -127,6 +127,13 @@
     if (!e) return;
 
     if (pushHistory) history.pushState({ essay: slug }, '', '#brain/' + slug);
+    /* the reader grows out of a circle from wherever it was opened */
+    var from = opener || list.querySelector('[data-slug="' + slug + '"]');
+    if (from && current === null) {
+      var fr = from.getBoundingClientRect();
+      reader.style.setProperty('--ox', Math.round(fr.left + Math.min(fr.width, 80) / 2) + 'px');
+      reader.style.setProperty('--oy', Math.round(fr.top + fr.height / 2) + 'px');
+    }
     /* remember the row itself rather than document.activeElement: Safari
        doesn't focus a button when it's clicked, so that would just be <body> */
     if (current === null) returnFocus = opener || list.querySelector('[data-slug="' + slug + '"]');
@@ -182,7 +189,7 @@
     document.documentElement.classList.remove('reader-open');
     document.title = baseTitle;
     stopLoading();
-    hideTimer = window.setTimeout(function () { reader.hidden = true; bodyEl.innerHTML = ''; }, 520);
+    hideTimer = window.setTimeout(function () { reader.hidden = true; bodyEl.innerHTML = ''; }, 820);
     if (returnFocus && returnFocus.focus) returnFocus.focus({ preventScroll: true });
     else if (reader.contains(document.activeElement)) document.activeElement.blur();
     returnFocus = null;

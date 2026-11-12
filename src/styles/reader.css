@@ -1,0 +1,263 @@
+/* ================================ READER =================================
+   An essay opens like a round door: the page grows out of a circle from
+   the row you clicked (--ox, --oy), and the words ink in a line at a time.
+   It reads like the first page of a book: a centred title, a gold ring
+   under it, a drop cap, and a ring to sign off.
+   ========================================================================== */
+
+.reader{
+  --ox:50%; --oy:50%;
+  position:fixed; inset:0;
+  z-index:1000;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(240,207,122,.05), transparent 60%),
+    #0d0a07;
+  clip-path:circle(0% at var(--ox) var(--oy));
+  transition:clip-path 800ms cubic-bezier(.7,0,.2,1);
+}
+.reader.is-open{ clip-path:circle(150% at var(--ox) var(--oy)); }
+html.reduce-motion .reader{ transition:opacity var(--dur-base) var(--ease); clip-path:none; opacity:0; }
+html.reduce-motion .reader.is-open{ opacity:1; }
+
+.reader-bar{
+  position:sticky; top:0;
+  z-index:1;
+  display:flex; align-items:center; justify-content:space-between; gap:var(--space-4);
+  padding:var(--space-4) var(--gutter);
+  background:rgba(13,10,7,.96);
+  border-bottom:1px solid var(--line);
+}
+/* once the big title scrolls away, a small copy of it shows up in the bar */
+.reader-bar-title{
+  position:absolute; left:50%; top:50%;
+  max-width:min(40vw, 32rem);
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  font-family:var(--font-display);
+  font-size:var(--text-lg);
+  font-weight:500;
+  color:var(--text);
+  opacity:0;
+  transform:translate(-50%, -30%);
+  pointer-events:none;
+  transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+.reader.is-past-title .reader-bar-title{ opacity:1; transform:translate(-50%, -50%); }
+@media (max-width:620px){ .reader-bar-title{ display:none; } }
+
+.reader-back{
+  padding:var(--space-1) 0;
+  border:0; background:none;
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease);
+}
+.reader-back:hover{ color:var(--gold-bright); }
+.reader-back span{ display:inline-block; transition:transform var(--dur-base) var(--ease); }
+.reader-back:hover span{ transform:translateX(calc(var(--space-1) * -1)); }
+.reader-tools{ display:flex; align-items:center; gap:var(--space-2); }
+.reader-tool{
+  min-width:2.25rem; height:2rem;
+  padding:0 var(--space-2);
+  border:1px solid var(--line);
+  border-radius:var(--radius-sm);
+  background:none;
+  font-family:var(--font-chrome);
+  font-size:var(--text-xs);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.reader-tool:hover{ color:var(--gold-bright); border-color:var(--gold-line); }
+.reader-tool:disabled{ opacity:.35; pointer-events:none; }
+.reader-hint{
+  padding:0 var(--space-2);
+  border:1px solid var(--line-strong);
+  border-bottom-width:2px;
+  border-radius:var(--radius-sm);
+}
+/* phones don't have an esc key, so don't advertise one */
+@media (pointer:coarse){ .reader-hint{ display:none; } }
+
+/* An essay is fetched when you open it. The bar only appears if that takes
+   long enough to notice, so a fast load never flashes a loading state. */
+.reader-progress{
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:1px;
+  overflow:hidden;
+  opacity:0;
+  transition:opacity var(--dur-fast) var(--ease);
+}
+.reader.is-loading .reader-progress{ opacity:1; }
+.reader-progress::after{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  transform:translateX(-100%);
+  animation:progress 1.1s var(--ease) infinite;
+}
+@keyframes progress{ to{ transform:translateX(100%); } }
+/* how far through the essay you are */
+.reader-read{
+  position:absolute; left:0; right:0; bottom:-1px;
+  height:2px;
+  background:linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transform:scaleX(var(--read, 0));
+  transform-origin:left;
+}
+.reader.is-loading .reader-read{ opacity:0; }
+
+.reader-article{
+  max-width:42rem;
+  margin:0 auto;
+  padding:clamp(var(--space-8), 12vh, var(--space-10)) var(--gutter) var(--space-10);
+}
+.reader-meta{ margin:0 0 var(--space-5); text-align:center; color:var(--gold); }
+.reader-meta:empty{ display:none; }
+.reader-title{
+  margin:0 auto;
+  max-width:16ch;
+  font-family:var(--font-display);
+  font-size:clamp(2.8rem, 1.8rem + 4vw, 5.25rem);
+  font-weight:500;
+  line-height:.98;
+  letter-spacing:-.02em;
+  text-align:center;
+  text-wrap:balance;
+}
+.reader-title.is-empty{ font-style:italic; color:var(--text-faint); }
+/* the ring from the logo, under the title */
+.reader-title::after{
+  content:'';
+  display:block;
+  width:14px; height:14px;
+  margin:var(--space-7) auto var(--space-8);
+  border:2px solid var(--gold);
+  border-radius:50%;
+  box-shadow:0 0 14px rgba(240,207,122,.35);
+}
+
+.reader-body{
+  color:rgba(239,230,210,.88);
+  font-size:calc(1.125rem * var(--reader-scale, 1));
+  line-height:1.78;
+}
+.reader-body > :first-child{ margin-top:0; }
+/* the words ink in, left to right, a block at a time */
+.reader-body > *{
+  -webkit-mask-image:linear-gradient(90deg, #000 40%, transparent 60%);
+          mask-image:linear-gradient(90deg, #000 40%, transparent 60%);
+  -webkit-mask-size:250% 100%; mask-size:250% 100%;
+  animation:ink 1.3s var(--ease-entrance) backwards;
+}
+.reader-body > :nth-child(2){ animation-delay:90ms; }
+.reader-body > :nth-child(3){ animation-delay:180ms; }
+.reader-body > :nth-child(n+4){ animation-delay:270ms; }
+@keyframes ink{ from{ -webkit-mask-position:100% 0; mask-position:100% 0; opacity:.2; } to{ -webkit-mask-position:0 0; mask-position:0 0; opacity:1; } }
+html.reduce-motion .reader-body > *{ animation:none; -webkit-mask-image:none; mask-image:none; }
+
+.reader-body p{ margin:0 0 var(--space-5); text-wrap:pretty; }
+/* a gold drop cap to open each essay */
+.reader-body > p:first-child:not(.reader-empty)::first-letter{
+  float:left;
+  margin:.08em var(--space-3) 0 0;
+  font-family:var(--font-display);
+  font-size:4.6em;
+  font-weight:600;
+  line-height:.78;
+  color:var(--gold-bright);
+}
+.reader-body h2{
+  margin:var(--space-8) 0 var(--space-4);
+  font-family:var(--font-display);
+  font-size:clamp(1.9rem, 1.5rem + 1vw, 2.4rem);
+  font-weight:500;
+  line-height:1.1;
+  color:var(--text);
+}
+.reader-body h3{
+  margin:var(--space-7) 0 var(--space-3);
+  font-family:var(--font-display);
+  font-size:1.6rem;
+  font-weight:600;
+  line-height:1.15;
+  color:var(--text);
+}
+.reader-body strong{ font-weight:600; color:var(--text); }
+.reader-body a{
+  color:var(--gold-bright);
+  text-decoration:underline;
+  text-underline-offset:.25em;
+  text-decoration-color:var(--gold-line);
+  transition:text-decoration-color var(--dur-base) var(--ease);
+}
+.reader-body a:hover{ text-decoration-color:var(--gold-bright); }
+/* quotes read like pull quotes */
+.reader-body blockquote{
+  position:relative;
+  margin:var(--space-8) 0;
+  padding:0 0 0 var(--space-6);
+  font-family:var(--font-display);
+  font-size:1.6em;
+  font-style:italic;
+  line-height:1.3;
+  color:var(--text);
+}
+.reader-body blockquote::before{
+  content:'\201C';
+  position:absolute; left:-.1em; top:-.25em;
+  font-size:2.4em;
+  font-style:normal;
+  line-height:1;
+  color:var(--gold);
+  opacity:.5;
+}
+.reader-body blockquote p{ margin:0; }
+.reader-body ul, .reader-body ol{ margin:0 0 var(--space-5); padding-left:var(--space-5); }
+.reader-body li{ margin:var(--space-2) 0; }
+.reader-body li::marker{ color:var(--gold); }
+.reader-body code{
+  padding:.1em .35em;
+  border-radius:var(--radius-sm);
+  background:rgba(239,230,210,.07);
+  font-family:var(--font-chrome);
+  font-size:.875em;
+}
+.reader-body hr{ width:30%; height:1px; margin:var(--space-8) auto; border:0; background:var(--gold-line); }
+.reader-body img{ margin:var(--space-6) 0; border-radius:var(--radius-md); }
+/* a small gold ring to sign off the essay */
+.reader-body:has(> :not(.reader-empty))::after{
+  content:'';
+  display:block;
+  width:10px; height:10px;
+  margin:var(--space-8) auto 0;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  opacity:.8;
+}
+/* a way out at the bottom, so you don't have to scroll back up for it */
+.reader-end{ display:flex; justify-content:center; margin-top:var(--space-7); }
+.reader-done{
+  padding:var(--space-2) var(--space-5);
+  border:1px solid var(--line-strong);
+  border-radius:var(--radius-pill);
+  background:none;
+  font-family:var(--font-chrome);
+  font-size:var(--text-xs);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-muted);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease);
+}
+.reader-done:hover{ color:var(--gold-bright); border-color:var(--gold-line); }
+.reader.is-loading .reader-end{ visibility:hidden; }
+.reader-empty{ font-family:var(--font-chrome); font-size:var(--text-sm); text-align:center; color:var(--text-faint); }
+
+@media (max-width:600px){
+  .reader-body{ hyphens:auto; -webkit-hyphens:auto; }
+}

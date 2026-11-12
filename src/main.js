@@ -17,6 +17,7 @@ import "./styles/chips.css";
 import "./styles/reveal.css";
 import "./styles/brain.css";
 import "./styles/footer.css";
+import "./styles/reader.css";
 import "../js/cursor.js";
 import "../js/main.js";
 import "../js/brain.js";
