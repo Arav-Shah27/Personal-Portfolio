@@ -31,6 +31,7 @@ if (!reduceMotion && finePointer) {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
   document.documentElement.classList.add("has-lenis");
+  if (import.meta.env.DEV) window.__lenis = lenis;
 }
 
 /* the essay reader scrolls itself, so the page has to hold still under it */
@@ -43,5 +44,12 @@ export function holdScroll(on) {
    every caller up to this module */
 new MutationObserver(() => holdScroll(document.documentElement.classList.contains("reader-open")))
   .observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+/* the page changes height after load (fonts, the essay list), so scroll
+   triggers re-measure when it does */
+const refresh = () => ScrollTrigger.refresh();
+document.fonts?.ready.then(refresh);
+window.addEventListener("essays:ready", () => requestAnimationFrame(refresh));
+window.addEventListener("load", refresh);
 
 export { gsap, ScrollTrigger };
