@@ -35,13 +35,13 @@
     repeating-linear-gradient(to bottom, var(--pin) 0 7px, transparent 7px 22px) right / 9px 100% no-repeat;
   transition:filter var(--dur-slow) var(--ease);
 }
-.project:hover{
+.project:hover, .project:focus-within{
   --pin:var(--gold-bright);
   --lift:-6px;
   border-color:rgba(240,207,122,.55);
   box-shadow:0 40px 70px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(240,207,122,.08), 0 0 40px -10px rgba(240,207,122,.25);
 }
-.project:hover::before{ filter:drop-shadow(0 0 4px rgba(240,207,122,.8)); }
+.project:hover::before, .project:focus-within::before{ filter:drop-shadow(0 0 4px rgba(240,207,122,.8)); }
 /* a soft light that follows the mouse (js/main.js sets --mx and --my) */
 .project::after{
   content:'';
