@@ -14,7 +14,6 @@ export function startSound() {
   /* even when it was left on, the browser needs a tap before it plays sound */
   const sync = () => {
     button.setAttribute("aria-pressed", String(on));
-    button.setAttribute("aria-label", on ? "Thunder sound: on" : "Thunder sound: off");
   };
   sync();
 

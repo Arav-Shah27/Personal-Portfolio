@@ -47,7 +47,6 @@ export async function startTree(storm) {
   button.addEventListener("click", () => {
     folded = !folded;
     button.setAttribute("aria-pressed", String(folded));
-    button.setAttribute("aria-label", folded ? "Grow the tree back" : "Fold the tree into a QR code for my LinkedIn");
     hint.textContent = folded ? "scan for my linkedin · tap to grow it back" : "tap the tree";
     tl?.kill();
     if (reduceMotion) {
