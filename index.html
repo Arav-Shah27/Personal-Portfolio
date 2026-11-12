@@ -268,6 +268,17 @@
 </main>
 
 <footer class="footer">
+  <!-- the Party Tree grows out of a QR code for my LinkedIn; tap it and it
+       folds back into a flat code you can scan (src/stage/tree.js) -->
+  <div class="party">
+    <button type="button" class="party-tree" aria-pressed="false"
+            aria-label="Fold the tree into a QR code for my LinkedIn">
+      <canvas class="party-qr" aria-hidden="true"></canvas>
+    </button>
+    <p class="party-hint label" aria-live="polite">tap the tree</p>
+  </div>
+
+  <div class="footer-bar">
   <p>Arav Shah <span class="dim">&middot; West Lafayette, 2026</span></p>
   <ul>
     <li><a href="https://github.com/Arav-Shah27" target="_blank" rel="noopener noreferrer">github</a></li>
@@ -275,6 +286,7 @@
     <li><a href="mailto:shah1462@purdue.edu">email</a></li>
     <li><a class="to-top" href="#home">top <span aria-hidden="true">&uarr;</span></a></li>
   </ul>
+  </div>
 </footer>
 
 <!-- essay reader -->

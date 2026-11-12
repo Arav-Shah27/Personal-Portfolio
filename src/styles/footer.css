@@ -1,0 +1,73 @@
+/* ================================ FOOTER =================================
+   The Party Tree stands over the footer: a voxel tree on a QR code (drawn
+   by the stage inside .party-tree). Folded, a crisp flat copy of the code
+   (.party-qr) is laid over the top so phones can scan it cleanly.
+   ========================================================================== */
+
+.footer{
+  position:relative; z-index:1;
+  max-width:var(--measure-page);
+  margin:0 auto;
+  padding:var(--space-8) var(--gutter) var(--space-7);
+}
+
+.party{
+  display:flex; flex-direction:column; align-items:center; gap:var(--space-3);
+  margin-bottom:var(--space-9);
+}
+.party-tree{
+  position:relative;
+  display:block;
+  width:min(100%, 34rem);
+  aspect-ratio:1;
+  padding:0;
+  border:0;
+  border-radius:var(--radius-md);
+  background:none;
+  cursor:pointer;
+}
+html.no-stage .party-tree{ width:min(100%, 18rem); }
+.party-qr{
+  position:absolute; left:50%; top:50%;
+  width:98%; height:98%;
+  translate:-50% -50%;
+  image-rendering:pixelated;
+  opacity:0;
+  transition:opacity 500ms var(--ease);
+  pointer-events:none;
+}
+.party-tree[aria-pressed="true"] .party-qr,
+html.no-stage .party-qr{ opacity:1; }
+.party-hint{ margin:0; color:var(--text-muted); }
+
+/* ---- the bar ------------------------------------------------------------ */
+.footer-bar{
+  position:relative;
+  display:flex; align-items:center; justify-content:space-between; gap:var(--space-4);
+  padding-top:var(--space-6);
+  border-top:1px solid var(--line-strong);
+  font-family:var(--font-chrome);
+  font-size:var(--text-sm);
+  letter-spacing:var(--tracking-label);
+  color:var(--text-faint);
+}
+.footer-bar p{ margin:0; color:var(--text-muted); }
+.footer-bar ul{ display:flex; flex-wrap:wrap; gap:var(--space-2) var(--space-5); margin:0; padding:0; list-style:none; }
+.footer-bar a{ position:relative; color:var(--text-muted); transition:color var(--dur-base) var(--ease); }
+.footer-bar a:hover{ color:var(--gold-bright); }
+.footer-bar a::after{
+  content:'';
+  position:absolute; left:0; right:0; bottom:-2px;
+  height:1px;
+  background:var(--gold);
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform var(--dur-slow) var(--ease);
+}
+.footer-bar a:hover::after{ transform:scaleX(1); }
+.to-top span{ display:inline-block; color:var(--gold); transition:transform var(--dur-base) var(--ease); }
+.to-top:hover span{ transform:translateY(calc(var(--space-1) * -1)); }
+
+@media (max-width:640px){
+  .footer-bar{ flex-direction:column; align-items:flex-start; gap:var(--space-4); }
+}

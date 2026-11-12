@@ -192,7 +192,7 @@ async function start() {
 
   /* ---------- 3. ball lightning over the footer line -------------------- */
   function footerBall() {
-    const footer = document.querySelector('.footer');
+    const footer = document.querySelector('.footer-bar');   /* it rolls along the rule over the links */
     if (!footer) return;
     const S = 2, [w, h] = ballLightning.meta.size, [ox, oy] = ballLightning.meta.origin;
     const canvas = document.createElement('canvas');
