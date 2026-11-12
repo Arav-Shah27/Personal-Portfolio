@@ -13,7 +13,6 @@
 <meta property="og:image" content="assets/shire.jpg">
 
 <link rel="preload" as="image" href="assets/shire.jpg">
-<link rel="stylesheet" href="styles.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%230c0b09'/><circle cx='16' cy='16' r='8.5' fill='none' stroke='%23d9b45a' stroke-width='3.2'/></svg>">
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -39,18 +38,26 @@
 <main>
 
   <!-- ================================ HOME ================================ -->
-  <section class="hero" id="home">
-    <div class="hero-bg" aria-hidden="true"><div class="hero-img"></div></div>
+    <!-- the hero sits in a tall runway: while you scroll through it, the
+         camera dives into the round door (src/descent.js) -->
+    <div class="hero-run" id="home">
+      <section class="hero" aria-labelledby="hero-name">
+        <div class="hero-bg" aria-hidden="true"><div class="hero-img"></div></div>
 
-    <div class="hero-content">
-      <p class="hero-hello load-in" style="--i:0">Hi, I&rsquo;m</p>
-      <h1 class="hero-name load-in" style="--i:1">Arav Shah</h1>
-      <p class="hero-lede load-in" style="--i:2">
-        I love to solve problems that make people&rsquo;s lives easier, better, and safer,
-        no matter how &ldquo;difficult&rdquo; that may be.
-      </p>
+        <div class="hero-frame">
+          <p class="hero-hello">Hi, I&rsquo;m</p>
+          <h1 class="hero-name" id="hero-name">
+            <span class="hero-line hero-line--a">Arav</span>
+            <span class="hero-line hero-line--b">Shah</span>
+          </h1>
 
-      <ul class="socials load-in" style="--i:3">
+          <div class="hero-foot">
+            <p class="hero-lede">
+              I love to solve problems that make people&rsquo;s lives easier, better, and safer,
+              no matter how &ldquo;difficult&rdquo; that may be.
+            </p>
+            <div class="hero-side">
+              <ul class="socials">
         <li>
           <a href="https://github.com/Arav-Shah27" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.36 1.09 2.94.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.5 9.5 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
@@ -68,14 +75,16 @@
           </button>
         </li>
       </ul>
+              <p class="hero-meta label"><span class="keep">computer engineering</span> <span class="sep">&middot;</span> <span class="keep">purdue university</span></p>
+            </div>
+          </div>
+        </div>
 
-      <p class="hero-meta label load-in" style="--i:4"><span class="keep">computer engineering</span> <span class="sep">&middot;</span> <span class="keep">purdue university</span></p>
+        <a class="scroll-hint label" href="#work">scroll <span aria-hidden="true"></span></a>
+      </section>
     </div>
 
-    <a class="scroll-hint label" href="#work">scroll <span aria-hidden="true"></span></a>
-  </section>
-
-  <!-- ============================ WHAT I'VE DONE ========================== -->
+    <!-- ============================ WHAT I'VE DONE ========================== -->
   <section class="section" id="work">
     <header class="section-head reveal">
       <p class="eyebrow label">01 / what i&rsquo;ve done</p>

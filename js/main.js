@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Page behavior: nav, hero parallax, reveals, logos, email
+   Page behavior: nav, reveals, logos, email
    ========================================================================== */
 (function () {
   'use strict';
@@ -42,9 +42,6 @@
   var links = Array.prototype.slice.call(nav.querySelectorAll('.nav-links a'));
   var sections = links.map(function (a) { return document.getElementById(a.getAttribute('data-section')); });
 
-  var heroImg = document.querySelector('.hero-img');
-  var heroContent = document.querySelector('.hero-content');
-  var scrollHint = document.querySelector('.scroll-hint');
   var progress = document.querySelector('.progress');
 
   var lastY = window.scrollY;
@@ -71,16 +68,6 @@
     sections.forEach(function (s, i) { if (s && s.offsetTop <= probe) active = i; });
     if (vh + y >= root.scrollHeight - 2) active = sections.length - 1;
     links.forEach(function (a, i) { a.classList.toggle('is-active', i === active); });
-
-    /* the painting drifts slower than the page and the name eases back into
-       it, which is where the sense of depth comes from */
-    if (!reduceMotion && y < vh * 1.25) {
-      heroImg.style.transform = 'translate3d(0,' + (y * 0.38).toFixed(1) + 'px,0)';
-      var p = Math.min(1, y / (vh * 0.75));
-      heroContent.style.transform = 'translate3d(0,' + (y * 0.14).toFixed(1) + 'px,0)';
-      heroContent.style.opacity = (1 - p * 0.92).toFixed(3);
-      scrollHint.style.opacity = Math.max(0, 1 - y / 160).toFixed(3);
-    }
   }
 
   function requestUpdate() {
@@ -90,30 +77,6 @@
   window.addEventListener('resize', requestUpdate);
   nav.addEventListener('focusin', function () { nav.classList.remove('is-hidden'); });
   update();
-
-  /* ---------- the painting leans a little toward the mouse ---------------- */
-  /* only with a real mouse; it's scaled up 2% so the shift never shows an edge */
-  var heroBg = document.querySelector('.hero-bg');
-  var hero = document.querySelector('.hero');
-  if (heroBg && hero && !reduceMotion && window.matchMedia('(pointer: fine)').matches) {
-    var tx = 0, ty = 0, cx = 0, cy = 0, leaning = false;
-    var lean = function () {
-      cx += (tx - cx) * 0.06;
-      cy += (ty - cy) * 0.06;
-      heroBg.style.transform = 'translate3d(' + cx.toFixed(2) + 'px,' + cy.toFixed(2) + 'px,0) scale(1.02)';
-      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) window.requestAnimationFrame(lean);
-      else leaning = false;
-    };
-    var aim = function (x, y) {
-      tx = x; ty = y;
-      if (!leaning) { leaning = true; window.requestAnimationFrame(lean); }
-    };
-    hero.addEventListener('pointermove', function (e) {
-      aim((e.clientX / window.innerWidth - 0.5) * -12, (e.clientY / window.innerHeight - 0.5) * -8);
-    });
-    hero.addEventListener('pointerleave', function () { aim(0, 0); });
-    heroBg.style.transform = 'scale(1.02)';
-  }
 
   /* ---------- a soft light that follows the mouse over project cards ------ */
   Array.prototype.forEach.call(document.querySelectorAll('.project'), function (card) {

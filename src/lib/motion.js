@@ -17,6 +17,7 @@ export const reduceMotion = mq("(prefers-reduced-motion: reduce)").matches;
 export const finePointer = mq("(hover: hover) and (pointer: fine)").matches;
 
 export let lenis = null;
+if (reduceMotion) document.documentElement.classList.add("reduce-motion");
 
 if (!reduceMotion && finePointer) {
   lenis = new Lenis({

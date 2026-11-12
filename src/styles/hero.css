@@ -1,0 +1,179 @@
+/* ================================ HERO ===================================
+   The name is set huge and split around the round door in the painting:
+   "Arav" up top on the left, "Shah" low on the right, and the door sits in
+   the gap between them. The painting itself is drawn by the stage behind.
+   ========================================================================== */
+
+/* a tall runway: while it scrolls past, the hero holds still (sticky) and
+   the camera dives into the door. src/descent.js drives it. */
+.hero-run{ position:relative; height:var(--run, 100svh); }
+
+.hero{
+  position:sticky; top:0;
+  height:100svh;
+  overflow:hidden;
+  isolation:isolate;
+}
+
+/* without the stage (no WebGL), the painting is a plain darkened image */
+.hero-bg{ position:absolute; inset:0; z-index:-1; }
+.hero-img{
+  position:absolute; inset:0;
+  background:url('../../assets/shire.jpg') center 42% / cover no-repeat;
+  filter:brightness(.38) saturate(.7) contrast(1.08);
+}
+html.has-stage .hero-bg{ display:none; }
+
+.hero-frame{
+  position:relative;
+  height:100%;
+  display:flex; flex-direction:column;
+  padding:calc(var(--nav-h) + var(--space-4)) var(--gutter) var(--space-7);
+}
+
+.hero-hello{
+  margin:0 0 var(--space-1) .06em;
+  font-family:var(--font-display);
+  font-size:clamp(1.25rem, 1.1rem + .9vw, 2rem);
+  font-style:italic;
+  font-weight:500;
+  color:var(--gold-bright);
+  text-shadow:0 1px 18px rgba(0,0,0,.8);
+}
+
+.hero-name{
+  flex:1;
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height:0;
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(5.25rem, 3rem + 13vw, 17.5rem);
+  font-weight:500;
+  line-height:.8;
+  letter-spacing:-.035em;
+  color:var(--text);
+}
+.hero-line{ display:block; white-space:nowrap; }
+.hero-line--b{ align-self:flex-end; margin-right:-.02em; }
+
+/* each letter catches the lightning: --lit is how hard the flash hits it and
+   --dir which side it came from, so the shadow falls away from the strike */
+.hero-name .ch{
+  --lit:0; --dir:0;
+  display:inline-block;
+  color:color-mix(in srgb, #fffaf0 calc(var(--lit) * 100%), var(--text));
+  text-shadow:
+    calc(var(--dir) * var(--lit) * .07em) calc(var(--lit) * .045em) calc(.01em + var(--lit) * .02em) rgba(6,4,2,calc(.35 + var(--lit) * .4)),
+    0 0 calc(var(--lit) * .4em) rgba(240,207,122,calc(var(--lit) * .55)),
+    0 .03em .35em rgba(0,0,0,.55);
+}
+
+.hero-foot{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:var(--space-6);
+  margin-top:var(--space-6);
+}
+.hero-lede{
+  max-width:25em;
+  margin:0;
+  font-size:clamp(var(--text-base), .9rem + .45vw, 1.3rem);
+  line-height:1.55;
+  color:var(--text);
+  text-wrap:balance;
+  text-shadow:0 1px 14px rgba(0,0,0,.9), 0 0 2px rgba(0,0,0,.6);
+}
+.hero-side{
+  display:flex; flex-direction:column; align-items:flex-end; gap:var(--space-3);
+}
+.hero-meta{ margin:0; color:var(--text-muted); text-shadow:0 1px 10px rgba(0,0,0,.9); }
+.hero-meta .sep{ margin:0 var(--space-1); color:var(--gold); }
+.hero-meta .keep{ white-space:nowrap; }
+
+/* ---- socials: small round keys with a gold ring that charges on hover ---- */
+.socials{
+  display:flex; gap:var(--space-3);
+  margin:0; padding:0;
+  list-style:none;
+}
+.socials a, .socials button{
+  position:relative;
+  display:grid; place-items:center;
+  width:2.75rem; height:2.75rem;
+  padding:0;
+  border:1px solid rgba(240,207,122,.28);
+  border-radius:50%;
+  background:rgba(10,8,6,.55);
+  color:var(--text);
+  cursor:pointer;
+  transition:color var(--dur-base) var(--ease), border-color var(--dur-base) var(--ease),
+             box-shadow var(--dur-base) var(--ease), background-color var(--dur-base) var(--ease);
+}
+.socials svg{ width:1.15rem; height:1.15rem; }
+.socials a:hover, .socials button:hover{
+  color:var(--gold-bright);
+  border-color:var(--gold-bright);
+  background:rgba(20,13,4,.8);
+  box-shadow:0 0 0 3px rgba(240,207,122,.12), 0 6px 18px rgba(0,0,0,.5);
+}
+.socials :focus-visible{ border-radius:50%; outline-offset:3px; }
+/* a quiet label over each key on hover, taken from its aria-label */
+.socials a::after, .socials button::after{
+  content:attr(aria-label);
+  position:absolute; bottom:calc(100% + var(--space-2)); left:50%;
+  font-family:var(--font-chrome);
+  font-size:var(--text-2xs);
+  letter-spacing:var(--tracking-label);
+  text-transform:lowercase;
+  white-space:nowrap;
+  color:var(--text-muted);
+  opacity:0;
+  transform:translate(-50%, var(--space-1));
+  pointer-events:none;
+  transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+@media (hover:none){ .socials a::after, .socials button::after{ display:none; } }
+.socials a:hover::after, .socials button:hover::after,
+.socials a:focus-visible::after, .socials button:focus-visible::after{ opacity:1; transform:translate(-50%, 0); }
+/* the envelope turns into a check for a moment after the email is copied */
+.copy-email svg{ transition:opacity var(--dur-base) var(--ease), transform var(--dur-base) var(--ease); }
+.copy-email .icon-check{ position:absolute; opacity:0; transform:scale(.6); color:var(--gold-bright); }
+.copy-email.is-copied svg:not(.icon-check){ opacity:0; transform:scale(.6); }
+.copy-email.is-copied .icon-check{ opacity:1; transform:none; }
+
+/* ---- scroll: a thread of gold that keeps running down -------------------- */
+.scroll-hint{
+  position:absolute; left:50%; bottom:var(--space-5);
+  display:flex; flex-direction:column; align-items:center; gap:var(--space-2);
+  color:var(--text-muted);
+  transform:translateX(-50%);
+  transition:color var(--dur-base) var(--ease);
+}
+.scroll-hint span{
+  width:1px; height:var(--space-7);
+  background:linear-gradient(var(--gold-bright), rgba(217,180,90,0));
+  animation:drip 2.4s var(--ease) infinite;
+}
+@keyframes drip{
+  0%{ transform:scaleY(0); transform-origin:top; }
+  50%{ transform:scaleY(1); transform-origin:top; }
+  50.01%{ transform:scaleY(1); transform-origin:bottom; }
+  100%{ transform:scaleY(0); transform-origin:bottom; }
+}
+.scroll-hint:hover{ color:var(--text); }
+
+/* ---- the intro: hidden until src/hero.js plays it in -------------------- */
+html.js:not(.reduce-motion) .hero-hello,
+html.js:not(.reduce-motion) .hero-foot,
+html.js:not(.reduce-motion) .scroll-hint{ opacity:0; }
+html.js:not(.reduce-motion):not(.hero-in) .hero-name{ visibility:hidden; }
+
+/* ---- smaller screens ---------------------------------------------------- */
+@media (max-width:760px){
+  .hero-frame{ padding-bottom:var(--space-6); }
+  .hero-name{ font-size:clamp(4.6rem, 27vw, 9rem); }
+  .hero-foot{ flex-direction:column; align-items:flex-start; gap:var(--space-5); }
+  .hero-side{ align-items:flex-start; flex-direction:column-reverse; }
+  .scroll-hint{ display:none; }
+  .socials a::after, .socials button::after{ display:none; }
+}
+@media (max-width:400px){ .hero-meta .sep{ display:block; height:0; overflow:hidden; } }

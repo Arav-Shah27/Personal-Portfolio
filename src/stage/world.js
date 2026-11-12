@@ -175,7 +175,14 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float lum = dot(col, vec3(0.299, 0.587, 0.114));
         /* the gold pass only reads brightness, so night is a tone curve: dark
            ink lines drop to black, stone and grass sit in the low golds */
-        vec3 night = vec3(pow(smoothstep(0.06, 0.95, lum), 1.35) * 0.58);
+        vec3 night = vec3(pow(smoothstep(0.05, 0.92, lum), 1.15) * 0.6);
+
+        /* the round door is the hinge of the whole page, so it gets a little
+           warm light of its own: a rim along the brick ring and a glow on the
+           brass knob */
+        float dDoor = length(p - DOOR);
+        night += vec3(0.11) * exp(-abs(dDoor - (DOOR_R + 34.0)) / 22.0);
+        night += vec3(0.5) * exp(-length(p - vec2(806.0, 815.0)) / 9.0);
 
         /* the watercolour sky becomes cloud, lit from inside when it strikes */
         float blue = smoothstep(0.03, 0.16, col.b - max(col.r, col.g) * 0.92);
