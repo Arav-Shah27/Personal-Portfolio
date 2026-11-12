@@ -96,6 +96,8 @@ html{
   scrollbar-gutter:stable;
   scrollbar-color:#3a2709 var(--bg);
   -webkit-text-size-adjust:100%;
+  -webkit-tap-highlight-color:rgba(240,207,122,.15);
+  touch-action:manipulation;
   background:var(--bg);
 }
 html.reader-open{ overflow:hidden; }
@@ -117,6 +119,8 @@ body{
 }
 
 main, .footer{ position:relative; z-index:1; }
+/* in-page links land below the fixed nav, not under it */
+[id]{ scroll-margin-top:var(--nav-h); }
 
 img{ max-width:100%; display:block; }
 a{ color:inherit; text-decoration:none; }
