@@ -89,11 +89,11 @@
 .project-when{ text-align:right; }
 .project-title{
   margin:0;
-  font-family:var(--font-display);
-  font-size:clamp(1.9rem, 1.4rem + 1.1vw, 2.5rem);
-  font-weight:500;
-  line-height:1.02;
-  letter-spacing:-.01em;
+  font-family:var(--font-title);
+  font-size:clamp(2.1rem, 1.6rem + 1.2vw, 2.8rem);
+  font-weight:400;
+  line-height:.95;
+  letter-spacing:.01em;
   text-wrap:balance;
   transition:color var(--dur-base) var(--ease);
 }
