@@ -23,16 +23,19 @@ sitting on top of it.
 
 ## Type
 
+All pixel faces, for a dark, cozy, storybook-at-night feel.
+
 | face | job | where |
 |---|---|---|
-| Cormorant 500 | display | the name, section titles, entry and chip titles, essay titles, drop caps |
-| Literata | reading | body copy, essays (1.125rem, 1.78 leading, ~62ch) |
-| IBM Plex Mono 400/500 | chrome | nav, labels, dates, tags (lowercase, tracked .08em) |
-| Geist Pixel | numbers and markings | counters, essay numbers, chip part numbers, the loader |
+| Jacquard 24 | display (pixel blackletter) | the name, section titles, essay titles, drop caps, the 404 |
+| Jersey 10 | titles | entries, projects, essay rows, "Hi, I'm", headings inside essays |
+| VT323 | reading | body copy and essays (22px, 1.42 leading) |
+| Tiny5 | chrome | nav, labels, dates, tags, counters, chip markings |
 
-Display type goes big and tight (`-.03em`, line-height under 1). Text over the
-stage always carries a soft dark shadow so its edges stay clean on the
-dithering.
+Pixel faces have one weight and no italic, so `font-synthesis` is off and
+emphasis is carried by colour (gold), never by faux bold or slant. No negative
+tracking. Text over the stage always carries a soft dark shadow so its edges
+stay clean on the dithering.
 
 ## Colour
 

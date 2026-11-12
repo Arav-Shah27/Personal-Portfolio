@@ -74,6 +74,7 @@ every push (see `vercel.json`).
 | How chunky the pixels are      | `pixelSize()` in `src/stage/palette.js`            |
 | How often the sky strikes      | `ambient(...)` in `src/storm.js`                   |
 | How long the dive into the door is | `.hero-run` height in `src/styles/hero.css`    |
+| Fonts                          | `src/fonts.js` and the `--font-*` tokens in `src/styles/base.css` |
 
 A new project chip gets its die animation from the `data-die` name on its
 canvas: add a scene with that name to `SCENES` in `src/dies.js`.
@@ -82,10 +83,10 @@ canvas: add a scene with that name to `SCENES` in `src/dies.js`.
 
 Tokens live in `src/styles/base.css`; everything is built from them.
 
-- **Cormorant** sets the display type: the name, section and essay titles.
-- **Literata** carries the reading: body copy and essays.
-- **IBM Plex Mono** is chrome: nav, labels, dates, tags.
-- **Geist Pixel** is for numbers and markings: counters, chip part numbers.
+- **Jacquard 24** (pixel blackletter) sets the display type: the name, section and essay titles.
+- **Jersey 10** sets the smaller titles: experiences, projects, essays in the list.
+- **VT323** carries the reading: body copy and essays.
+- **Tiny5** is chrome and numbers: nav, labels, dates, tags, counters.
 
 Colour is one ramp of storm gold, from the page's own black to a white-hot
 core. The stage uses exactly that ramp, so the canvas and the CSS never
