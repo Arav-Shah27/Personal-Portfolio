@@ -61,7 +61,8 @@ async function start() {
     s.ctx.putImageData(s.img, 0, 0);
   }
 
-  heroSky();
+  /* the WebGL stage draws the hero's storm now; this is the fallback */
+  if (!document.documentElement.classList.contains('has-stage')) heroSky();
   clickPops();
   footerBall();
 
