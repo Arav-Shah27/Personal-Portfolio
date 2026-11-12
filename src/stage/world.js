@@ -87,6 +87,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       uPainting: { value: 1 },
       uScroll: { value: 0 },
       uDim: { value: 1 },
+      uRipple: { value: new THREE.Vector3(0, 0, -99) },
       uMouse: { value: new THREE.Vector2() },
       uCenterY: { value: 640 },
     },
@@ -98,6 +99,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       precision highp float;
       uniform sampler2D uPaint, uBolt;
       uniform vec2 uRes, uStrike, uMouse;
+      uniform vec3 uRipple;
       uniform float uPx, uTime, uFlash, uZoom, uOpen, uBoard, uPainting, uScroll, uCenterY, uDim;
       in vec2 vUv;
       out vec4 fragColor;
@@ -225,7 +227,11 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float wave = fract(r / 150.0 - uTime * 0.32);
         float pulse = smoothstep(0.9, 1.0, wave) * smoothstep(1.0, 0.985, wave);
         float shimmer = 0.75 + 0.25 * noise(floor((q + 4096.0) / 12.0) + uTime * 0.6);
-        float boardLum = bd.x * (0.3 * shimmer + 0.65 * pulse) + bd.y * 0.18 + fbm(q * 0.05) * 0.03;
+        /* a ripple from wherever something on the page just lit up */
+        float rt = uTime - uRipple.z;
+        float rr = length(sp - uRipple.xy);
+        float ripple = exp(-pow((rr - rt * 260.0) / 10.0, 2.0)) * exp(-rt * 1.6);
+        float boardLum = bd.x * (0.3 * shimmer + 0.65 * pulse + 2.2 * ripple) + bd.y * 0.18 + fbm(q * 0.05) * 0.03;
         /* the current comes in through the door: a bright bloom at the core
            while it opens */
         boardLum += bd.x * exp(-r / 60.0) * smoothstep(0.2, 0.7, uOpen) * (1.0 - smoothstep(0.85, 1.0, uOpen)) * 0.8;
@@ -306,9 +312,18 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     onFlash?.(flash, strikeX);
   }
 
+  /* send a ripple of current across the board from a point on screen */
+  let clockNow = 0;
+  function ripple(cssX, cssY) {
+    const px = material.uniforms.uPx.value, h = material.uniforms.uRes.value.y;
+    material.uniforms.uRipple.value.set(cssX / px, h - cssY / px, clockNow);
+    stage.invalidate();
+  }
+
   const layer = {
     state,
     strike,
+    ripple,
     toScreen,
     KNOB: { x: 816, y: 782 },
     get flash() { return flash; },
@@ -320,12 +335,13 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     },
     active: () => ready,
     animating: () => true,
-    fast: () => bolts.length > 0 || boltsDirty || Math.abs(state.mouse.x - state.mouseTarget.x) + Math.abs(state.mouse.y - state.mouseTarget.y) > 0.002,
+    fast: () => bolts.length > 0 || boltsDirty || clockNow - material.uniforms.uRipple.value.z < 2.5 || Math.abs(state.mouse.x - state.mouseTarget.x) + Math.abs(state.mouse.y - state.mouseTarget.y) > 0.002,
     draw(renderer, target, frame) {
       updateBolts(frame.dt);
       state.mouse.lerp(state.mouseTarget, 1 - Math.pow(0.001, frame.dt));
       const u = material.uniforms;
       u.uTime.value = frame.t;
+      clockNow = frame.t;
       u.uFlash.value = flash;
       u.uStrike.value.set(strikeX, 0);
       u.uZoom.value = state.zoom;

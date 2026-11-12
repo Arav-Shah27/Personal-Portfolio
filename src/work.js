@@ -46,6 +46,7 @@ function route() {
           e.classList.add("is-lit");
           const n = e.querySelector(".route-node").getBoundingClientRect();
           window.sitePop?.(n.left + n.width / 2, n.top + n.height / 2);
+          window.siteRipple?.(n.left + n.width / 2, n.top + n.height / 2);
         } else if (!lit) e.classList.remove("is-lit");
       });
     },

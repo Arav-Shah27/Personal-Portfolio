@@ -96,6 +96,9 @@ export function startStorm() {
     box.addEventListener("pointerleave", () => document.querySelectorAll(".essay-row.is-hot").forEach((r) => r.classList.remove("is-hot")));
   }
 
+  /* anything on the page can send current across the board */
+  window.siteRipple = (x, y) => world.ripple(x, y);
+
   if (import.meta.env.DEV) window.__storm = { stage, world };
   return { stage, world };
 }
