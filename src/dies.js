@@ -126,6 +126,27 @@ const SCENES = {
       p.rect(x - 1, oy - 9 + Math.round(f * 6), 2, 2, 0.6 * f);
     }
   },
+
+  /* a hub reaching out to everyone around it, one after another */
+  mfs(p, w, h, t) {
+    const cx = w / 2, cy = h / 2 + 1, n = 9;
+    p.glow(cx, cy, 6, 0.9);
+    p.ring(cx, cy, 4, 0.7);
+    for (let i = 0; i < n; i++) {
+      const a = (i / n) * TAU + t * 0.08;
+      const rx = w * 0.36, ry = h * 0.34;
+      const x = cx + Math.cos(a) * rx, y = cy + Math.sin(a) * ry;
+      const f = fract(t * 0.32 - i / n);
+      const reached = f < 0.35 ? f / 0.35 : 1;
+      p.line(cx, cy, x, y, 0.12);
+      if (f < 0.35) {                                /* a pulse on its way out */
+        p.glow(cx + (x - cx) * reached, cy + (y - cy) * reached, 2.2, 0.85);
+      }
+      const lit = f < 0.35 ? 0 : Math.max(0, 1 - (f - 0.35) * 1.6);
+      p.ring(x, y, 2.5, 0.35 + lit * 0.6);
+      if (lit > 0) p.glow(x, y, 4, lit * 0.6);
+    }
+  },
 };
 
 export function startDies() {
