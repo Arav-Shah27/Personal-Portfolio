@@ -2,8 +2,8 @@
 
 **Storm over the Shire.** One continuous scene you scroll through: lightning
 over the Shire at night, a dive through the round green door, a circuit board
-on the other side, a brain made of gold points, and a voxel tree growing out of
-a QR code. Everything visual is drawn by one WebGL canvas behind the page,
+on the other side, a brain made of gold points, and a dark voxel tower whose
+voxels fly apart into a QR code when you tap it. Everything visual is drawn by one WebGL canvas behind the page,
 rendered as dithered gold pixel art, so it all reads as one world.
 
 Every word on the page (the intro, experiences, projects, essays) is plain
@@ -19,13 +19,13 @@ src/stage/              the WebGL world (three.js)
   palette.js              the gold ramp and the pixel size
   world.js                the painting at night, the storm, the door, the board
   brain.js                the brain made of points, with a node per essay
-  tree.js                 the Party Tree on its QR code
+  tower.js                the dark tower and its flight into a QR code
 src/storm.js            puts the stage on the page and wires up the brain
 src/descent.js          scrolling dives into the door (GSAP ScrollTrigger)
 src/hero.js             the name's intro and its letters catching the light
 src/work.js             the route that fills with current, chips that tilt
 src/dies.js             the little pixel animations inside each project chip
-src/tree.js             the Party Tree's grow and fold
+src/tower.js            the tower's rise and fold
 src/loader.js           the ring that charges up on a first visit
 src/sound.js            thunder, made in the browser (off by default)
 src/titles.js           titles that rise in, labels that flicker

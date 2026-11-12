@@ -60,4 +60,4 @@ stay clean on the dithering.
 
 Every word on the page is the owner's. Design work never edits copy, fixes
 typos in essays, or adds claims. New UI text is limited to short lowercase
-chrome labels (like "tap the tree").
+chrome labels (like "tap the tower").
