@@ -147,6 +147,35 @@ const SCENES = {
       if (lit > 0) p.glow(x, y, 4, lit * 0.6);
     }
   },
+
+  /* a sensor pinging down at the water and listening for the echo */
+  sf(p, w, h, t) {
+    const sx = Math.round(w * 0.5), top = 6;
+    const level = h * 0.62 + Math.sin(t * 0.6) * 3;
+    /* the water, with a moving surface */
+    for (let x = 4; x < w - 4; x++) {
+      const yS = Math.round(level + Math.sin(x * 0.18 + t * 2.1) * 1.4 + Math.sin(x * 0.05 - t) * 1);
+      p.set(x, yS, 0.75);
+      for (let y = yS + 1; y < h - 4; y++) p.set(x, y, 0.16 + 0.1 * ((y - yS) % 6 === 0 ? 1 : 0));
+    }
+    /* the sensor */
+    p.rect(sx - 6, top, 13, 4, 0.55);
+    p.rect(sx - 3, top + 4, 7, 2, 0.4);
+    /* pings going down and echoes coming back */
+    for (let k = 0; k < 3; k++) {
+      const f = fract(t * 0.5 + k / 3);
+      const down = f < 0.5, q = down ? f * 2 : (1 - f) * 2;
+      const y = top + 7 + q * (level - top - 9);
+      const v = down ? 0.75 : 0.45;
+      const span = 3 + q * 7;
+      p.line(sx - span, y - (down ? 2 : -2), sx, y, v);
+      p.line(sx, y, sx + span, y - (down ? 2 : -2), v);
+    }
+    /* a drop now and then */
+    const d = fract(t * 0.23);
+    if (d < 0.6) p.rect(Math.round(w * 0.8), Math.round(8 + (d / 0.6) * (level - 8)), 2, 3, 0.6);
+    else p.ring(w * 0.8 + 1, level, (d - 0.6) * 22, (1 - d) * 1.2);
+  },
 };
 
 export function startDies() {
