@@ -1,0 +1,117 @@
+/* ============================ PROJECT CHIPS ==============================
+   Each project is a chip: a dark package with pins down both sides and a
+   die window showing a little pixel animation of what the project does
+   (src/dies.js). On hover the pins light up and the chip tilts toward you.
+   ========================================================================== */
+
+/* ---- projects: chips ---------------------------------------------------- */
+.projects{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  gap:clamp(var(--space-6), 4vw, var(--space-8)) clamp(var(--space-7), 5vw, var(--space-9));
+  padding-inline:12px;
+}
+.project{
+  --pin:rgba(240,207,122,.42);
+  --rx:0deg; --ry:0deg; --lift:0px;
+  position:relative;
+  display:flex; flex-direction:column;
+  padding:var(--space-3) var(--space-3) var(--space-6);
+  border:1px solid rgba(240,207,122,.24);
+  border-radius:8px;
+  background:linear-gradient(180deg, #120e09, #0b0906);
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.9);
+  transform:perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+  transition:border-color var(--dur-base) var(--ease), box-shadow var(--dur-slow) var(--ease),
+             transform var(--dur-slow) var(--ease-entrance);
+}
+/* the pins, down both sides like a DIP package */
+.project::before{
+  content:'';
+  position:absolute; top:var(--space-6); bottom:var(--space-6); left:-10px; right:-10px;
+  z-index:-1;
+  background:
+    repeating-linear-gradient(to bottom, var(--pin) 0 7px, transparent 7px 22px) left / 9px 100% no-repeat,
+    repeating-linear-gradient(to bottom, var(--pin) 0 7px, transparent 7px 22px) right / 9px 100% no-repeat;
+  transition:filter var(--dur-slow) var(--ease);
+}
+.project:hover{
+  --pin:var(--gold-bright);
+  --lift:-6px;
+  border-color:rgba(240,207,122,.55);
+  box-shadow:0 40px 70px -30px rgba(0,0,0,.95), 0 0 0 1px rgba(240,207,122,.08), 0 0 40px -10px rgba(240,207,122,.25);
+}
+.project:hover::before{ filter:drop-shadow(0 0 4px rgba(240,207,122,.8)); }
+/* a soft light that follows the mouse (js/main.js sets --mx and --my) */
+.project::after{
+  content:'';
+  position:absolute; inset:0;
+  border-radius:inherit;
+  background:radial-gradient(380px circle at var(--mx, 50%) var(--my, 0%), rgba(240,207,122,.09), transparent 65%);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity var(--dur-slow) var(--ease);
+}
+.project:hover::after{ opacity:1; }
+
+/* the die window */
+.chip-die{
+  position:relative;
+  height:clamp(6.5rem, 9vw, 8.5rem);
+  margin-bottom:var(--space-5);
+  border:1px solid rgba(240,207,122,.16);
+  border-radius:4px;
+  background:#070504;
+  overflow:hidden;
+}
+.chip-die canvas{ display:block; width:100%; height:100%; image-rendering:pixelated; }
+/* pin one, and the part number printed on the package */
+.chip-die::before{
+  content:'';
+  position:absolute; top:8px; left:8px;
+  width:7px; height:7px;
+  border-radius:50%;
+  border:1px solid rgba(240,207,122,.5);
+}
+.chip-mark{
+  position:absolute; right:10px; bottom:6px;
+  font-family:var(--font-pixel);
+  font-size:var(--text-xs);
+  letter-spacing:.08em;
+  color:rgba(240,207,122,.55);
+}
+
+.project > :not(.chip-die){ margin-inline:var(--space-3); }
+.project-top{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--space-4);
+  margin-bottom:var(--space-5);
+}
+.project-when{ text-align:right; }
+.project-title{
+  margin:0;
+  font-family:var(--font-display);
+  font-size:clamp(1.9rem, 1.4rem + 1.1vw, 2.5rem);
+  font-weight:500;
+  line-height:1.02;
+  letter-spacing:-.01em;
+  text-wrap:balance;
+  transition:color var(--dur-base) var(--ease);
+}
+.project:hover .project-title{ color:var(--gold-bright); }
+.project-role{
+  margin:var(--space-2) 0 0;
+  font-size:var(--text-md);
+  line-height:var(--leading-normal);
+  color:var(--gold-bright);
+}
+.project-desc{
+  flex:1;
+  margin:var(--space-4) 0 0;
+  color:var(--text-muted);
+  text-wrap:pretty;
+}
+.project:hover .tags li{ color:var(--text); border-color:var(--gold-line); }
+
+@media (max-width:760px){
+  .projects{ grid-template-columns:1fr; padding-inline:10px; }
+}
