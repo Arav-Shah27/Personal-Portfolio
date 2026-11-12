@@ -38,7 +38,7 @@ html.no-stage .party-tree{ width:min(100%, 18rem); }
 /* the flat image is only for when there's no 3D to fold: with the stage,
    the ground itself becomes the code */
 html.no-stage .party-qr{ opacity:1; }
-.party-hint{ margin:0; color:var(--text-muted); }
+.party-hint{ margin:0; text-align:center; text-wrap:balance; color:var(--text-muted); }
 
 /* ---- the bar ------------------------------------------------------------ */
 .footer-bar{
