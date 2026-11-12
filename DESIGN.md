@@ -47,6 +47,18 @@ stay clean on the dithering.
 - Gold is for state and emphasis (the active section, a lit stop, a role, a
   hover), not decoration.
 
+## The eye
+
+The tower's eye is the one character on the site. It perches on top of text
+(never over it), hops between headings and paragraphs, and watches the
+visitor. It never trails the cursor like a second pointer: it goes to where
+you are, in hops, and stays put. When the tower is on screen it lives in its
+socket, and it gets out of the way of the QR code completely.
+
+The QR code is gold on black stone to match the tower, but the gold squares
+are one flat colour. Scanners threshold block by block, so any shading inside
+the light squares can read as dark; texture only ever goes in the black.
+
 ## Motion
 
 - One clock: GSAP's ticker drives Lenis, ScrollTrigger and the stage.
