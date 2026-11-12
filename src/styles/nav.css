@@ -40,6 +40,7 @@
   text-shadow:0 1px 10px rgba(0,0,0,.8);
 }
 .nav-mark svg{ color:var(--gold); transition:color var(--dur-base) var(--ease), filter var(--dur-base) var(--ease), rotate 900ms var(--ease-entrance); }
+.nav-mark svg{ filter:drop-shadow(0 0 calc(var(--flash, 0) * 10px) rgba(255,243,207,calc(var(--flash, 0) * .9))); }
 .nav-mark:hover svg{ color:var(--gold-bright); filter:drop-shadow(0 0 5px rgba(240,207,122,.7)); rotate:180deg; }
 
 .nav-links{ display:flex; gap:clamp(var(--space-4), 2.6vw, var(--space-6)); }
