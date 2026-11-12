@@ -30,7 +30,7 @@ import { startTitles } from "./titles.js";
 import { startMagnets } from "./magnet.js";
 import { startLoader } from "./loader.js";
 import { startDescent } from "./descent.js";
-import { startTree } from "./tree.js";
+import { startTower } from "./tower.js";
 import { startMellon } from "./mellon.js";
 
 startHero();
@@ -50,5 +50,5 @@ try {
 }
 startLoader(storm);
 startDescent(storm);
-startTree(storm);
+startTower(storm);
 startMellon(storm);

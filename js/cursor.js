@@ -288,13 +288,13 @@
   /* ---------- the spark: the exact point, with no easing ------------------
      The ring trails a little behind on purpose, so a pixel of light sits
      right under the pointer for aiming. Over the parts of the page that do
-     something when you touch them (the sky, the brain, the tree) it's
+     something when you touch them (the sky, the brain, the tower) it's
      charged, and the ring hums with it. */
   var spark = document.createElement('div');
   spark.className = 'spark-dot';
   document.body.appendChild(spark);
-  var CHARGED = '.hero, .brain-viz, .party-tree';
-  var NOT_CHARGED = 'a, button:not(.party-tree), p, h1, h2, ul, .no-strike';
+  var CHARGED = '.hero, .brain-viz, .party-tower';
+  var NOT_CHARGED = 'a, button:not(.party-tower), p, h1, h2, ul, .no-strike';
   document.addEventListener('mousemove', function (e) {
     spark.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
     var el = e.target;

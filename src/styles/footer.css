@@ -1,6 +1,6 @@
 /* ================================ FOOTER =================================
-   The Party Tree stands over the footer: a voxel tree on a QR code (drawn
-   by the stage inside .party-tree). Folded, the ground turns over into the
+   The dark tower stands over the footer: a voxel tower on a QR code (drawn
+   by the stage inside .party-tower). Folded, the ground turns over into the
    code itself; .party-qr is a flat copy for when WebGL isn't available.
    ========================================================================== */
 
@@ -15,18 +15,18 @@
   display:flex; flex-direction:column; align-items:center; gap:var(--space-3);
   margin-bottom:var(--space-9);
 }
-.party-tree{
+.party-tower{
   position:relative;
   display:block;
   width:min(100%, 34rem);
-  aspect-ratio:1;
+  aspect-ratio:4 / 5;
   padding:0;
   border:0;
   border-radius:var(--radius-md);
   background:none;
   cursor:pointer;
 }
-html.no-stage .party-tree{ width:min(100%, 18rem); }
+html.no-stage .party-tower{ width:min(100%, 18rem); aspect-ratio:1; }
 .party-qr{
   position:absolute; left:50%; top:50%;
   width:98%; height:98%;

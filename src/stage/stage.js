@@ -2,7 +2,7 @@
    The stage: one fixed canvas behind the whole page.
 
    Every scene (the storm over the painting, the circuit board, the brain,
-   the tree) draws into the same small render target, one texel per art
+   the tower) draws into the same small render target, one texel per art
    pixel, and the dither pass turns that into gold pixel art on the canvas.
    CSS scales the canvas back up with hard edges. One canvas and one palette
    is what makes the page feel like a single world rather than a set of
@@ -85,7 +85,7 @@ export function createStage() {
   let clock = 0, owed = 0;
   /* Pixel art doesn't need 60 frames a second to drift: ambient motion (the
      clouds, the board's current, the brain turning) runs at 30. Anything
-     that answers you (a bolt, a scroll, a drag, the tree folding) gets every
+     that answers you (a bolt, a scroll, a drag, the tower folding) gets every
      frame. */
   let scrolled = false;
   window.addEventListener("scroll", () => { scrolled = true; dirty = true; }, { passive: true });

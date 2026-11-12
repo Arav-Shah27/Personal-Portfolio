@@ -1,6 +1,6 @@
 /* ==========================================================================
-   The Party Tree in the footer: it grows when you reach it, and a tap folds
-   it into a QR code for my LinkedIn (and back again).
+   The dark tower in the footer: it rises when you reach it, and a tap
+   folds it into a QR code for my LinkedIn (and back again).
    ========================================================================== */
 import { gsap, ScrollTrigger, reduceMotion } from "./lib/motion.js";
 import { qrMatrix } from "./qr.js";
@@ -15,8 +15,8 @@ function paintQr(canvas, qr) {
   for (let r = 0; r < qr.size; r++) for (let c = 0; c < qr.size; c++) if (qr.dark(r, c)) ctx.fillRect(c, r, 1, 1);
 }
 
-export async function startTree(storm) {
-  const button = document.querySelector(".party-tree");
+export async function startTower(storm) {
+  const button = document.querySelector(".party-tower");
   if (!button) return;
   const hint = document.querySelector(".party-hint");
   const canvas = button.querySelector(".party-qr");
@@ -30,13 +30,13 @@ export async function startTree(storm) {
     return;
   }
 
-  const { createTree } = await import("./stage/tree.js");
-  const tree = storm.stage.add(createTree(storm.stage, { box: button }));
-  paintQr(canvas, tree.qr);
-  const s = tree.state;
-  if (import.meta.env.DEV) window.__tree = tree;
+  const { createTower } = await import("./stage/tower.js");
+  const tower = storm.stage.add(createTower(storm.stage, { box: button }));
+  paintQr(canvas, tower.qr);
+  const s = tower.state;
+  if (import.meta.env.DEV) window.__tower = tower;
 
-  /* it grows when you get there */
+  /* it rises when you get there */
   if (reduceMotion) s.grow = 1;
   else ScrollTrigger.create({
     trigger: button, start: "top 85%", once: true,
@@ -47,7 +47,7 @@ export async function startTree(storm) {
   button.addEventListener("click", () => {
     folded = !folded;
     button.setAttribute("aria-pressed", String(folded));
-    hint.textContent = folded ? "scan for my linkedin · tap to grow it back" : "tap the tree";
+    hint.textContent = folded ? "scan for my linkedin · tap to raise it again" : "tap the tower";
     tl?.kill();
     if (reduceMotion) {
       Object.assign(s, { fold: folded ? 1 : 0, cam: folded ? 1 : 0, grow: 1 });

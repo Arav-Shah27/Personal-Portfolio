@@ -1,4 +1,4 @@
-/* The QR code under the Party Tree: my LinkedIn, with the quiet border a
+/* The QR code the dark tower turns into: my LinkedIn, with the quiet border a
    scanner needs. Kept apart from the 3D so the flat code works without it. */
 import qrcode from "qrcode-generator";
 
