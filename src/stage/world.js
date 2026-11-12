@@ -279,6 +279,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     }));
     strikeX = xArt / pf.frame.w;
     stage.invalidate();
+    window.dispatchEvent(new CustomEvent("storm:strike", { detail: { x: strikeX, near: aimed } }));
   }
 
   function updateBolts(dt) {
