@@ -167,6 +167,14 @@ html.js:not(.reduce-motion) .hero-foot,
 html.js:not(.reduce-motion) .scroll-hint{ opacity:0; }
 html.js:not(.reduce-motion):not(.hero-in) .hero-name{ visibility:hidden; }
 
+/* ---- the descent: --fall is scrubbed by src/descent.js. It works through
+   translate and a filter so it never fights the intro, which owns opacity */
+.hero{ --fall:0; }
+.hero-hello, .hero-foot, .scroll-hint{
+  translate:0 calc(var(--fall) * -1.5rem);
+  filter:opacity(calc(1 - var(--fall)));
+}
+
 /* ---- smaller screens ---------------------------------------------------- */
 @media (max-width:760px){
   .hero-frame{ padding-bottom:var(--space-6); }

@@ -30,6 +30,7 @@ const DOOR = { x: 836, y: 763, r: 268 };          /* the green of the door, insi
 const LAMPS = [[441, 628], [1160, 620]];
 
 const seed = () => (Math.random() * 1e6) | 0;
+const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
 export function createWorld(stage, { onFlash, onReady } = {}) {
   const state = {
@@ -38,6 +39,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     board: 0,         /* 0..1, how strongly the board shows outside the door */
     painting: 1,      /* 0 once the painting is fully behind us */
     scroll: 0,        /* drifts the board as the page moves */
+    dim: 1,           /* the board steps back once there's text over it */
     mouse: new THREE.Vector2(),
     mouseTarget: new THREE.Vector2(),
     centerY: 640,     /* where the painting is framed vertically */
@@ -82,6 +84,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       uBoard: { value: 0 },
       uPainting: { value: 1 },
       uScroll: { value: 0 },
+      uDim: { value: 1 },
       uMouse: { value: new THREE.Vector2() },
       uCenterY: { value: 640 },
     },
@@ -93,7 +96,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       precision highp float;
       uniform sampler2D uPaint, uBolt;
       uniform vec2 uRes, uStrike, uMouse;
-      uniform float uPx, uTime, uFlash, uZoom, uOpen, uBoard, uPainting, uScroll, uCenterY;
+      uniform float uPx, uTime, uFlash, uZoom, uOpen, uBoard, uPainting, uScroll, uCenterY, uDim;
       in vec2 vUv;
       out vec4 fragColor;
 
@@ -118,7 +121,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         vec2 pa = p - a, ba = b - a;
         return length(pa - ba * clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0));
       }
-      float edgeOn(vec2 k) { return step(0.5, hash(k * 1.37 + 4.1)); }
+      float edgeOn(vec2 k) { return step(0.38, hash(k * 1.37 + 4.1)); }
 
       vec2 board(vec2 q) {               /* q in art pixels; returns (trace, pad) */
         const float S = 12.0;
@@ -209,17 +212,20 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         vec2 doorArt = vec2(doorCss.x, cssRes.y - doorCss.y) / uPx;
         float depth = mix(0.35, 1.0, smoothstep(0.0, 1.0, uOpen));
         vec2 q = (sp - doorArt) / depth;
-        q.y += uScroll / uPx;
+        q.y -= uScroll * 0.45 / uPx;
         vec2 bd = board(q + 4096.0);
-        float r = length(sp - doorArt);
+        float r = length(q);
         float wave = fract(r / 150.0 - uTime * 0.32);
         float pulse = smoothstep(0.9, 1.0, wave) * smoothstep(1.0, 0.985, wave);
         float shimmer = 0.75 + 0.25 * noise(floor((q + 4096.0) / 12.0) + uTime * 0.6);
-        float boardLum = bd.x * (0.16 * shimmer + 0.62 * pulse) + bd.y * 0.08 + fbm(q * 0.05) * 0.035;
+        float boardLum = bd.x * (0.3 * shimmer + 0.65 * pulse) + bd.y * 0.18 + fbm(q * 0.05) * 0.03;
+        /* the current comes in through the door: a bright bloom at the core
+           while it opens */
+        boardLum += bd.x * exp(-r / 60.0) * smoothstep(0.2, 0.7, uOpen) * (1.0 - smoothstep(0.85, 1.0, uOpen)) * 0.8;
 
         float inDoor = 1.0 - smoothstep(DOOR_R - 1.5, DOOR_R + 1.5, length(p - DOOR));
         float showBoard = max(inDoor * uOpen, uBoard * (1.0 - uPainting));
-        float boardOut = mix(boardLum * 0.55, boardLum, uOpen);
+        float boardOut = mix(boardLum * 0.55, boardLum, uOpen) * uDim;
 
         vec3 outCol = mix(lit * uPainting, vec3(boardOut), showBoard);
         float outA = reveal * uPainting * (1.0 - showBoard);
@@ -245,6 +251,21 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
   const scene = new THREE.Scene();
   scene.add(quad);
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+
+  /* where a point of the painting is on screen right now, in css px; the
+     same framing the shader uses, so a bolt can be aimed at the door knob */
+  function toScreen(x, y) {
+    const W = window.innerWidth, H = window.innerHeight;
+    const k = Math.max(W / PAINTING.w, H / PAINTING.h);
+    const z = state.zoom;
+    const focus = smooth(1, 2.2, z);
+    const hx = W / (2 * k), hy = H / (2 * k);
+    let cx = Math.min(Math.max(DOOR.x, hx), PAINTING.w - hx);
+    let cy = Math.min(Math.max(state.centerY, hy), PAINTING.h - hy);
+    cx = cx + (DOOR.x - cx) * focus + state.mouse.x * 14 / z;
+    cy = cy + (DOOR.y - cy) * focus + state.mouse.y * 14 / z;
+    return { x: (x - cx) * k * z + W / 2, y: (y - cy) * k * z + H / 2 };
+  }
 
   let flash = 0, strikeX = 0.5;
 
@@ -280,6 +301,8 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
   const layer = {
     state,
     strike,
+    toScreen,
+    KNOB: { x: 806, y: 815 },
     get flash() { return flash; },
     get bolting() { return bolts.length > 0; },
     resize({ w, h, px }) {
@@ -301,6 +324,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       u.uBoard.value = state.board;
       u.uPainting.value = state.painting;
       u.uScroll.value = state.scroll;
+      u.uDim.value = state.dim;
       u.uMouse.value.copy(state.mouse);
       u.uCenterY.value = state.centerY;
       renderer.render(scene, camera);
