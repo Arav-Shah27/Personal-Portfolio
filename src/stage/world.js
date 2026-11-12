@@ -29,6 +29,7 @@ import shireUrl from "../../assets/shire-stage.jpg";
 /* landmarks in the painting, in its own pixels (1800 x 1688, y down) */
 export const PAINTING = { w: 1800, h: 1688 };
 const DOOR = { x: 836, y: 763, r: 268 };          /* the green of the door, inside the brick ring */
+const KNOB = { x: 816, y: 782 };                  /* the brass knob: the board opens out of it */
 const LAMPS = [[441, 628], [1160, 620]];
 
 const seed = () => (Math.random() * 1e6) | 0;
@@ -107,6 +108,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       const vec2 IMG = vec2(${PAINTING.w}.0, ${PAINTING.h}.0);
       const vec2 DOOR = vec2(${DOOR.x}.0, ${DOOR.y}.0);
       const float DOOR_R = ${DOOR.r}.0;
+      const vec2 KNOB = vec2(${KNOB.x}.0, ${KNOB.y}.0);
 
       float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
       float noise(vec2 p) {
@@ -169,7 +171,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         vec2 halfView = cssRes / (2.0 * k);
         vec2 center = vec2(clamp(DOOR.x, halfView.x, IMG.x - halfView.x),
                            clamp(uCenterY, halfView.y, IMG.y - halfView.y));
-        center = mix(center, DOOR, focus) + uMouse * 14.0 / uZoom;
+        center = mix(center, KNOB, focus) + uMouse * 14.0 / uZoom;
         vec2 css = vec2(vUv.x, 1.0 - vUv.y) * cssRes;       /* css px, y down */
         vec2 p = center + (css - cssRes * 0.5) / (k * uZoom);
 
@@ -216,11 +218,15 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         vec3 lit = night + col * flash * 1.25;
         float reveal = smoothstep(0.2, 0.95, flash) * (1.0 - sky);
 
-        /* ---- the board, seen through the door ----------------------------- */
-        vec2 doorCss = (DOOR - center) * k * uZoom + cssRes * 0.5;
-        vec2 doorArt = vec2(doorCss.x, cssRes.y - doorCss.y) / uPx;
-        float depth = mix(0.35, 1.0, smoothstep(0.0, 1.0, uOpen));
-        vec2 q = (sp - doorArt) / depth;
+        /* ---- the board, opening out of the brass knob ---------------------
+           The camera homes in on the knob, the knob charges, and then a
+           circle of circuitry grows out of it: a bead of light first, then
+           a rush to the edges, with a bright front of current as it goes.
+           The soft edge is left for the dither pass to break into pixels. */
+        vec2 knobCss = (KNOB - center) * k * uZoom + cssRes * 0.5;
+        vec2 knobArt = vec2(knobCss.x, cssRes.y - knobCss.y) / uPx;
+        float depth = mix(0.3, 1.0, smoothstep(0.0, 1.0, uOpen));
+        vec2 q = (sp - knobArt) / depth;
         q.y -= uScroll * 0.45 / uPx;
         vec2 bd = board(q + 4096.0);
         float r = length(q);
@@ -232,15 +238,23 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float rr = length(sp - uRipple.xy);
         float ripple = exp(-pow((rr - rt * 260.0) / 10.0, 2.0)) * exp(-rt * 1.6);
         float boardLum = bd.x * (0.3 * shimmer + 0.65 * pulse + 2.2 * ripple) + bd.y * 0.18 + fbm(q * 0.05) * 0.03;
-        /* the current comes in through the door: a bright bloom at the core
-           while it opens */
-        boardLum += bd.x * exp(-r / 60.0) * smoothstep(0.2, 0.7, uOpen) * (1.0 - smoothstep(0.85, 1.0, uOpen)) * 0.8;
+        /* the current pours out of the knob while it opens */
+        float opening = smoothstep(0.0, 0.3, uOpen) * (1.0 - smoothstep(0.85, 1.0, uOpen));
+        boardLum += bd.x * exp(-r / 70.0) * opening * 0.9;
 
-        float inDoor = 1.0 - smoothstep(DOOR_R - 1.5, DOOR_R + 1.5, length(p - DOOR));
-        float showBoard = max(inDoor * uOpen, uBoard * (1.0 - uPainting));
-        float boardOut = mix(boardLum * 0.55, boardLum, uOpen) * uDim;
+        float R = pow(uOpen, 2.2) * length(uRes) * 1.08;
+        float dk = length(sp - knobArt);
+        float live = step(0.001, uOpen);
+        float portal = (1.0 - smoothstep(R - 5.0, R + 5.0, dk)) * live;
+        float front = exp(-abs(dk - R) / (1.5 + R * 0.025)) * live * (1.0 - smoothstep(0.9, 1.0, uOpen));
+        /* the painting just outside the front catches its light */
+        float spill = exp(-max(0.0, dk - R) / (18.0 + R * 0.15)) * live * (1.0 - portal) * uPainting;
+
+        float showBoard = max(portal, uBoard * (1.0 - uPainting));
+        float boardOut = boardLum * uDim;
 
         vec3 outCol = mix(lit * uPainting, vec3(boardOut), showBoard);
+        outCol += vec3(0.95) * front + lit * spill * 0.8 + vec3(0.12) * spill;
         float outA = reveal * uPainting * (1.0 - showBoard);
 
         /* gentle vignette so the edges sit back */
@@ -275,8 +289,8 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     const hx = W / (2 * k), hy = H / (2 * k);
     let cx = Math.min(Math.max(DOOR.x, hx), PAINTING.w - hx);
     let cy = Math.min(Math.max(state.centerY, hy), PAINTING.h - hy);
-    cx = cx + (DOOR.x - cx) * focus + state.mouse.x * 14 / z;
-    cy = cy + (DOOR.y - cy) * focus + state.mouse.y * 14 / z;
+    cx = cx + (KNOB.x - cx) * focus + state.mouse.x * 14 / z;
+    cy = cy + (KNOB.y - cy) * focus + state.mouse.y * 14 / z;
     return { x: (x - cx) * k * z + W / 2, y: (y - cy) * k * z + H / 2 };
   }
 
@@ -325,7 +339,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     strike,
     ripple,
     toScreen,
-    KNOB: { x: 816, y: 782 },
+    KNOB,
     get flash() { return flash; },
     get bolting() { return bolts.length > 0; },
     resize({ w, h, px }) {

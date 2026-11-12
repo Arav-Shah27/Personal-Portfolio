@@ -5,8 +5,9 @@
      - the name parts like curtains and the rest of the hero falls away,
      - the camera zooms into the door, and a bolt comes down on the brass
        knob on the way in,
-     - the door opens, and its inside is the circuit board, which then fills
-       the screen and stays on behind the rest of the page.
+     - the knob charges, and the circuit board opens out of it: a bead of
+       light that grows until it fills the screen, then stays on behind the
+       rest of the page.
    Under reduced motion there is no runway and no zoom; the painting simply
    gives way to the board once you scroll past it.
    ========================================================================== */
@@ -68,7 +69,7 @@ export function startDescent(storm) {
     .to(".hero-line--b", { xPercent: 120, yPercent: 30, opacity: 0, filter: "blur(8px)", duration: 0.42, ease: "power2.in" }, 0.02)
     /* into the door */
     .to(cam, { lz: Math.log(7), duration: 0.74, ease: "power1.in", onUpdate: apply }, 0.04)
-    .to(state, { open: 1, duration: 0.4, ease: "power1.inOut" }, 0.4)
+    .to(state, { open: 1, duration: 0.48, ease: "none" }, 0.36)
     .to(state, { painting: 0, board: 1, duration: 0.1 }, 0.86);
 
   /* once there's text over it, the board steps back to a whisper */
