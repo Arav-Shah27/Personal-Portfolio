@@ -96,6 +96,8 @@ html{
   background:var(--bg);
 }
 html.reader-open{ overflow:hidden; }
+/* Lenis does the easing itself; a CSS smooth scroll on top would fight it */
+html.has-lenis{ scroll-behavior:auto; }
 
 body{
   margin:0;
