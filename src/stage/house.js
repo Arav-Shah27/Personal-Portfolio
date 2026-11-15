@@ -9,7 +9,8 @@
    The camera walks a fixed path through the house: in at the door, down
    the bend of the hall, into the study (the map, then the workbench),
    through the round door to the parlour and the fire, and out of the back
-   door into the night. Where it is on that path (state.u) is set by the
+   door into the night, turning round to see the round door glowing in
+   the hill. Where it is on that path (state.u) is set by the
    page from the scroll (src/rooms.js); the camera eases after it.
 
    It has its own weather: now and then lightning shows through the round
@@ -43,8 +44,10 @@ function cameraPath(h) {
     [v(4.7, 1.6, -3.0), v(11.5, 1.45, -3.3)],
     /* 8  at the back door */
     [v(9.3, 1.45, -1.7), v(10, 1.3, 1.5)],
-    /* 9  out into the night */
-    [v(10, 1.5, 3.4), v(10, 1.2, 9)],
+    /* 9  out into the night, looking round */
+    [v(10.2, 1.5, 2.2), v(12.8, 1.35, 3.4)],
+    /* 10 and back at the round door, lit from inside */
+    [v(12.2, 1.75, 6.2), v(10, 1.2, 0)],
   ];
   const pos = new THREE.CatmullRomCurve3(keys.map((k) => k[0]), false, "centripetal");
   const look = new THREE.CatmullRomCurve3(keys.map((k) => k[1]), false, "centripetal");

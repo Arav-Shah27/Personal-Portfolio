@@ -4,7 +4,9 @@
    parlour with a fire through a round door on the right.
 
      the hall     a tunnel with a flat tiled floor, swept along a long bend
-                  to the right so you can't see the end until you're near it.
+                  to the left so you can't see the end until you're near it
+                  (left, so it curls away from the back door: out there you
+                  should only see the night).
                   Benches run along both walls, wooden ribs every pace, a
                   lantern now and then.
      the study    a map on the left wall, a workbench under a round window
@@ -62,18 +64,19 @@ function mats() {
     map: lam({ map: T.map() }),
     lantern: glow(0xffc070),
     pane: glow(0x101826),
-    ground: lam({ color: 0x1e2a14 }),
+    ground: lam({ color: 0x4a5a30 }),
   };
 }
 
 /* ---- the hall, swept along its bend ------------------------------------ */
-/* where s metres down the hall is, and which way is right */
+/* where s metres down the hall is, and which way is right; it sets off
+   down -z and bends steadily to the left */
 export function hallAt(s) {
   const a = s / HALL.bend;
   return {
-    p: new THREE.Vector3(HALL.bend - HALL.bend * Math.cos(a), 0, -HALL.bend * Math.sin(a)),
-    right: new THREE.Vector3(Math.cos(a), 0, Math.sin(a)),
-    yaw: -a,
+    p: new THREE.Vector3(HALL.bend * (Math.cos(a) - 1), 0, -HALL.bend * Math.sin(a)),
+    right: new THREE.Vector3(Math.cos(a), 0, -Math.sin(a)),
+    yaw: a,
   };
 }
 const UP = new THREE.Vector3(0, 1, 0);
@@ -572,19 +575,39 @@ function buildParlour(M, root, lights, panes, finds, fire) {
   return g;
 }
 
-/* outside the back door: a bit of grass and the night */
-function buildOutside(M, root) {
+/* outside the back door: the hillside the house is dug into, with the
+   round door in it, a lantern beside it, grass and the night */
+function buildOutside(M, root, lights) {
   const g = new THREE.Group();
   root.add(g);
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), M.ground);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.set(BACK_DOOR.x, -0.02, 20.2);
-  g.add(ground);
-  /* a lantern on a post by the door */
-  cyl(g, M.dark, 0.05, 0.05, 1.6, BACK_DOOR.x + 1.6, 0.8, 1.2, 6);
-  const lan = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.24, 0.18), M.lantern);
-  lan.position.set(BACK_DOOR.x + 1.6, 1.7, 1.2);
+  /* the face of the hill, just outside the parlour's front wall */
+  /* (it starts right of the study, clear of where the hall comes in) */
+  const hill = new THREE.Mesh(wallGeo(21, 7, [{ a: BACK_DOOR.x - 12.5, R: BACK_DOOR.R + 0.14, C: BACK_DOOR.C }], [], 0.3), M.ground);
+  hill.position.set(12.5, 0, 0.32);
+  g.add(hill);
+  frame(g, M.stone, BACK_DOOR.R + 0.1, BACK_DOOR.C, BACK_DOOR.x, 0.5, 0);
+  /* the door, swung open against the hill */
+  const leaf = cyl(g, M.door, BACK_DOOR.R, BACK_DOOR.R, 0.08, BACK_DOOR.x - 1.75, BACK_DOOR.C, 0.95, 32);
+  leaf.rotation.x = Math.PI / 2;
+  leaf.rotation.z = 0.35;
+  /* a lantern on the hill beside it */
+  const lan = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.2, 0.14), M.lantern);
+  lan.position.set(BACK_DOOR.x + 1.5, 1.9, 0.62);
   g.add(lan);
+  const ll = new THREE.PointLight(0xffa24a, 9, 8, 1.4);
+  ll.position.set(BACK_DOOR.x + 1.5, 1.8, 1.1);
+  g.add(ll);
+  lights.push({ light: ll, base: 9, flicker: 0.15 });
+  /* a path of flat stones leading away */
+  for (let i = 0; i < 6; i++) {
+    const st = cyl(g, M.stone, 0.32, 0.34, 0.04, BACK_DOOR.x + Math.sin(i * 0.9) * 0.3, 0.0, 1.4 + i * 0.85, 9);
+    st.scale.set(1, 1, 0.75);
+  }
+  /* kept clear of the hall, which curls away to the other side */
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(28, 40), M.ground);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.set(16, -0.02, 20.2);
+  g.add(ground);
   return g;
 }
 
@@ -641,7 +664,7 @@ export function buildHouse() {
   const fire = makeFire();
   buildStudy(M, root, lights, panes, finds);
   buildParlour(M, root, lights, panes, finds, fire.mesh);
-  buildOutside(M, root);
+  buildOutside(M, root, lights);
 
   /* a point in the hall (s along it, x across, y up) in the house's frame */
   hallRoot.updateMatrixWorld();

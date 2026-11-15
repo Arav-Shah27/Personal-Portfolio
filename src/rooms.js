@@ -54,7 +54,7 @@ export function startRooms(storm) {
       [bottom(work) - vh, 5.25],
       [top(brain) - vh * 0.1, 7],
       [bottom(brain) - vh, 7.3],
-      [top(footer) - vh * 0.35, 9],
+      [top(footer) - vh * 0.6, 10],
     ];
   }
 
@@ -86,7 +86,7 @@ export function startRooms(storm) {
     /* out of the back door, the house falls away behind you and the tower
        stands on its own */
     const ft = top(footer);
-    lum *= 1 - 0.9 * smooth(ft - vh * 0.9, ft - vh * 0.2, y);
+    lum *= 1 - 0.92 * smooth(ft - vh * 0.55, ft - vh * 0.05, y);
     if (import.meta.env.DEV && window.__lum != null) lum = window.__lum;
     house.state.lum = lum;
     storm.stage.invalidate();
