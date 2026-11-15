@@ -75,7 +75,7 @@ export function startRooms(storm) {
     if (reduceMotion) u = Math.round(u);
     house.state.u = u;
     const cover = Math.max(covered(work, vh), covered(brain, vh));
-    let lum = 1 - 0.7 * smooth(0.04, 0.4, cover);
+    let lum = 1 - 0.45 * smooth(0.04, 0.4, cover);
     /* out of the back door, the house falls away behind you and the tower
        stands on its own */
     const ft = top(footer);
