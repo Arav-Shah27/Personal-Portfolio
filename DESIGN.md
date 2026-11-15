@@ -47,6 +47,22 @@ stay clean on the dithering.
 - Gold is for state and emphasis (the active section, a lit stop, a role, a
   hover), not decoration.
 
+## Current in the type
+
+Two moments where the lightning touches the words themselves, both built from
+the real glyphs rasterised onto the stage's pixel grid, so they're the
+letters' own shapes in the stage's own pixels and ramp:
+
+- **The name is written in lightning.** A bolt lands on the first letter and
+  the current runs through each stroke, jumps to the next letter (and leaps
+  across the painting from one line to the other), and each finished letter
+  flashes and becomes the real one. Bolts and sparks are random every visit.
+- **Click a title and it takes the hit.** The letters burst into gold pixels
+  from where it struck and fly back, left to right, into place.
+
+The words are always real text underneath (they're only hidden while their
+pixels are out), and under reduced motion neither happens.
+
 ## The eye
 
 The tower's eye is the one character on the site. It perches on top of text

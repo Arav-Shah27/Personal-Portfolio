@@ -33,6 +33,7 @@ src/eye.js              the eye as a character: perching, hopping, going home
 src/loader.js           the ring that charges up on a first visit
 src/sound.js            thunder, made in the browser (off by default)
 src/titles.js           titles that rise in, labels that flicker
+src/zap.js              the name written in lightning; titles that shatter when clicked
 src/magnet.js           round buttons that lean toward the mouse
 src/mellon.js           type "mellon" anywhere
 src/qr.js               the LinkedIn QR code
