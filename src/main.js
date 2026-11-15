@@ -33,6 +33,7 @@ import { startDescent } from "./descent.js";
 import { startTower } from "./tower.js";
 import { startMellon } from "./mellon.js";
 import { startZap } from "./zap.js";
+import { startRooms } from "./rooms.js";
 
 const zap = startZap();
 startHero(zap);
@@ -53,5 +54,6 @@ try {
 if (zap) zap.storm = storm;
 startLoader(storm);
 startDescent(storm);
+startRooms(storm);
 startTower(storm);
 startMellon(storm);

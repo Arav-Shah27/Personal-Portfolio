@@ -36,7 +36,7 @@ const LAMPS = [[441, 628], [1160, 620]];
 const seed = () => (Math.random() * 1e6) | 0;
 const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
-export function createWorld(stage, { onFlash, onReady } = {}) {
+export function createWorld(stage, { onFlash, onReady, inside = null } = {}) {
   const state = {
     zoom: 1,          /* 1 = the whole painting; ~14 = through the door */
     open: 0,          /* 0..1, how far the door has opened onto the board */
@@ -94,6 +94,11 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       uRain: { value: reduceMotion ? 0 : 1 },
       uMouse: { value: new THREE.Vector2() },
       uCenterY: { value: 640 },
+      /* the house behind the door (src/stage/house.js), when there is one */
+      uHouse: { value: null },
+      uHouseOn: { value: 0 },
+      uHouseLum: { value: 1 },
+      uHouseFlash: { value: 0 },
     },
     vertexShader: /* glsl */ `
       out vec2 vUv;
@@ -101,7 +106,8 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     `,
     fragmentShader: /* glsl */ `
       precision highp float;
-      uniform sampler2D uPaint, uBolt;
+      uniform sampler2D uPaint, uBolt, uHouse;
+      uniform float uHouseOn, uHouseLum, uHouseFlash;
       uniform vec2 uRes, uStrike, uMouse;
       uniform vec3 uRipple;
       uniform vec2 uLand;                     /* where the last bolt came down, art px, y down */
@@ -302,9 +308,21 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float showBoard = max(portal, uBoard * (1.0 - uPainting));
         float boardOut = boardLum * uDim;
 
-        vec3 outCol = mix(lit * uPainting, vec3(boardOut), showBoard);
+        /* with the house built, the door opens onto it instead: rendered in
+           linear light, so it's brought up to the eye's curve before the
+           ramp reads it. A touch on the page still sends a ring of current
+           across it. */
+        vec3 inside = vec3(boardOut);
+        if (uHouseOn > 0.5) {
+          vec3 hc = pow(max(texture(uHouse, vUv).rgb, 0.0), vec3(1.0 / 2.2));
+          inside = hc * uHouseLum + vec3(0.4) * ripple;
+        }
+
+        vec3 outCol = mix(lit * uPainting, inside, showBoard);
         outCol += vec3(0.95) * front + lit * spill * 0.8 + vec3(0.12) * spill;
         float outA = reveal * uPainting * (1.0 - showBoard);
+        /* lightning in the windows shows the rooms in their real colours */
+        outA = max(outA, smoothstep(0.3, 0.95, uHouseFlash) * showBoard * uHouseOn * 0.85);
 
         /* ---- light shafts from the strike ---------------------------------
            For each pixel, step toward where the bolt came down and count how
@@ -457,6 +475,13 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       u.uDim.value = state.dim;
       u.uMouse.value.copy(state.mouse);
       u.uCenterY.value = state.centerY;
+      if (inside) {
+        inside.state.on = state.open > 0.001 || (state.board > 0.001 && state.painting < 0.999);
+        u.uHouse.value = inside.texture;
+        u.uHouseOn.value = inside.state.on ? 1 : 0;
+        u.uHouseLum.value = inside.state.lum;
+        u.uHouseFlash.value = inside.flash;
+      }
       renderer.render(scene, camera);
     },
   };

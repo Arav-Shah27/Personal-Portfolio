@@ -7,6 +7,7 @@ import { reduceMotion, finePointer } from "./lib/motion.js";
 import { createStage } from "./stage/stage.js";
 import { createWorld } from "./stage/world.js";
 import { createBrain } from "./stage/brain.js";
+import { createHouse } from "./stage/house.js";
 import { overText } from "./lib/hit.js";
 
 export function startStorm() {
@@ -18,7 +19,11 @@ export function startStorm() {
   const root = document.documentElement;
   const hero = document.querySelector(".hero");
 
+  /* the house behind the door draws first, into its own target, and the
+     world shows it through the door */
+  const house = stage.add(createHouse(stage));
   const world = stage.add(createWorld(stage, {
+    inside: house,
     onReady: () => { root.classList.add("stage-ready"); window.dispatchEvent(new Event("stage:ready")); },
     /* the flash goes out as a CSS variable and an event, so type and
        anything else can light up in step with the sky */
@@ -103,6 +108,6 @@ export function startStorm() {
   /* anything on the page can send current across the board */
   window.siteRipple = (x, y) => world.ripple(x, y);
 
-  if (import.meta.env.DEV) window.__storm = { stage, world };
-  return { stage, world };
+  if (import.meta.env.DEV) window.__storm = { stage, world, house };
+  return { stage, world, house };
 }

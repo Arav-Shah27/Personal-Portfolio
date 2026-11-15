@@ -106,3 +106,14 @@
 @media (max-width:760px){
   .section{ padding-block:var(--space-9); }
 }
+
+/* ---- the walks ----------------------------------------------------------
+   Gaps in the page where nothing is written and you walk through the house
+   behind the door (src/rooms.js). Without the stage there's no house, so
+   they close up; under reduced motion they're short, a pause at each room. */
+.walk{ height:0; }
+html.js:not(.no-stage) .walk{ height:45svh; }
+html.js:not(.reduce-motion):not(.no-stage) .walk--hall{ height:150svh; }
+html.js:not(.reduce-motion):not(.no-stage) .walk--door{ height:110svh; }
+html.js:not(.reduce-motion):not(.no-stage) .walk--out{ height:90svh; }
+@media print{ .walk{ display:none; } }
