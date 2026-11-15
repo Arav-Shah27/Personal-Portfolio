@@ -156,5 +156,5 @@ html.has-stage .hero-bg{ display:none; }
   image-rendering:pixelated;
 }
 .zap-hide, .zap-hide *{ color:transparent !important; text-shadow:none !important; }
-html.has-zap :is(.hero-name, .section-title, .entry-title, .project-title){ cursor:pointer; }
+html.has-zap.zap-aim :is(.hero-name, .section-title, .entry-title, .project-title){ cursor:pointer; }
 @media print{ .zap-layer{ display:none; } .zap-hide, .zap-hide *{ color:inherit !important; } }

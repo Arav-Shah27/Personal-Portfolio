@@ -331,7 +331,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
           float ang = atan(d.y, d.x);
           float spokes = pow(noise(vec2(ang * 7.0, uLand.x * 0.37)), 3.0) + 0.5 * pow(noise(vec2(ang * 19.0, uLand.y)), 4.0);
           float dl = length(d) / uRes.y;
-          outCol += vec3(1.6) * (acc / 11.5) * (0.08 + 2.4 * spokes) * uFlash * exp(-dl * 1.2) * scene;
+          outCol += vec3(0.7) * (acc / 11.5) * (0.05 + 1.6 * spokes) * uFlash * exp(-dl * 1.8) * scene;
         }
 
         /* ---- rain over the painting, lit by the lanterns and the lightning */

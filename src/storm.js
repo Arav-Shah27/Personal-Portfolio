@@ -7,6 +7,7 @@ import { reduceMotion, finePointer } from "./lib/motion.js";
 import { createStage } from "./stage/stage.js";
 import { createWorld } from "./stage/world.js";
 import { createBrain } from "./stage/brain.js";
+import { overText } from "./lib/hit.js";
 
 export function startStorm() {
   const stage = createStage();
@@ -50,7 +51,10 @@ export function startStorm() {
   /* click the sky and it strikes right there */
   let lastClick = 0;
   hero?.addEventListener("click", (e) => {
-    if (e.target.closest("a, button, p, h1, ul, .no-strike")) return;
+    if (e.target.closest("a, button, p, ul, .no-strike")) return;
+    /* the name's box fills most of the hero: only its letters are off limits */
+    const h1 = e.target.closest("h1");
+    if (h1 && overText(h1, e.clientX, e.clientY)) return;
     const sel = window.getSelection?.();
     if (sel && !sel.isCollapsed) return;
     const now = performance.now();

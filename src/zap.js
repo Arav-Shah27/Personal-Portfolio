@@ -24,6 +24,7 @@ import { createFrame, clearFrame, composite, painterFor, createFx, hex, Rng } fr
 import * as skyBolt from "../pixelfx/src/fx/lightning/sky-bolt.js";
 import { zigzag, crackle } from "../pixelfx/src/fx/lightning/_lib.js";
 import { pixelSize } from "./stage/palette.js";
+import { overText } from "./lib/hit.js";
 
 /* the storm-gold ramp, dark to white-hot */
 const C = skyBolt.STORM_GOLD.map(hex);
@@ -413,17 +414,22 @@ export function startZap() {
     });
   }
 
-  /* click a title and it takes the hit */
+  /* click a title (its letters, not just the box round them) and it takes
+     the hit; the pointer only turns into a hand over the letters too */
   document.addEventListener("click", (e) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0 || e.detail === 0) return;
     const el = e.target.closest?.(TITLES);
-    if (!el) return;
+    if (!el || !overText(el, e.clientX, e.clientY)) return;
     const sel = window.getSelection?.();
     if (sel && !sel.isCollapsed) return;
-    let x = e.clientX, y = e.clientY;
-    if (e.detail === 0) { const r = el.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; }
-    shatter(el, x, y);
+    shatter(el, e.clientX, e.clientY);
   });
+  let aimed = false;
+  window.addEventListener("pointermove", (e) => {
+    const el = e.target.closest?.(TITLES);
+    const on = !!el && overText(el, e.clientX, e.clientY);
+    if (on !== aimed) root.classList.toggle("zap-aim", (aimed = on));
+  }, { passive: true });
 
   if (import.meta.env.DEV) window.__zap = api;
   return api;
