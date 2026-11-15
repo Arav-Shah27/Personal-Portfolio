@@ -26,6 +26,33 @@ sitting on top of it.
   board, fills the route, lights the stops, ripples out from what you touch.
   New interactions should feel like they send or receive current.
 
+## The house
+
+Behind the round door is a house, and the page is a walk through it. The
+dive goes in at the door, the hall's ribs curl away to the left, What I've
+Done is the study (the map for the experiences, the workbench for the
+projects), My Brain is the parlour by the fire, and the end of the page
+steps out of the back door and looks back at it glowing in the hill.
+
+- **It's the stage's own pixels.** The house is plain 3D shapes, lit by
+  lanterns and a fire, rendered at one texel per art pixel and dithered into
+  the same gold ramp as the painting. Lightning in the round windows shows
+  the rooms in their real colours for an instant, like the flash over the
+  painting does.
+- **The page is the route.** Each section is pinned to a stop on the
+  camera's path; the gaps between sections (`.walk`) are where you walk.
+  Nobody has to explore to read anything: scrolling straight down passes
+  every room and every word.
+- **Rooms step back under words.** Where text covers the screen the house
+  dims to about half, so it still shows but never fights the reading. In
+  the walks it's at full strength.
+- **Finding things is extra.** Objects light up under the pointer when
+  there's something to find; the map, books and workbench lead to their
+  sections, and anything else says what `src/finds.js` says. Empty entries
+  are just furniture. What's written there is also in the page for screen
+  readers.
+- **Reduced motion** stands still at each room instead of walking.
+
 ## Type
 
 Pixel letters for titles, a plain clean sans for reading. The pixel face is

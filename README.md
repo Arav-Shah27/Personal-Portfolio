@@ -19,12 +19,17 @@ src/stage/              the WebGL world (three.js)
   stage.js                one fixed canvas, one render target, 30fps when idle
   dither.js               turns every frame into gold pixel art (4x4 Bayer)
   palette.js              the gold ramp and the pixel size
-  world.js                the painting at night, the storm, the door, the board
+  world.js                the painting at night, the storm, the door (and the board, on the 404)
+  house.js                the house behind the door: the camera's walk, lightning in the windows
+  house/build.js          the hall, the study, the parlour and the hillside, from plain shapes
+  house/tex.js            the floor tiles, plaster, wood and the map, painted on canvases
   brain.js                the brain made of points, with a node per essay
   tower.js                the dark tower and its flight into a QR code
   eye.js                  the eye, drawn pixel by pixel in the stage's palette
 src/storm.js            puts the stage on the page and wires up the brain
 src/descent.js          scrolling dives into the door (GSAP ScrollTrigger)
+src/rooms.js            the walk through the house: scroll to camera, things to find
+src/finds.js            what the things in the rooms say when you click them
 src/hero.js             the name's intro and its letters catching the light
 src/work.js             the route that fills with current, chips that tilt
 src/dies.js             the little pixel animations inside each project chip
@@ -79,6 +84,9 @@ every push (see `vercel.json`).
 | How chunky the pixels are      | `pixelSize()` in `src/stage/palette.js`            |
 | How often the sky strikes      | `ambient(...)` in `src/storm.js`                   |
 | How long the dive into the door is | `.hero-run` height in `src/styles/hero.css`    |
+| Things to find in the house    | `src/finds.js`: write a `text` for an object and it becomes clickable |
+| How long the walks between rooms are | the `.walk` heights in `src/styles/sections.css` |
+| Where the camera goes          | `cameraPath()` in `src/stage/house.js`, and which part of the page pins to which stop in `anchors()` in `src/rooms.js` |
 | Fonts                          | `src/fonts.js` and the `--font-*` tokens in `src/styles/base.css` |
 
 A new project chip gets its die animation from the `data-die` name on its

@@ -5,9 +5,9 @@
      - the name parts like curtains and the rest of the hero falls away,
      - the camera zooms into the door, and a bolt comes down on the brass
        knob on the way in,
-     - the knob charges, and the circuit board opens out of it: a bead of
-       light that grows until it fills the screen, then stays on behind the
-       rest of the page.
+     - the knob charges, and a ring of current opens out of it: a bead of
+       light that grows until it fills the screen, with the hall of the
+       house behind it (src/rooms.js walks you on from there).
    Under reduced motion there is no runway and no zoom; the painting simply
    gives way to the board once you scroll past it.
    ========================================================================== */

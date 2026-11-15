@@ -1,6 +1,7 @@
 /* ==========================================================================
-   The world: the painting at night, the storm over it, and the circuit
-   board that waits behind the round door.
+   The world: the painting at night, the storm over it, and what waits
+   behind the round door: the house (src/stage/house.js), or, where there's
+   no house (the 404), the circuit board.
 
    It is one full-screen shader so the three can hand over to each other
    without seams:
