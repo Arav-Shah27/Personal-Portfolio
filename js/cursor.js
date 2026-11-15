@@ -293,12 +293,13 @@
   var spark = document.createElement('div');
   spark.className = 'spark-dot';
   document.body.appendChild(spark);
-  var CHARGED = '.hero, .brain-viz, .party-tower';
+  var CHARGED = '.hero, .brain-viz, .party-tower, .walk';
   var NOT_CHARGED = 'a, button:not(.party-tower), p, h1, h2, ul, .no-strike';
   document.addEventListener('mousemove', function (e) {
     spark.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
     var el = e.target;
-    var charged = !!(el && el.closest && el.closest(CHARGED) && !el.closest(NOT_CHARGED));
+    var charged = !!(el && el.closest && el.closest(CHARGED) && !el.closest(NOT_CHARGED)) ||
+      root.classList.contains('find-aim');   /* a thing in a room you can open (src/rooms.js) */
     ring.classList.toggle('is-charged', charged);
     spark.classList.toggle('is-charged', charged);
   }, { passive: true });

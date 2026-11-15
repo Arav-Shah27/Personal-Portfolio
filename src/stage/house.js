@@ -101,15 +101,18 @@ export function createHouse(stage) {
     camera.lookAt(path.look.getPoint(t));
   }
 
+  function bolt_(near) {
+    flashT = 0;
+    nextFlash = 8 + Math.random() * 9;
+    window.dispatchEvent(new CustomEvent("storm:strike", { detail: { x: 0.5, near } }));
+    stage.invalidate();
+  }
+
   /* lightning through the windows, now and then while you're inside */
   function storm(dt) {
     if (reduceMotion) return;
     nextFlash -= dt;
-    if (nextFlash <= 0 && state.lum > 0.2 && !document.hidden) {
-      flashT = 0;
-      nextFlash = 8 + Math.random() * 9;
-      window.dispatchEvent(new CustomEvent("storm:strike", { detail: { x: 0.5, near: false } }));
-    }
+    if (nextFlash <= 0 && state.lum > 0.2 && !document.hidden) bolt_(false);
     if (flashT >= 0) {
       flashT += dt;
       flash = flashCurve(flashT);
@@ -123,14 +126,14 @@ export function createHouse(stage) {
     get flash() { return flash; },
     get texture() { return target.texture; },
     /* lightning on demand, for a click in an empty room */
-    strike() { if (!reduceMotion) { flashT = 0; nextFlash = 8 + Math.random() * 9; stage.invalidate(); } },
+    strike() { if (!reduceMotion && flashT < 0) bolt_(true); },
     /* which find (if any) is under a point on the screen */
     pick(cx, cy) {
       if (!state.on) return null;
       const ndc = new THREE.Vector2((cx / window.innerWidth) * 2 - 1, -(cy / window.innerHeight) * 2 + 1);
       raycaster.setFromCamera(ndc, camera);
       const hit = raycaster.intersectObject(house.root, true)[0];
-      if (!hit || hit.distance > 7) return null;
+      if (!hit || hit.distance > 12) return null;
       for (let o = hit.object; o; o = o.parent) if (owner.has(o)) return owner.get(o);
       return null;
     },

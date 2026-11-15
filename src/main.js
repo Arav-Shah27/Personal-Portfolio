@@ -16,6 +16,7 @@ import "./styles/brain.css";
 import "./styles/footer.css";
 import "./styles/reader.css";
 import "./styles/loader.css";
+import "./styles/house.css";
 
 import "./lib/motion.js";
 import "../js/cursor.js";

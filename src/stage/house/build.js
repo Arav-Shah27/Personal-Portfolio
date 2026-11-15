@@ -466,7 +466,7 @@ function buildParlour(M, root, lights, panes, finds, fire) {
   mantelLight.position.set(-0.9, 2.2, 0);
   fp.add(mantelLight);
   lights.push({ light: mantelLight, base: 6, flicker: 0.12 });
-  finds.push({ id: "fireplace", mesh: fire });
+  finds.push({ id: "fireplace", mesh: fp });
   /* things on the mantel */
   cyl(fp, M.brass, 0.03, 0.05, 0.36, -0.42, 1.75, 0.95);
   cyl(fp, M.brass, 0.03, 0.05, 0.36, -0.42, 1.75, -0.95);
