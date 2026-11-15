@@ -52,7 +52,9 @@ stay clean on the dithering.
 The tower's eye is the one character on the site. It perches on top of text
 (never over it), hops between headings and paragraphs, and watches the
 visitor. It never trails the cursor like a second pointer: it goes to where
-you are, in hops, and stays put. When the tower is on screen it lives in its
+you are, in hops, and stays put. While the page scrolls it keeps to the
+middle of the screen, hopping ahead to the text that will be there when it
+lands, instead of riding a heading off the top. When the tower is on screen it lives in its
 socket, and it gets out of the way of the QR code completely.
 
 The QR code is gold on black stone to match the tower, but the gold squares

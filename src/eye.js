@@ -69,6 +69,39 @@ export function startEye(storm, tower, button) {
   const reading = () =>
     finePointer && performance.now() - pointer.at < 6000 ? { x: pointer.x, y: pointer.y } : { x: innerWidth * 0.5, y: innerHeight * 0.38 };
 
+  /* while you scroll it keeps to the middle of the screen: once its perch
+     drifts out of this band it hops to the text nearest the middle */
+  const bandTop = () => Math.max(navH() + W * 0.6, innerHeight * 0.24);
+  const bandBot = () => innerHeight * 0.68;
+  const inBand = (y) => y > bandTop() && y < bandBot();
+  function pickMiddle(avoid) {
+    /* aim ahead of the scroll, so the next one has room to come to it */
+    const mid = { x: perch ? E.x : innerWidth * 0.5, y: innerHeight * (scrollDir > 0 ? 0.52 : scrollDir < 0 ? 0.36 : 0.44) };
+    /* and judge each one by where it will be when it lands, not where it is now */
+    const lead = scrolling() ? scrollV * 0.5 : 0;
+    let best = null, bestD = Infinity;
+    for (const el of document.querySelectorAll(PERCHES)) {
+      if (el === avoid || !valid(el)) continue;
+      const p = spot(el);
+      p.y -= lead;
+      if (!inBand(p.y)) continue;
+      const d = Math.hypot((p.x - mid.x) * 0.5, p.y - mid.y) + Math.random() * 30;
+      if (d < bestD) { bestD = d; best = el; }
+    }
+    return best;
+  }
+  /* how fast the page is moving, in px/s (down is positive) */
+  let scrolledAt = -1e9, scrollDir = 0, scrollV = 0, lastY = scrollY;
+  window.addEventListener("scroll", () => {
+    const now = performance.now(), dt = Math.max(8, now - scrolledAt) / 1000;
+    const v = dt > 0.3 ? 0 : (scrollY - lastY) / dt;
+    scrollV += (clamp(v, -3000, 3000) - scrollV) * 0.3;
+    scrollDir = Math.sign(scrollY - lastY) || scrollDir;
+    scrolledAt = now;
+    lastY = scrollY;
+  }, { passive: true });
+  const scrolling = () => performance.now() - scrolledAt < 400;
+
   /* a hop: crouch, spring up in an arc, land with a squash */
   function hopTo(el, from = { x: E.x, y: E.y }) {
     if (!el) return;
@@ -78,18 +111,23 @@ export function startEye(storm, tower, button) {
     lastHop = clock;
     const to0 = spot(el);
     const dist = Math.hypot(to0.x - from.x, to0.y - from.y);
-    const dur = clamp(0.32 + dist / 1500, 0.38, 0.85);
-    const lift = clamp(24 + dist * 0.22, 34, 200);
+    /* quicker, flatter hops while the page is moving, so it keeps up */
+    const quick = scrolling();
+    const dur = quick ? clamp(0.26 + dist / 1800, 0.3, 0.55) : clamp(0.32 + dist / 1500, 0.38, 0.85);
+    const lift = quick ? clamp(14 + dist * 0.12, 22, 70) : clamp(24 + dist * 0.22, 34, 200);
+    const crouch = quick ? 0.05 : 0.09;
+    /* where it took off from scrolls with the page, like the text it left */
+    const sy0 = scrollY;
     const h = { k: 0 };
     tl = gsap.timeline()
-      .to(E, { sq: 0.62, duration: 0.09, ease: "power2.out" })
+      .to(E, { sq: 0.62, duration: crouch, ease: "power2.out" })
       .to(E, { sq: 1.25, duration: 0.1, ease: "power2.out" })
       .to(h, {
         k: 1, duration: dur, ease: "none",
         onUpdate() {
-          const to = spot(perch), t = h.k;
+          const to = spot(perch), t = h.k, fy = from.y - (scrollY - sy0);
           E.x = from.x + (to.x - from.x) * t;
-          E.y = from.y + (to.y - from.y) * t - lift * 4 * t * (1 - t);
+          E.y = fy + (to.y - fy) * t - lift * 4 * t * (1 - t);
         },
       }, "<")
       .to(E, { sq: 1, duration: dur * 0.6 }, "<+=0.1")
@@ -127,14 +165,18 @@ export function startEye(storm, tower, button) {
     let show = true;
     if (mode === "perch") {
       if (!valid(perch)) {
-        const next = pick(reading(), perch);
+        const next = pickMiddle(perch) || pick(reading(), perch);
         if (next) hopTo(next); else show = false;
       } else {
         const p = spot(perch);
         E.x = p.x;
         E.y = p.y;
-        /* every so often it goes for a wander */
-        if (clock > nextWander && clock - lastHop > 5) {
+        if (scrolling() && !inBand(p.y) && clock - lastHop > 0.25) {
+          /* the page is moving under it: hop to keep up */
+          const next = pickMiddle(perch);
+          if (next) hopTo(next);
+        } else if (clock > nextWander && clock - lastHop > 5) {
+          /* every so often it goes for a wander */
           nextWander = clock + 8 + Math.random() * 7;
           const next = pick({ x: E.x + (Math.random() - 0.5) * 500, y: E.y + (Math.random() - 0.5) * 300 }, perch);
           if (next) hopTo(next);
@@ -168,7 +210,7 @@ export function startEye(storm, tower, button) {
   /* it opens once the page has loaded */
   function wake() {
     if (mode === "perch") {
-      perch = pick(reading());
+      perch = pickMiddle() || pick(reading());
       if (perch) Object.assign(E, spot(perch));
     }
     gsap.to(E, { open: 1, duration: 0.5, delay: reduceMotion ? 0 : 0.6, ease: "power2.out" });
