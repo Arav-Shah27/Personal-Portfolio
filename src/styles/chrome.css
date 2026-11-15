@@ -144,3 +144,17 @@ html.has-stage .hero-bg{ display:none; }
   will-change:transform;
 }
 @media print{ .eye-sprite{ display:none; } }
+
+/* current in the type (src/zap.js): one pixel canvas over the page while a
+   name is being written or a title is blown apart, and the real letters
+   hidden underneath while their pixels are out */
+.zap-layer{
+  position:fixed; left:0; top:0;
+  z-index:39;
+  pointer-events:none;
+  visibility:hidden;
+  image-rendering:pixelated;
+}
+.zap-hide, .zap-hide *{ color:transparent !important; text-shadow:none !important; }
+html.has-zap :is(.hero-name, .section-title, .entry-title, .project-title){ cursor:pointer; }
+@media print{ .zap-layer{ display:none; } .zap-hide, .zap-hide *{ color:inherit !important; } }

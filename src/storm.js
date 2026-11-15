@@ -44,7 +44,7 @@ export function startStorm() {
       }
       ambient(9000 + Math.random() * 9000);
     }, delay);
-    ambient(2600);
+    ambient(6000);   /* after the name has been written in lightning (src/zap.js) */
   }
 
   /* click the sky and it strikes right there */

@@ -7,7 +7,7 @@ import { SplitText } from "gsap/SplitText";
 
 gsap.registerPlugin(SplitText);
 
-export function startHero() {
+export function startHero(zap) {
   const name = document.querySelector(".hero-name");
   if (!name) return;
   const root = document.documentElement;
@@ -20,16 +20,18 @@ export function startHero() {
   const chars = split.chars;
 
   const intro = () => {
+    /* written in lightning (src/zap.js), or failing that, letter by letter */
+    if (zap && !reduceMotion) zap.write(name, chars, 0.3);
     root.classList.add("hero-in");
     if (reduceMotion) return;
     const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-    tl.from(chars, {
+    if (!zap) tl.from(chars, {
       yPercent: 70, opacity: 0, rotate: () => gsap.utils.random(-6, 6), filter: "blur(10px)",
       duration: 1.6, stagger: 0.055,
-    })
-      .to(".hero-hello", { opacity: 1, y: 0, duration: 1.2 }, 0.35)
-      .fromTo(".hero-foot", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1.3 }, 0.7)
-      .to(".scroll-hint", { opacity: 1, duration: 1 }, 1.3);
+    }, 0);
+    tl.to(".hero-hello", { opacity: 1, y: 0, duration: 1.2 }, zap ? 0 : 0.35)
+      .fromTo(".hero-foot", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 1.3 }, zap ? 1.5 : 0.7)
+      .to(".scroll-hint", { opacity: 1, duration: 1 }, zap ? 2.2 : 1.3);
     gsap.set(".hero-hello", { y: 10 });
   };
   /* the loader (if any) says when; otherwise once the fonts are in */

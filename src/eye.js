@@ -273,6 +273,14 @@ export function startEye(storm, tower, button) {
 
   ScrollTrigger.create({ trigger: button, start: "top 62%", onEnter: goHome, onLeaveBack: leaveHome });
 
+  /* lightning hit the title it was sitting on: it's knocked off, and flares */
+  window.addEventListener("zap:hit", (e) => {
+    const el = e.detail.el;
+    if (mode !== "perch" || !perch || !(perch === el || el.contains(perch) || perch.contains(el))) return;
+    gsap.fromTo(E, { heat: 1 }, { heat: 0, duration: 1.2, ease: "power2.out" });
+    hopTo(pick({ x: E.x, y: E.y + 120 }, perch));
+  });
+
   return {
     /* the tower is turning into the code: the eye's voxels go with it */
     fold() {

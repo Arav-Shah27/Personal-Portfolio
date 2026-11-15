@@ -32,8 +32,10 @@ import { startLoader } from "./loader.js";
 import { startDescent } from "./descent.js";
 import { startTower } from "./tower.js";
 import { startMellon } from "./mellon.js";
+import { startZap } from "./zap.js";
 
-startHero();
+const zap = startZap();
+startHero(zap);
 startWork();
 startDies();
 startSound();
@@ -48,6 +50,7 @@ try {
 } catch {
   document.documentElement.classList.add("no-stage");
 }
+if (zap) zap.storm = storm;
 startLoader(storm);
 startDescent(storm);
 startTower(storm);
