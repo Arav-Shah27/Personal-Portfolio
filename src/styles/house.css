@@ -80,3 +80,25 @@ html.find-aim:not(.has-ring), html.find-aim:not(.has-ring) *{ cursor:pointer; }
   white-space:nowrap;
   border:0;
 }
+
+/* the room you're walking through, small in the corner */
+.room-name{
+  position:fixed;
+  left:var(--gutter); bottom:calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  z-index:30;
+  display:flex; align-items:center; gap:var(--space-2);
+  margin:0;
+  color:var(--text-muted);
+  text-shadow:0 1px 8px rgba(0,0,0,.9);
+  pointer-events:none;
+  opacity:0;
+  transition:opacity var(--dur-slow) var(--ease);
+}
+.room-name::before{
+  content:'';
+  width:6px; height:6px;
+  background:var(--gold-bright);
+  box-shadow:0 0 8px rgba(240,207,122,.8);
+}
+.room-name.is-shown{ opacity:1; }
+@media print{ .room-name{ display:none; } }

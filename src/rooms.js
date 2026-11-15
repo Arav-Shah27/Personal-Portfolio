@@ -75,6 +75,13 @@ export function startRooms(storm) {
     return Math.max(0, b - a) / vh;
   }
 
+  /* the room's name, small in the corner while you walk */
+  const sign = document.createElement("p");
+  sign.className = "room-name label";
+  sign.setAttribute("aria-hidden", "true");
+  document.body.append(sign);
+  const roomAt = (u) => (u < 3.3 ? "the hall" : u < 6.05 ? "the study" : u < 8.35 ? "the parlour" : "outside");
+
   function update() {
     const vh = window.innerHeight, y = window.scrollY;
     const A = anchors();
@@ -89,6 +96,9 @@ export function startRooms(storm) {
     lum *= 1 - 0.92 * smooth(ft - vh * 0.55, ft - vh * 0.05, y);
     if (import.meta.env.DEV && window.__lum != null) lum = window.__lum;
     house.state.lum = lum;
+    const name = roomAt(u);
+    if (sign.textContent !== name) sign.textContent = name;
+    sign.classList.toggle("is-shown", lum > 0.85 && u > 0.6 && u < 9.6);
     storm.stage.invalidate();
   }
   window.addEventListener("scroll", update, { passive: true });
