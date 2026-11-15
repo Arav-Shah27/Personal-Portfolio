@@ -17,6 +17,11 @@ sitting on top of it.
 - **The ring is the motif.** The logo, the round door, the reader opening, the
   loader, the route's stops, the sign-off at the end of an essay. When a new
   thing needs a shape, it's probably the ring.
+- **Weather is light too.** Rain, light shafts and sheet lightning are all
+  computed in the world shader and go through the same dither, so they're
+  pixels in the ramp, not overlays. Rain is always there but faint, and
+  brightens near the lanterns and in a flash; shafts burst out from wherever
+  a bolt lands and only cost anything while it's flashing.
 - **Current is the thread.** Lightning strikes the door, runs through the
   board, fills the route, lights the stops, ripples out from what you touch.
   New interactions should feel like they send or receive current.

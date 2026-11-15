@@ -20,6 +20,7 @@
    the stage and laid over the top.
    ========================================================================== */
 import * as THREE from "three";
+import { reduceMotion } from "../lib/motion.js";
 import { createFrame, clearFrame, createFx, composite } from "../../pixelfx/src/core/index.js";
 import * as skyBolt from "../../pixelfx/src/fx/lightning/sky-bolt.js";
 /* a lighter encode of the painting: the stage dithers it, so the extra
@@ -89,6 +90,8 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       uScroll: { value: 0 },
       uDim: { value: 1 },
       uRipple: { value: new THREE.Vector3(0, 0, -99) },
+      uLand: { value: new THREE.Vector2(0, 0) },
+      uRain: { value: reduceMotion ? 0 : 1 },
       uMouse: { value: new THREE.Vector2() },
       uCenterY: { value: 640 },
     },
@@ -101,7 +104,8 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       uniform sampler2D uPaint, uBolt;
       uniform vec2 uRes, uStrike, uMouse;
       uniform vec3 uRipple;
-      uniform float uPx, uTime, uFlash, uZoom, uOpen, uBoard, uPainting, uScroll, uCenterY, uDim;
+      uniform vec2 uLand;                     /* where the last bolt came down, art px, y down */
+      uniform float uPx, uTime, uFlash, uZoom, uOpen, uBoard, uPainting, uScroll, uCenterY, uDim, uRain;
       in vec2 vUv;
       out vec4 fragColor;
 
@@ -120,6 +124,43 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float s = 0.0, a = 0.5;
         for (int i = 0; i < 5; i++) { s += a * noise(p); p = p * 2.03 + 17.1; a *= 0.5; }
         return s;
+      }
+
+      /* domain-warped cloud, fbm(p + fbm(p + fbm(p))) with a rotation
+         between octaves so the layers don't line up (shader-dev: domain-warping) */
+      const mat2 ROT = mat2(0.80, 0.60, -0.60, 0.80);
+      float warped(vec2 p, float t) {
+        vec2 q = vec2(fbm(p + vec2(0.0, t * 0.05)), fbm(ROT * p + vec2(5.2, 1.3)));
+        vec2 r = vec2(fbm(p + 3.0 * q + vec2(1.7, 9.2) + t * 0.03), fbm(ROT * p + 3.0 * q + vec2(8.3, 2.8)));
+        return fbm(p + 2.5 * r);
+      }
+
+      /* stateless rain: slanted 1px streaks in three depths, every drop
+         worked out from its cell and the time, no state kept between frames
+         (shader-dev: particle-system, stateless) */
+      float rain(vec2 sp, float t, float wind) {
+        float acc = 0.0;
+        for (int i = 0; i < 3; i++) {
+          float fi = float(i);
+          float W = 9.0 - fi * 2.0;            /* columns get closer as they get farther away */
+          float speed = 260.0 - fi * 70.0;     /* art px a second */
+          float L = 7.0 - fi * 2.0;            /* streak length */
+          float slant = wind * (1.0 - fi * 0.25);
+          float u = sp.x + sp.y * slant + fi * 37.0;
+          float col = floor(u / W);
+          float v = sp.y + t * speed + hash(vec2(col, fi)) * 400.0;
+          float P = 46.0 + fi * 10.0;
+          float cell = floor(v / P);
+          float h = hash(vec2(col * 1.7 + fi, cell));
+          if (h < 0.55) continue;              /* not every cell has a drop */
+          float x0 = floor(hash(vec2(col, cell + 3.1)) * (W - 1.0));
+          float y0 = hash(vec2(cell, col + 7.7)) * (P - L);
+          float inX = 1.0 - step(0.5, abs(floor(u - col * W) - x0));
+          float y = v - cell * P - y0;
+          float inY = step(0.0, y) * step(y, L);
+          acc += inX * inY * (1.0 - fi * 0.3) * (0.6 + 0.4 * y / L);
+        }
+        return acc;
       }
 
       /* ---- the board: a truchet of traces that always meet their neighbours */
@@ -202,8 +243,16 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         float blue = smoothstep(0.03, 0.16, col.b - max(col.r, col.g) * 0.92);
         float sky = blue * (1.0 - smoothstep(330.0, 470.0, p.y));
         vec2 cp = p * 0.0042 + vec2(uTime * 0.035, -uTime * 0.01);
-        float cloud = fbm(cp + fbm(cp * 0.7 - uTime * 0.02) * 0.9);
-        vec3 storm = vec3(0.05 + 0.2 * cloud * cloud) + flash * vec3(0.55 * cloud + 0.12);
+        float cloud = warped(cp, uTime);
+        /* sheet lightning: now and then a patch of cloud lights up from
+           inside, somewhere along the sky, without a bolt coming down */
+        float epoch = floor(uTime / 2.3);
+        vec2 sheetAt = vec2(hash(vec2(epoch, 1.0)) * IMG.x, 120.0 + hash(vec2(epoch, 2.0)) * 220.0);
+        float st = fract(uTime / 2.3) * 2.3;
+        float sheet = step(0.45, hash(vec2(epoch, 3.0))) * exp(-st * 7.0) * (0.6 + 0.4 * sin(st * 70.0))
+                    * exp(-length(p - sheetAt) / 260.0) * uRain;
+        vec3 storm = vec3(0.05 + 0.2 * cloud * cloud) + (flash + sheet * 0.7) * vec3(0.55 * cloud + 0.12)
+                   + vec3(0.35) * sheet * smoothstep(0.45, 0.75, cloud);
         night = mix(night, storm, sky);
 
         /* the lanterns by the door are lit, and breathe a little */
@@ -257,6 +306,46 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
         outCol += vec3(0.95) * front + lit * spill * 0.8 + vec3(0.12) * spill;
         float outA = reveal * uPainting * (1.0 - showBoard);
 
+        /* ---- light shafts from the strike ---------------------------------
+           For each pixel, step toward where the bolt came down and count how
+           much of the way is open: light streams through the gaps between
+           the dark shapes of the painting and the stone and leaves catch it
+           at the edges (shader-dev: screen-space volumetric light / god rays).
+           Only while a flash is going, so it costs nothing the rest of the time. */
+        float scene = uPainting * (1.0 - showBoard);
+        if (uFlash > 0.02 && scene > 0.01) {
+          vec2 L = vec2(uLand.x, uRes.y - uLand.y);
+          vec2 dir = (L - sp) / 22.0;
+          vec2 s = sp + dir * hash(sp + fract(uTime) * 61.0);   /* jittered start: the dither hides the steps */
+          float acc = 0.0, decay = 1.0;
+          for (int i = 0; i < 22; i++) {
+            s += dir;
+            vec2 ps = center + (vec2(s.x, uRes.y - s.y) * uPx - cssRes * 0.5) / (k * uZoom);
+            vec3 c = texture(uPaint, vec2(ps.x / IMG.x, 1.0 - ps.y / IMG.y)).rgb;
+            acc += smoothstep(0.12, 0.45, dot(c, vec3(0.299, 0.587, 0.114))) * decay;
+            decay *= 0.93;
+          }
+          /* spokes: the light breaks into rays around the strike, a new
+             pattern for every bolt */
+          vec2 d = sp - L;
+          float ang = atan(d.y, d.x);
+          float spokes = pow(noise(vec2(ang * 7.0, uLand.x * 0.37)), 3.0) + 0.5 * pow(noise(vec2(ang * 19.0, uLand.y)), 4.0);
+          float dl = length(d) / uRes.y;
+          outCol += vec3(1.6) * (acc / 11.5) * (0.08 + 2.4 * spokes) * uFlash * exp(-dl * 1.2) * scene;
+        }
+
+        /* ---- rain over the painting, lit by the lanterns and the lightning */
+        if (uRain > 0.0 && scene > 0.01) {
+          float r = rain(sp, uTime, 0.22 + uMouse.x * 0.25);
+          float lampLit = 0.0;
+          for (int i = 0; i < 2; i++) {
+            vec2 lp = i == 0 ? vec2(${LAMPS[0][0]}.0, ${LAMPS[0][1]}.0) : vec2(${LAMPS[1][0]}.0, ${LAMPS[1][1]}.0);
+            lampLit += exp(-length(p - lp) / 140.0);
+          }
+          float calm = 1.0 - smoothstep(1.4, 3.0, uZoom);     /* it eases off as you go in at the door */
+          outCol += vec3(r) * (0.14 + lampLit * 0.3 + flash * 0.75) * scene * calm;
+        }
+
         /* gentle vignette so the edges sit back */
         vec2 vq = vUv - 0.5;
         outCol *= 1.0 - dot(vq, vq) * 0.9;
@@ -294,7 +383,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
     return { x: (x - cx) * k * z + W / 2, y: (y - cy) * k * z + H / 2 };
   }
 
-  let flash = 0, strikeX = 0.5;
+  let flash = 0, strikeX = 0.5, landY = 0;
 
   function strike(xArt, toYArt, { aimed = false } = {}) {
     if (!pf) return;
@@ -305,6 +394,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       lean: 0.18, thickness: aimed ? 1.2 : 0.95, light: aimed ? 1 : 0.85, aim: aimed ? 0 : null,
     }));
     strikeX = xArt / pf.frame.w;
+    landY = -6 + length;
     stage.invalidate();
     window.dispatchEvent(new CustomEvent("storm:strike", { detail: { x: strikeX, near: aimed } }));
   }
@@ -358,6 +448,7 @@ export function createWorld(stage, { onFlash, onReady } = {}) {
       clockNow = frame.t;
       u.uFlash.value = flash;
       u.uStrike.value.set(strikeX, 0);
+      u.uLand.value.set(strikeX * frame.w, landY);
       u.uZoom.value = state.zoom;
       u.uOpen.value = state.open;
       u.uBoard.value = state.board;
